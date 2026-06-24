@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Add Employee') }}
+            {{ __('Edit Employee') }} — {{ $employee->full_name }}
         </h2>
     </x-slot>
 
@@ -35,8 +35,9 @@
                         .t-btn-submit:hover { background: #1d4ed8; }
                     </style>
 
-                    <form action="{{ route('employees.store') }}" method="POST">
+                    <form action="{{ route('employees.update', $employee->id) }}" method="POST">
                         @csrf
+                        @method('PUT')
 
                         {{-- Personal Information --}}
                         <div class="t-section">
@@ -44,24 +45,24 @@
                             <div class="t-grid t-grid-2" style="margin-bottom: 10px;">
                                 <div>
                                     <label for="first_name" class="t-label">First Name</label>
-                                    <input type="text" name="first_name" id="first_name" value="{{ old('first_name') }}" required class="t-input" placeholder="e.g. John">
+                                    <input type="text" name="first_name" id="first_name" value="{{ old('first_name', $employee->first_name) }}" required class="t-input" placeholder="e.g. John">
                                     @error('first_name') <span class="t-error">{{ $message }}</span> @enderror
                                 </div>
                                 <div>
                                     <label for="middle_name" class="t-label">Middle Name <span style="color:#9ca3af; font-weight:400;">(optional)</span></label>
-                                    <input type="text" name="middle_name" id="middle_name" value="{{ old('middle_name') }}" class="t-input" placeholder="e.g. Santos">
+                                    <input type="text" name="middle_name" id="middle_name" value="{{ old('middle_name', $employee->middle_name) }}" class="t-input" placeholder="e.g. Santos">
                                     @error('middle_name') <span class="t-error">{{ $message }}</span> @enderror
                                 </div>
                             </div>
                             <div class="t-grid t-grid-2">
                                 <div>
                                     <label for="last_name" class="t-label">Last Name</label>
-                                    <input type="text" name="last_name" id="last_name" value="{{ old('last_name') }}" required class="t-input" placeholder="e.g. Dela Cruz">
+                                    <input type="text" name="last_name" id="last_name" value="{{ old('last_name', $employee->last_name) }}" required class="t-input" placeholder="e.g. Dela Cruz">
                                     @error('last_name') <span class="t-error">{{ $message }}</span> @enderror
                                 </div>
                                 <div>
                                     <label for="suffix" class="t-label">Suffix <span style="color:#9ca3af; font-weight:400;">(optional)</span></label>
-                                    <input type="text" name="suffix" id="suffix" value="{{ old('suffix') }}" class="t-input" placeholder="e.g. Jr., Sr., III">
+                                    <input type="text" name="suffix" id="suffix" value="{{ old('suffix', $employee->suffix) }}" class="t-input" placeholder="e.g. Jr., Sr., III">
                                     @error('suffix') <span class="t-error">{{ $message }}</span> @enderror
                                 </div>
                             </div>
@@ -75,7 +76,7 @@
                                     <label for="nfp_id" class="t-label">Employee ID <span style="color:#9ca3af; font-weight:400;">(optional)</span></label>
                                     <div style="display: flex; align-items: stretch; border: 1px solid #d1d5db; border-radius: 6px; overflow: hidden; background: #fff; transition: border-color 0.15s, box-shadow 0.15s;" onfocusin="this.style.borderColor='#2563eb'; this.style.boxShadow='0 0 0 3px rgba(37, 99, 235, 0.12)';" onfocusout="this.style.borderColor='#d1d5db'; this.style.boxShadow='none';">
                                         <span style="background: #f9fafb; color: #111827; padding: 7px 10px; font-size: 0.875rem; border-right: 1px solid #d1d5db; display: flex; align-items: center;">NFP-</span>
-                                        <input type="text" name="nfp_id" id="nfp_id" value="{{ str_replace('NFP-', '', old('nfp_id')) }}" maxlength="4" class="t-input" style="border: none; border-radius: 0; box-shadow: none; outline: none; width: 100%;" placeholder="e.g. 1234">
+                                        <input type="text" name="nfp_id" id="nfp_id" value="{{ str_replace('NFP-', '', old('nfp_id', $employee->nfp_id)) }}" maxlength="4" class="t-input" style="border: none; border-radius: 0; box-shadow: none; outline: none; width: 100%;" placeholder="e.g. 1234">
                                     </div>
                                     @error('nfp_id') <span class="t-error" style="display:block; margin-top:4px;">{{ $message }}</span> @enderror
                                 </div>
@@ -84,14 +85,14 @@
                                     <select name="department" id="department" required class="t-input">
                                         <option value="">— Select Department —</option>
                                         @foreach(array_keys($hierarchy) as $dept)
-                                            <option value="{{ $dept }}" {{ old('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
+                                            <option value="{{ $dept }}" {{ old('department', $employee->department) == $dept ? 'selected' : '' }}>{{ $dept }}</option>
                                         @endforeach
                                     </select>
                                     @error('department') <span class="t-error">{{ $message }}</span> @enderror
                                 </div>
                                 <div>
                                     <label for="position" class="t-label">Position</label>
-                                    <select name="position" id="position" required class="t-input" data-old="{{ old('position') }}">
+                                    <select name="position" id="position" required class="t-input" data-old="{{ old('position', $employee->position) }}">
                                         <option value="">— Select Position —</option>
                                     </select>
                                     @error('position') <span class="t-error">{{ $message }}</span> @enderror
@@ -103,7 +104,7 @@
                                     <select name="branch" id="branch" required class="t-input">
                                         <option value="">— Select Branch —</option>
                                         @foreach(['HEAD OFFICE', 'NDD BACOLOD', 'NDD BAESA', 'NDD BATAAN', 'NDD BATANGAS', 'NDD CAVITE', 'NDD CDO', 'NDD CEBU', 'NDD DAVAO', 'NDD DIPOLOG', 'NDD DUMAGUETE', 'NDD ILOILO', 'NDD LA UNION', 'NDD LAGUNA', 'NDD LAS PIÑAS', 'NDD NUEVA ECIJA', 'NDD PULILAN', 'NDD ROXAS', 'NDD SAN FRANCISCO', 'NDD TACLOBAN', 'NDD TARLAC', 'NDD TAYTAY'] as $br)
-                                            <option value="{{ $br }}" {{ old('branch') == $br ? 'selected' : '' }}>{{ $br }}</option>
+                                            <option value="{{ $br }}" {{ old('branch', $employee->branch) == $br ? 'selected' : '' }}>{{ $br }}</option>
                                         @endforeach
                                     </select>
                                     @error('branch') <span class="t-error">{{ $message }}</span> @enderror
@@ -112,8 +113,8 @@
                                     <label for="contact_no_suffix" class="t-label">Contact No. <span style="color:#9ca3af; font-weight:400;">(optional)</span></label>
                                     <div style="display: flex; align-items: stretch; border: 1px solid #d1d5db; border-radius: 6px; overflow: hidden; background: #fff; transition: border-color 0.15s, box-shadow 0.15s;" onfocusin="this.style.borderColor='#2563eb'; this.style.boxShadow='0 0 0 3px rgba(37, 99, 235, 0.12)';" onfocusout="this.style.borderColor='#d1d5db'; this.style.boxShadow='none';">
                                         <span style="background: #f9fafb; color: #111827; padding: 7px 10px; font-size: 0.875rem; border-right: 1px solid #d1d5db; display: flex; align-items: center;">+63</span>
-                                        <input type="text" name="contact_no_suffix" id="contact_no_suffix" value="{{ str_replace('+63', '', old('contact_no')) }}" maxlength="10" class="t-input" style="border: none; border-radius: 0; box-shadow: none; outline: none; width: 100%;" placeholder="e.g. 9123456789" oninput="this.value = this.value.replace(/[^0-9]/g, ''); document.getElementById('contact_no_hidden').value = this.value ? '+63' + this.value : '';">
-                                        <input type="hidden" name="contact_no" id="contact_no_hidden" value="{{ old('contact_no') }}">
+                                        <input type="text" name="contact_no_suffix" id="contact_no_suffix" value="{{ str_replace('+63', '', old('contact_no', $employee->contact_no)) }}" maxlength="10" class="t-input" style="border: none; border-radius: 0; box-shadow: none; outline: none; width: 100%;" placeholder="e.g. 9123456789" oninput="this.value = this.value.replace(/[^0-9]/g, ''); document.getElementById('contact_no_hidden').value = this.value ? '+63' + this.value : '';">
+                                        <input type="hidden" name="contact_no" id="contact_no_hidden" value="{{ old('contact_no', $employee->contact_no) }}">
                                     </div>
                                     @error('contact_no') <span class="t-error" style="display:block; margin-top:4px;">{{ $message }}</span> @enderror
                                 </div>
@@ -123,7 +124,7 @@
                         {{-- Actions --}}
                         <div class="t-footer">
                             <a href="{{ route('employees.index') }}" class="t-btn-cancel">Cancel</a>
-                            <button type="submit" class="t-btn-submit">Save Employee</button>
+                            <button type="submit" class="t-btn-submit">Update Employee</button>
                         </div>
                     </form>
 
