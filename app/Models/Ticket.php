@@ -17,6 +17,7 @@ class Ticket extends Model
         'requested_by',
         'position',
         'branch',
+        'department',
         'assisted_by',
         'status',
         'remarks',

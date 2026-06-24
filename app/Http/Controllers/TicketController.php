@@ -63,8 +63,9 @@ class TicketController extends Controller
     public function create()
     {
         $requestTypes = self::REQUEST_TYPES;
+        $employees = \App\Models\Employee::orderBy('last_name')->get();
 
-        return view('tickets.create', compact('requestTypes'));
+        return view('tickets.create', compact('requestTypes', 'employees'));
     }
 
     /**
@@ -80,6 +81,7 @@ class TicketController extends Controller
             'requested_by'    => 'required|string',
             'position'        => 'nullable|string',
             'branch'          => 'nullable|string',
+            'department'      => 'nullable|string',
             'assisted_by'     => 'nullable|string',
             'status'          => 'required|string',
             'remarks'         => 'nullable|string',
@@ -118,9 +120,10 @@ class TicketController extends Controller
     public function edit(Ticket $ticket)
     {
         $requestTypes = self::REQUEST_TYPES;
+        $employees = \App\Models\Employee::orderBy('last_name')->get();
         $ticket->load('attachments');
 
-        return view('tickets.edit', compact('ticket', 'requestTypes'));
+        return view('tickets.edit', compact('ticket', 'requestTypes', 'employees'));
     }
 
     /**
@@ -136,6 +139,7 @@ class TicketController extends Controller
             'requested_by'    => 'required|string',
             'position'        => 'nullable|string',
             'branch'          => 'nullable|string',
+            'department'      => 'nullable|string',
             'assisted_by'     => 'nullable|string',
             'status'          => 'required|string',
             'remarks'         => 'nullable|string',
@@ -187,6 +191,7 @@ class TicketController extends Controller
             'requested_by'        => $ticket->requested_by,
             'position'            => $ticket->position,
             'branch'              => $ticket->branch,
+            'department'          => $ticket->department,
             'assisted_by'         => $ticket->assisted_by,
             'status'              => $ticket->status,
             'remarks'             => $ticket->remarks,
@@ -253,6 +258,7 @@ class TicketController extends Controller
                 'requested_by'          => $archiveTicket->requested_by,
                 'position'              => $archiveTicket->position,
                 'branch'                => $archiveTicket->branch,
+                'department'            => $archiveTicket->department,
                 'assisted_by'           => $archiveTicket->assisted_by,
                 'status'                => $archiveTicket->status,
                 'remarks'               => $archiveTicket->remarks,

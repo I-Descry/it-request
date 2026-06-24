@@ -5,100 +5,75 @@
         </h2>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+                <div class="p-4 text-gray-900">
 
                     @if (session('success'))
-                        <div style="color: green; margin-bottom: 15px; font-weight: bold;">
+                        <div style="color: green; margin-bottom: 12px; font-weight: bold; font-size: 0.9rem;">
                             {{ session('success') }}
                         </div>
                     @endif
 
                     {{-- Restored Badge --}}
                     @if ($ticket->restored_from_archive)
-                        <div style="background-color: #dbeafe; color: #1e40af; padding: 10px 16px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; font-size: 0.9rem;">
+                        <div style="background-color: #dbeafe; color: #1e40af; padding: 8px 12px; border-radius: 6px; margin-bottom: 15px; font-weight: bold; font-size: 0.85rem;">
                             ♻️ This ticket was restored from the Archived Tickets on {{ $ticket->restored_at ? $ticket->restored_at->format('M d, Y h:i A') : 'N/A' }}
                         </div>
                     @endif
 
                     {{-- Action Buttons --}}
-                    <div style="display: flex; gap: 10px; margin-bottom: 25px;">
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
                         <a href="{{ route('tickets.index') }}"
-                           style="background-color: #6b7280; color: #fff; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-size: 0.9rem;">
+                           style="background-color: #6b7280; color: #fff; padding: 6px 14px; border-radius: 5px; text-decoration: none; font-size: 0.85rem;">
                             ← Back to Tickets
                         </a>
                         <a href="{{ route('tickets.edit', $ticket->id) }}"
-                           style="background-color: #f59e0b; color: #fff; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-size: 0.9rem;">
+                           style="background-color: #f59e0b; color: #fff; padding: 6px 14px; border-radius: 5px; text-decoration: none; font-size: 0.85rem;">
                             ✏️ Edit Ticket
                         </a>
                     </div>
 
                     {{-- Ticket Details --}}
-                    <table cellpadding="10" cellspacing="0" style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
-                        <tr style="border-bottom: 1px solid #e5e7eb;">
-                            <td style="font-weight: bold; width: 200px; vertical-align: top; padding: 12px;">Ticket No.</td>
-                            <td style="padding: 12px;">{{ $ticket->ticket_no }}</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #e5e7eb; background-color: #f9fafb;">
-                            <td style="font-weight: bold; padding: 12px;">Status</td>
-                            <td style="padding: 12px;">
-                                @php
-                                    $statusColor = match($ticket->status) {
-                                        'Open' => 'background-color: #fee2e2; color: #991b1b;',
-                                        'In Progress' => 'background-color: #fef08a; color: #854d0e;',
-                                        'Resolved' => 'background-color: #dcfce3; color: #166534;',
-                                        'Closed' => 'background-color: #f3f4f6; color: #374151;',
-                                        default => 'background-color: #f3f4f6; color: #374151;',
-                                    };
-                                @endphp
-                                <span style="padding: 4px 12px; border-radius: 9999px; font-size: 0.85rem; font-weight: bold; {{ $statusColor }}">
-                                    {{ $ticket->status }}
-                                </span>
-                            </td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #e5e7eb;">
-                            <td style="font-weight: bold; padding: 12px;">Request Type</td>
-                            <td style="padding: 12px;">{{ $ticket->request_type }}</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #e5e7eb; background-color: #f9fafb;">
-                            <td style="font-weight: bold; padding: 12px;">Requested By</td>
-                            <td style="padding: 12px;">{{ $ticket->requested_by }}</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #e5e7eb;">
-                            <td style="font-weight: bold; padding: 12px;">Position</td>
-                            <td style="padding: 12px;">{{ $ticket->position ?? 'N/A' }}</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #e5e7eb; background-color: #f9fafb;">
-                            <td style="font-weight: bold; padding: 12px;">Branch</td>
-                            <td style="padding: 12px;">{{ $ticket->branch ?? 'N/A' }}</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #e5e7eb;">
-                            <td style="font-weight: bold; padding: 12px;">Affected System</td>
-                            <td style="padding: 12px;">{{ $ticket->affected_system ?? 'N/A' }}</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #e5e7eb; background-color: #f9fafb;">
-                            <td style="font-weight: bold; vertical-align: top; padding: 12px;">Details of the Issue</td>
-                            <td style="padding: 12px; white-space: pre-wrap;">{{ $ticket->request_details }}</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #e5e7eb;">
-                            <td style="font-weight: bold; padding: 12px;">Assisted By</td>
-                            <td style="padding: 12px;">{{ $ticket->assisted_by ?? 'N/A' }}</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #e5e7eb; background-color: #f9fafb;">
-                            <td style="font-weight: bold; vertical-align: top; padding: 12px;">Remarks</td>
-                            <td style="padding: 12px; white-space: pre-wrap;">{{ $ticket->remarks ?? 'N/A' }}</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #e5e7eb;">
-                            <td style="font-weight: bold; padding: 12px;">Date Created</td>
-                            <td style="padding: 12px;">{{ $ticket->created_at->format('M d, Y h:i A') }}</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #e5e7eb; background-color: #f9fafb;">
-                            <td style="font-weight: bold; padding: 12px;">Last Updated</td>
-                            <td style="padding: 12px;">{{ $ticket->updated_at->format('M d, Y h:i A') }}</td>
-                        </tr>
-                    </table>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 15px; font-size: 0.85rem; border: 1px solid #e5e7eb; padding: 12px; border-radius: 6px; background-color: #f9fafb;">
+                        <div><strong style="color: #4b5563;">Ticket No.:</strong> <br>{{ $ticket->ticket_no }}</div>
+                        <div><strong style="color: #4b5563;">Status:</strong> <br>
+                            @php
+                                $statusColor = match($ticket->status) {
+                                    'Open' => 'background-color: #fee2e2; color: #991b1b;',
+                                    'In Progress' => 'background-color: #fef08a; color: #854d0e;',
+                                    'Resolved' => 'background-color: #dcfce3; color: #166534;',
+                                    'Closed' => 'background-color: #e5e7eb; color: #374151;',
+                                    default => 'background-color: #e5e7eb; color: #374151;',
+                                };
+                            @endphp
+                            <span style="padding: 2px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: bold; {{ $statusColor }} display: inline-block; margin-top: 2px;">
+                                {{ $ticket->status }}
+                            </span>
+                        </div>
+                        <div><strong style="color: #4b5563;">Request Type:</strong> <br>{{ $ticket->request_type }}</div>
+                        
+                        <div><strong style="color: #4b5563;">Requested By:</strong> <br>{{ $ticket->requested_by }}</div>
+                        <div><strong style="color: #4b5563;">Position:</strong> <br>{{ $ticket->position ?? 'N/A' }}</div>
+                        <div><strong style="color: #4b5563;">Department:</strong> <br>{{ $ticket->department ?? 'N/A' }}</div>
+                        <div><strong style="color: #4b5563;">Branch:</strong> <br>{{ $ticket->branch ?? 'N/A' }}</div>
+                        
+                        <div><strong style="color: #4b5563;">Affected System:</strong> <br>{{ $ticket->affected_system ?? 'N/A' }}</div>
+                        <div><strong style="color: #4b5563;">Assisted By:</strong> <br>{{ $ticket->assisted_by ?? 'N/A' }}</div>
+                        <div><strong style="color: #4b5563;">Date Created:</strong> <br>{{ $ticket->created_at->format('M d, Y h:i A') }}</div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; font-size: 0.85rem; border: 1px solid #e5e7eb; padding: 12px; border-radius: 6px; background-color: #f9fafb;">
+                        <div>
+                            <strong style="color: #4b5563;">Details of the Issue:</strong>
+                            <div style="margin-top: 4px; white-space: pre-wrap; background: #fff; padding: 8px; border: 1px solid #e5e7eb; border-radius: 4px; min-height: 50px;">{{ $ticket->request_details }}</div>
+                        </div>
+                        <div>
+                            <strong style="color: #4b5563;">Admin Remarks:</strong>
+                            <div style="margin-top: 4px; white-space: pre-wrap; background: #fff; padding: 8px; border: 1px solid #e5e7eb; border-radius: 4px; min-height: 50px;">{{ $ticket->remarks ?? 'N/A' }}</div>
+                        </div>
+                    </div>
 
                     {{-- Attachments Section --}}
                     <h3 style="font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px;">
@@ -106,9 +81,9 @@
                     </h3>
 
                     @if ($ticket->attachments->count() > 0)
-                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
                             @foreach ($ticket->attachments as $attachment)
-                                <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; background-color: #f9fafb;">
+                                <div style="border: 1px solid #e5e7eb; border-radius: 6px; padding: 8px; background-color: #f9fafb;">
                                     {{-- File Preview --}}
                                     @php
                                         $isImage = str_starts_with($attachment->file_type, 'image/');
@@ -119,47 +94,43 @@
                                     @endphp
 
                                     @if ($isImage)
-                                        <div style="margin-bottom: 10px; text-align: center;">
+                                        <div style="margin-bottom: 6px; text-align: center;">
                                             <img src="{{ $fileUrl }}" alt="{{ $attachment->file_name }}"
-                                                 style="max-width: 100%; max-height: 200px; border-radius: 6px; object-fit: contain; cursor: pointer;"
+                                                 style="max-width: 100%; height: 100px; border-radius: 4px; object-fit: cover; cursor: pointer;"
                                                  onclick="window.open('{{ $fileUrl }}', '_blank')">
                                         </div>
                                     @elseif ($isVideo)
-                                        <div style="margin-bottom: 10px;">
-                                            <video controls style="width: 100%; max-height: 200px; border-radius: 6px;">
+                                        <div style="margin-bottom: 6px;">
+                                            <video controls style="width: 100%; height: 100px; border-radius: 4px; object-fit: cover;">
                                                 <source src="{{ $fileUrl }}" type="{{ $attachment->file_type }}">
-                                                Your browser does not support the video tag.
                                             </video>
                                         </div>
                                     @elseif ($isAudio)
-                                        <div style="margin-bottom: 10px;">
-                                            <audio controls style="width: 100%;">
+                                        <div style="margin-bottom: 6px;">
+                                            <audio controls style="width: 100%; height: 30px;">
                                                 <source src="{{ $fileUrl }}" type="{{ $attachment->file_type }}">
-                                                Your browser does not support the audio tag.
                                             </audio>
                                         </div>
                                     @else
-                                        <div style="margin-bottom: 10px; text-align: center; padding: 20px; background-color: #e5e7eb; border-radius: 6px;">
-                                            <span style="font-size: 2rem;">📄</span>
+                                        <div style="margin-bottom: 6px; text-align: center; padding: 10px; background-color: #e5e7eb; border-radius: 4px;">
+                                            <span style="font-size: 1.5rem;">📄</span>
                                         </div>
                                     @endif
 
-                                    {{-- File Info --}}
-                                    <p style="font-weight: bold; font-size: 0.85rem; word-break: break-all; margin-bottom: 4px;">
+                                    <p style="font-weight: bold; font-size: 0.75rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 2px;" title="{{ $attachment->file_name }}">
                                         {{ $attachment->file_name }}
                                     </p>
-                                    <p style="font-size: 0.8rem; color: #6b7280; margin-bottom: 8px;">
+                                    <p style="font-size: 0.7rem; color: #6b7280; margin-bottom: 6px;">
                                         {{ strtoupper(pathinfo($attachment->file_name, PATHINFO_EXTENSION)) }} • {{ $fileSizeMB }} MB
                                     </p>
 
-                                    {{-- Download Button --}}
                                     <a href="{{ $fileUrl }}" download="{{ $attachment->file_name }}"
-                                       style="display: inline-block; background-color: #2563eb; color: #fff; padding: 4px 12px; border-radius: 4px; text-decoration: none; font-size: 0.85rem;">
-                                        ⬇️ Download
+                                       style="display: inline-block; background-color: #2563eb; color: #fff; padding: 3px 8px; border-radius: 4px; text-decoration: none; font-size: 0.75rem;">
+                                        ⬇️
                                     </a>
                                     <a href="{{ $fileUrl }}" target="_blank"
-                                       style="display: inline-block; background-color: #6b7280; color: #fff; padding: 4px 12px; border-radius: 4px; text-decoration: none; font-size: 0.85rem; margin-left: 4px;">
-                                        🔗 Open
+                                       style="display: inline-block; background-color: #6b7280; color: #fff; padding: 3px 8px; border-radius: 4px; text-decoration: none; font-size: 0.75rem; margin-left: 2px;">
+                                        🔗
                                     </a>
                                 </div>
                             @endforeach
