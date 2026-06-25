@@ -7,7 +7,7 @@
 
     <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white overflow-visible shadow-sm sm:rounded-lg">
                 <div class="p-4 text-gray-900">
 
                     @if (session('success'))
@@ -25,52 +25,51 @@
 
                     {{-- Action Buttons --}}
                     <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                        <a href="{{ route('tickets.index') }}"
-                           style="background-color: #6b7280; color: #fff; padding: 6px 14px; border-radius: 5px; text-decoration: none; font-size: 0.85rem;">
+                        <a href="{{ route('tickets.index') }}" class="dk-btn dk-btn-secondary">
                             ← Back to Tickets
                         </a>
-                        <a href="{{ route('tickets.edit', $ticket->id) }}"
-                           style="background-color: #f59e0b; color: #fff; padding: 6px 14px; border-radius: 5px; text-decoration: none; font-size: 0.85rem;">
+                        <a href="{{ route('tickets.edit', $ticket->id) }}" class="dk-btn dk-btn-warning">
                             ✏️ Edit Ticket
                         </a>
                     </div>
 
                     {{-- Ticket Details --}}
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 15px; font-size: 0.85rem; border: 1px solid #e5e7eb; padding: 12px; border-radius: 6px; background-color: #f9fafb;">
-                        <div><strong style="color: #4b5563;">Ticket No.:</strong> <br>{{ $ticket->ticket_no }}</div>
-                        <div><strong style="color: #4b5563;">Status:</strong> <br>
+                    <div class="dk-panel dk-grid-4">
+                        <div><strong class="dk-text-label">Ticket No.:</strong> <br>{{ $ticket->ticket_no }}</div>
+                        <div><strong class="dk-text-label">Status:</strong> <br>
                             @php
                                 $statusColor = match($ticket->status) {
-                                    'Open' => 'background-color: #fee2e2; color: #991b1b;',
-                                    'In Progress' => 'background-color: #fef08a; color: #854d0e;',
-                                    'Resolved' => 'background-color: #dcfce3; color: #166534;',
-                                    'Closed' => 'background-color: #e5e7eb; color: #374151;',
-                                    default => 'background-color: #e5e7eb; color: #374151;',
+                                    'Open' => 'dk-badge-open',
+                                    'In Progress' => 'dk-badge-progress',
+                                    'Resolved' => 'dk-badge-resolved',
+                                    'Closed' => 'dk-badge-closed',
+                                    default => 'dk-badge-closed',
                                 };
                             @endphp
-                            <span style="padding: 2px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: bold; {{ $statusColor }} display: inline-block; margin-top: 2px;">
+                            <span class="dk-badge {{ $statusColor }}" style="margin-top: 2px;">
                                 {{ $ticket->status }}
                             </span>
                         </div>
-                        <div><strong style="color: #4b5563;">Request Type:</strong> <br>{{ $ticket->request_type }}</div>
+                        <div><strong class="dk-text-label">Request Type:</strong> <br>{{ $ticket->request_type }}</div>
+                        <div><strong class="dk-text-label">Request:</strong> <br>{{ $ticket->request ?? '—' }}</div>
                         
-                        <div><strong style="color: #4b5563;">Requested By:</strong> <br>{{ $ticket->requested_by }}</div>
-                        <div><strong style="color: #4b5563;">Position:</strong> <br>{{ $ticket->position ?? 'N/A' }}</div>
-                        <div><strong style="color: #4b5563;">Department:</strong> <br>{{ $ticket->department ?? 'N/A' }}</div>
-                        <div><strong style="color: #4b5563;">Branch:</strong> <br>{{ $ticket->branch ?? 'N/A' }}</div>
+                        <div><strong class="dk-text-label">Requested By:</strong> <br>{{ $ticket->requested_by }}</div>
+                        <div><strong class="dk-text-label">Position:</strong> <br>{{ $ticket->position ?? 'N/A' }}</div>
+                        <div><strong class="dk-text-label">Department:</strong> <br>{{ $ticket->department ?? 'N/A' }}</div>
+                        <div><strong class="dk-text-label">Branch:</strong> <br>{{ $ticket->branch ?? 'N/A' }}</div>
                         
-                        <div><strong style="color: #4b5563;">Affected System:</strong> <br>{{ $ticket->affected_system ?? 'N/A' }}</div>
-                        <div><strong style="color: #4b5563;">Assisted By:</strong> <br>{{ $ticket->assisted_by ?? 'N/A' }}</div>
-                        <div><strong style="color: #4b5563;">Date Created:</strong> <br>{{ $ticket->created_at->format('M d, Y h:i A') }}</div>
+                        <div><strong class="dk-text-label">Affected System:</strong> <br>{{ $ticket->affected_system ?? 'N/A' }}</div>
+                        <div><strong class="dk-text-label">Assisted By:</strong> <br>{{ $ticket->assisted_by ?? 'N/A' }}</div>
+                        <div><strong class="dk-text-label">Date Created:</strong> <br>{{ $ticket->created_at->format('M d, Y h:i A') }}</div>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; font-size: 0.85rem; border: 1px solid #e5e7eb; padding: 12px; border-radius: 6px; background-color: #f9fafb;">
+                    <div class="dk-panel dk-grid-2">
                         <div>
-                            <strong style="color: #4b5563;">Details of the Issue:</strong>
+                            <strong class="dk-text-label">Details of the Issue:</strong>
                             <div style="margin-top: 4px; white-space: pre-wrap; background: #fff; padding: 8px; border: 1px solid #e5e7eb; border-radius: 4px; min-height: 50px;">{{ $ticket->request_details }}</div>
                         </div>
                         <div>
-                            <strong style="color: #4b5563;">Admin Remarks:</strong>
+                            <strong class="dk-text-label">Admin Remarks:</strong>
                             <div style="margin-top: 4px; white-space: pre-wrap; background: #fff; padding: 8px; border: 1px solid #e5e7eb; border-radius: 4px; min-height: 50px;">{{ $ticket->remarks ?? 'N/A' }}</div>
                         </div>
                     </div>
@@ -117,7 +116,7 @@
                                         </div>
                                     @endif
 
-                                    <p style="font-weight: bold; font-size: 0.75rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 2px;" title="{{ $attachment->file_name }}">
+                                    <p style="font-weight: bold; font-size: 0.75rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 2px;" data-tooltip="{{ $attachment->file_name }}">
                                         {{ $attachment->file_name }}
                                     </p>
                                     <p style="font-size: 0.7rem; color: #6b7280; margin-bottom: 6px;">

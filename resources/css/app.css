@@ -1,3 +1,150 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Global "Soft, Alive, Responsive" Styles */
+button:not(.action-btn):not(.pill-add), 
+.t-btn-submit, 
+.t-btn-cancel,
+.dk-btn,
+a[style*="background-color: #f59e0b"] {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.dk-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 8px 15px; border-radius: 6px; font-weight: 600; font-size: 0.9rem;
+    cursor: pointer; border: none; text-decoration: none;
+}
+.dk-btn-primary { background-color: #111827; color: #fff; }
+.dk-btn-secondary { background-color: #6b7280; color: #fff; }
+.dk-btn-warning { background-color: #f59e0b; color: #fff; }
+.dk-btn-outline { background-color: #fff; color: #64748b; border: 1px solid #cbd5e1; }
+
+
+button:not(.action-btn):not(.pill-add):hover:not(:disabled), 
+.t-btn-submit:hover, 
+.t-btn-cancel:hover,
+.dk-btn:hover:not(:disabled),
+a[style*="background-color: #f59e0b"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+    filter: brightness(1.08);
+}
+
+button:not(.action-btn):not(.pill-add):active:not(:disabled), 
+.t-btn-submit:active, 
+.t-btn-cancel:active,
+.dk-btn:active:not(:disabled),
+a[style*="background-color: #f59e0b"]:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+    filter: brightness(0.95);
+}
+
+/* Action Buttons (Tables) */
+.action-btn {
+    position: relative;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 8px;
+}
+.action-btn:hover {
+    transform: scale(1.1);
+    z-index: 9999;
+}
+.action-btn:active {
+    transform: scale(0.9) !important;
+    filter: brightness(0.85);
+}
+.action-btn.view:hover { background-color: #eff6ff; color: #1d4ed8 !important; }
+.action-btn.edit:hover { background-color: #ecfdf5; color: #047857 !important; }
+.action-btn.delete:hover { background-color: #fef2f2; color: #b91c1c !important; }
+.action-btn.restore:hover { background-color: #f3e8ff; color: #7e22ce !important; }
+
+/* CSS Tooltip */
+[data-tooltip] {
+    position: relative;
+}
+[data-tooltip]:hover {
+    z-index: 99999 !important;
+}
+[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) scale(0.95);
+    background: #1f2937;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 999999 !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+[data-tooltip]::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 5px);
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: #1f2937 transparent transparent transparent;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 999999 !important;
+}
+[data-tooltip]:hover::after,
+[data-tooltip]:hover::before {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) scale(1);
+}
+
+/* Action Button Tooltip alignment (prevent right edge clipping) */
+.action-btn[data-tooltip]::after {
+    left: auto;
+    right: 0;
+    transform: translateX(0) scale(0.95);
+}
+.action-btn[data-tooltip]:hover::after {
+    transform: translateX(0) scale(1);
+}
+
+/* Raise sticky table column z-index on hover to prevent header covering tooltip */
+tr:hover td[style*="position: sticky"] {
+    z-index: 50 !important;
+}
+
+input, select, textarea {
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+input:focus, select:focus, textarea:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+    outline: none !important;
+}
+
+/* Global Tables Design (from Dashboard) */
+.dk-table-wrap { overflow-x: auto; background: #fff; border-radius: 8px; border: 1px solid #e5e7eb; height: 100%; display: flex; flex-direction: column; }
+.dk-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.8rem; }
+.dk-table th { background: #f8fafc; padding: 10px; text-align: left; font-size: 0.75rem; color: #64748b; font-weight: 600; border-bottom: 1px solid #e2e8f0; }
+.dk-table td { padding: 8px 10px; border-bottom: 1px solid #f3f4f6; color: #374151; white-space: nowrap; }
+.dk-table tbody tr { transition: background-color 0.15s; cursor: pointer; background-color: #fff; }
+.dk-table tbody tr:hover { background-color: #f8fafc; }
+.dk-badge { display: inline-block; padding: 3px 10px; border-radius: 9999px; font-size: 0.8rem; font-weight: bold; }
+.dk-badge-open { background: #fffbeb; color: #f59e0b; }
+.dk-badge-progress { background: #eff6ff; color: #3b82f6; }
+.dk-badge-resolved { background: #ecfdf5; color: #10b981; }
+.dk-badge-closed { background: #f3f4f6; color: #6b7280; }
+.dk-pagination { padding: 4px 10px; border-top: 1px solid #e5e7eb; background: #fff; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; font-size: 0.7rem;}
+

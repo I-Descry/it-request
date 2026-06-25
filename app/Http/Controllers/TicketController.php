@@ -42,7 +42,7 @@ class TicketController extends Controller
     public function index()
     {
         // Fetch all active tickets (soft-deleted are automatically excluded)
-        $tickets = Ticket::withCount('attachments')->latest()->get();
+        $tickets = Ticket::withCount('attachments')->latest()->paginate(10);
 
         return view('tickets.index', compact('tickets'));
     }
@@ -76,6 +76,7 @@ class TicketController extends Controller
         // 1. Validate the form inputs
         $validated = $request->validate([
             'request_type'    => 'required|string',
+            'request'         => 'required|string',
             'request_details' => 'required|string',
             'affected_system' => 'nullable|string',
             'requested_by'    => 'required|string',
@@ -134,6 +135,7 @@ class TicketController extends Controller
         // 1. Validate the form inputs
         $validated = $request->validate([
             'request_type'    => 'required|string',
+            'request'         => 'required|string',
             'request_details' => 'required|string',
             'affected_system' => 'nullable|string',
             'requested_by'    => 'required|string',
@@ -186,6 +188,7 @@ class TicketController extends Controller
             'original_ticket_id'  => $ticket->id,
             'ticket_no'           => $ticket->ticket_no,
             'request_type'        => $ticket->request_type,
+            'request'             => $ticket->request,
             'request_details'     => $ticket->request_details,
             'affected_system'     => $ticket->affected_system,
             'requested_by'        => $ticket->requested_by,
@@ -225,7 +228,7 @@ class TicketController extends Controller
     {
         $archivedTickets = ArchiveTicket::withCount('attachments')
             ->latest('archived_at')
-            ->get();
+            ->paginate(10);
 
         return view('tickets.archived', compact('archivedTickets'));
     }
@@ -253,6 +256,7 @@ class TicketController extends Controller
             $ticket = Ticket::create([
                 'ticket_no'             => $archiveTicket->ticket_no,
                 'request_type'          => $archiveTicket->request_type,
+                'request'               => $archiveTicket->request,
                 'request_details'       => $archiveTicket->request_details,
                 'affected_system'       => $archiveTicket->affected_system,
                 'requested_by'          => $archiveTicket->requested_by,

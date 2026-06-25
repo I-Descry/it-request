@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white overflow-visible shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     
                     @if (session('success'))
@@ -17,18 +17,14 @@
                     @endif
 
                     <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                        <a href="{{ route('employees.create') }}">
-                            <button style="background-color: #000; color: #fff; padding: 8px 15px; border-radius: 5px; cursor: pointer; border: none;">
-                                + Add Employee
-                            </button>
+                        <a href="{{ route('employees.create') }}" class="dk-btn dk-btn-primary">
+                            + Add Employee
                         </a>
-                        <button type="button" onclick="openHierarchyModal()" style="background-color: #6b7280; color: #fff; padding: 8px 15px; border-radius: 5px; cursor: pointer; border: none;">
+                        <button type="button" onclick="openHierarchyModal()" class="dk-btn dk-btn-secondary">
                             ⚙️ Manage Hierarchy
                         </button>
-                        <a href="{{ route('employees.directory') }}">
-                            <button style="background-color: #10b981; color: #fff; padding: 8px 15px; border-radius: 5px; cursor: pointer; border: none;">
-                                📇 Directory
-                            </button>
+                        <a href="{{ route('employees.directory') }}" class="dk-btn dk-btn-secondary" style="background-color: #4b5563;">
+                            📇 Directory
                         </a>
                     </div>
 
@@ -70,11 +66,11 @@
                             </div>
 
                             <div>
-                                <button type="submit" style="background: #2563eb; color: #fff; padding: 8px 15px; border-radius: 6px; border: none; font-size: 0.9rem; font-weight: 600; cursor: pointer; height: 38px;">Search</button>
+                                <button type="submit" class="dk-btn dk-btn-primary" style="height: 38px;">Search</button>
                             </div>
                             @if(request()->hasAny(['search', 'filter_dept', 'filter_branch']))
                             <div>
-                                <a href="{{ route('employees.index') }}" style="display: inline-flex; align-items: center; justify-content: center; height: 38px; padding: 0 15px; background: #fff; color: #64748b; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; font-weight: 600; text-decoration: none;">Clear</a>
+                                <a href="{{ route('employees.index') }}" class="dk-btn dk-btn-outline" style="height: 38px;">Clear</a>
                             </div>
                             @endif
                         </form>
@@ -94,38 +90,39 @@
                         }
                     </script>
 
-                    <div style="overflow-x: auto; max-width: 100%; border: 1px solid #e5e7eb; border-radius: 8px;">
-                        <table style="width: 100%; text-align: left; border-collapse: collapse; white-space: nowrap;">
+                    <div class="dk-table-wrap">
+                        <table class="dk-table" style="white-space: nowrap;">
                             <thead>
                                 @php
                                     $sortCol = request('sort_by', 'last_name');
                                     $sortDir = request('sort_dir', 'asc');
                                     function sortArrow($col, $sCol, $sDir) {
                                         if ($col !== $sCol) return "<span style='color: #cbd5e1; font-size: 0.8rem; margin-left: 4px;'>↕</span>";
-                                        return $sDir === 'asc' ? "<span style='color: #2563eb; font-size: 0.8rem; margin-left: 4px;'>↑</span>" : "<span style='color: #2563eb; font-size: 0.8rem; margin-left: 4px;'>↓</span>";
+                                        return $sDir === 'asc' ? "<span style='color: #1f2937; font-size: 0.8rem; margin-left: 4px;'>↑</span>" : "<span style='color: #1f2937; font-size: 0.8rem; margin-left: 4px;'>↓</span>";
                                     }
                                 @endphp
-                                <tr style="background-color: #f3f4f6; border-bottom: 2px solid #e5e7eb; user-select: none;">
-                                    <th style="padding: 12px 14px; font-size: 0.85rem; font-weight: 700; cursor: pointer;" onclick="sortBy('nfp_id')">Employee ID {!! sortArrow('nfp_id', $sortCol, $sortDir) !!}</th>
-                                    <th style="padding: 12px 14px; font-size: 0.85rem; font-weight: 700; cursor: pointer;" onclick="sortBy('last_name')">Name {!! sortArrow('last_name', $sortCol, $sortDir) !!}</th>
-                                    <th style="padding: 12px 14px; font-size: 0.85rem; font-weight: 700; cursor: pointer;" onclick="sortBy('position')">Position {!! sortArrow('position', $sortCol, $sortDir) !!}</th>
-                                    <th style="padding: 12px 14px; font-size: 0.85rem; font-weight: 700; cursor: pointer;" onclick="sortBy('department')">Department {!! sortArrow('department', $sortCol, $sortDir) !!}</th>
-                                    <th style="padding: 12px 14px; font-size: 0.85rem; font-weight: 700; cursor: pointer;" onclick="sortBy('branch')">Branch {!! sortArrow('branch', $sortCol, $sortDir) !!}</th>
-                                    <th style="padding: 12px 14px; font-size: 0.85rem; font-weight: 700; text-align: center;">Actions</th>
+                                <tr style="user-select: none;">
+                                    <th style="cursor: pointer;" onclick="sortBy('nfp_id')">Employee ID {!! sortArrow('nfp_id', $sortCol, $sortDir) !!}</th>
+                                    <th style="cursor: pointer;" onclick="sortBy('last_name')">Name {!! sortArrow('last_name', $sortCol, $sortDir) !!}</th>
+                                    <th style="cursor: pointer;" onclick="sortBy('position')">Position {!! sortArrow('position', $sortCol, $sortDir) !!}</th>
+                                    <th style="cursor: pointer;" onclick="sortBy('department')">Department {!! sortArrow('department', $sortCol, $sortDir) !!}</th>
+                                    <th style="cursor: pointer;" onclick="sortBy('branch')">Branch {!! sortArrow('branch', $sortCol, $sortDir) !!}</th>
+                                    <th style="text-align: center;">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($employees as $index => $employee)
-                                    @php $rowBg = $index % 2 === 0 ? '#ffffff' : '#f9fafb'; @endphp
-                                    <tr style="border-bottom: 1px solid #e5e7eb; background-color: {{ $rowBg }};">
-                                        <td style="padding: 10px 14px; font-size: 0.85rem;">{{ $employee->nfp_id }}</td>
-                                        <td style="padding: 10px 14px; font-size: 0.85rem; font-weight: bold;">{{ $employee->full_name }}</td>
-                                        <td style="padding: 10px 14px; font-size: 0.85rem;">{{ $employee->position }}</td>
-                                        <td style="padding: 10px 14px; font-size: 0.85rem;">{{ $employee->department ?? '—' }}</td>
-                                        <td style="padding: 10px 14px; font-size: 0.85rem;">{{ $employee->branch }}</td>
-                                        <td style="padding: 10px 14px; font-size: 0.85rem; text-align: center;">
-                                            <a href="{{ route('employees.edit', $employee->id) }}" style="background-color: #f59e0b; color: #fff; padding: 4px 10px; border-radius: 4px; text-decoration: none; font-size: 0.75rem; font-weight: 600;">
-                                                ✏️ Edit
+                                @forelse ($employees as $employee)
+                                    <tr>
+                                        <td>{{ $employee->nfp_id }}</td>
+                                        <td style="font-weight: bold;">{{ $employee->full_name }}</td>
+                                        <td>{{ $employee->position }}</td>
+                                        <td>{{ $employee->department ?? '—' }}</td>
+                                        <td>{{ $employee->branch }}</td>
+                                        <td style="text-align: center;">
+                                            <a href="{{ route('employees.edit', $employee->id) }}" class="action-btn edit" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; color: #059669;" data-tooltip="Edit Employee">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px;">
+                                                  <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                                </svg>
                                             </a>
                                         </td>
                                     </tr>
@@ -156,7 +153,7 @@
             <p id="deleteConfirmMsg" style="font-size: 0.95rem; color: #64748b; margin-bottom: 20px;"></p>
             <div style="display: flex; gap: 10px; justify-content: center;">
                 <button type="button" onclick="closeDeleteConfirm()" style="background: #e2e8f0; color: #475569; padding: 8px 20px; border-radius: 6px; border: none; font-weight: 600; cursor: pointer;">Cancel</button>
-                <button type="button" onclick="executeDelete()" style="background: #ef4444; color: #fff; padding: 8px 20px; border-radius: 6px; border: none; font-weight: 600; cursor: pointer;">Delete</button>
+                <button type="button" onclick="executeDelete()" style="background: #334155; color: #fff; padding: 8px 20px; border-radius: 6px; border: none; font-weight: 600; cursor: pointer;">Delete</button>
             </div>
         </div>
     </div>
@@ -184,7 +181,7 @@
                     <div style="display: flex; gap: 10px; align-items: center;">
                         <span style="font-size: 0.8rem; color: #94a3b8;" id="drill-hint">Click a pill to drill down</span>
                         <button type="button" onclick="closeHierarchyModal()" style="background: #fff; color: #64748b; padding: 6px 12px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 0.85rem; font-weight: 600; cursor: pointer;">Cancel</button>
-                        <button type="button" onclick="saveHierarchyAjax()" id="saveHierarchyBtn" style="background: #2563eb; color: #fff; padding: 6px 16px; border-radius: 6px; border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2);">Save Changes</button>
+                        <button type="button" onclick="saveHierarchyAjax()" id="saveHierarchyBtn" style="background: #1f2937; color: #fff; padding: 6px 16px; border-radius: 6px; border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; box-shadow: 0 1px 3px rgba(31, 41, 55, 0.2);">Save Changes</button>
                     </div>
                 </div>
 
@@ -223,8 +220,8 @@
         .action-btn:hover { transform: scale(1.15); z-index: 10 !important; }
 
         .view-btn { background: #64748b; }
-        .edit-btn { background: #f59e0b; }
-        .del-btn { background: #ef4444; }
+        .edit-btn { background: #4b5563; }
+        .del-btn { background: #334155; }
 
         .pill-add { 
             width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; 
@@ -316,7 +313,7 @@
                 if (addingNewDept) {
                     html += `<div class="pill-wrapper"><div class="pill" id="new-dept-pill"></div></div>`;
                 }
-                html += `<button type="button" onclick="addDept()" class="pill-add" title="Add Department"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg></button>`;
+                html += `<button type="button" onclick="addDept()" class="pill-add" data-tooltip="Add Department"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg></button>`;
                 html += `</div>`;
             } else {
                 breadcrumb.innerHTML = `<span onclick="goOverview()" style="color:#475569; font-weight:600; cursor:pointer; display:flex; align-items:center;">${homeIcon} Overview <span style="color:#94a3b8; margin: 0 8px;">&gt;</span> ${currentDept}</span>`;
@@ -336,7 +333,7 @@
                 if (addingNewPos) {
                     html += `<div class="pill-wrapper"><div class="pill" id="new-pos-pill"></div></div>`;
                 }
-                html += `<button type="button" onclick="addPos()" class="pill-add" title="Add Position"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg></button>`;
+                html += `<button type="button" onclick="addPos()" class="pill-add" data-tooltip="Add Position"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg></button>`;
                 html += `</div></div>`;
             }
             
@@ -351,12 +348,12 @@
             let safeName = name.replace(/'/g, "\\'");
             let safeId = typeof identifier === 'string' ? identifier.replace(/'/g, "\\'") : identifier;
 
-            let viewBtn = type === 'dept' ? `<button type="button" class="action-btn view-btn" onclick="drillDown('${safeId}')" title="View/Drill Down">${iconView}</button>` : '';
+            let viewBtn = type === 'dept' ? `<button type="button" class="action-btn view" data-tooltip="View / Drill Down" onclick="drillDown('${safeId}')">${iconView}</button>` : '';
             let editFn = (type === 'dept' || type === 'dept-active') ? `editDept(this, '${safeId}')` : `editPos(this, ${identifier})`;
             let delFn = (type === 'dept' || type === 'dept-active') ? `delDept('${safeId}')` : `delPos(${identifier})`;
             
-            let editBtn = `<button type="button" class="action-btn edit-btn" onclick="${editFn}" title="Edit Name">${iconEdit}</button>`;
-            let delBtn = `<button type="button" class="action-btn del-btn" onclick="${delFn}" title="Delete">${iconTrash}</button>`;
+            let editBtn = `<button type="button" class="action-btn edit" data-tooltip="Edit Name" onclick="${editFn}">${iconEdit}</button>`;
+            let delBtn = `<button type="button" class="action-btn delete" data-tooltip="Delete" onclick="${delFn}">${iconTrash}</button>`;
             let onClick = type === 'dept' ? `onclick="drillDown('${safeId}')"` : '';
             
             let pillClass = type === 'dept-active' ? 'pill active' : 'pill';
@@ -393,7 +390,7 @@
             element.contentEditable = "true";
             element.focus();
             element.style.cursor = "text";
-            element.style.outline = "2px solid #3b82f6";
+            element.style.outline = "2px solid #4b5563";
             element.style.backgroundColor = "#ffffff";
             if (element.classList.contains('active')) {
                 element.style.color = "#000";

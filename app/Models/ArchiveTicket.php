@@ -10,6 +10,7 @@ class ArchiveTicket extends Model
         'original_ticket_id',
         'ticket_no',
         'request_type',
+        'request',
         'request_details',
         'affected_system',
         'requested_by',

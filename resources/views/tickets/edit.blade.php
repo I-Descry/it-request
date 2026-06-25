@@ -23,20 +23,69 @@
                         @endif
                     </div>
 
-                    <style>
-                        .t-label { display: block; font-size: 0.8rem; font-weight: 600; color: #374151; margin-bottom: 4px; letter-spacing: 0.01em; }
-                        .t-input { display: block; width: 100%; padding: 7px 10px; font-size: 0.875rem; color: #111827; background: #fff; border: 1px solid #d1d5db; border-radius: 6px; outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
-                        .t-input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12); }
+                    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.default.min.css" rel="stylesheet">
+<style>
+                        .t-label {
+                            display: block;
+                            font-size: 0.8rem;
+                            font-weight: 600;
+                            color: #374151;
+                            margin-bottom: 4px;
+                            letter-spacing: 0.01em;
+                        }
+                        .t-input {
+                            display: block;
+                            width: 100%;
+                            padding: 7px 10px;
+                            font-size: 0.875rem;
+                            color: #111827;
+                            background-color: #fff;
+                            border: 1px solid #d1d5db;
+                            border-radius: 6px;
+                            outline: none;
+                            transition: border-color 0.15s, box-shadow 0.15s;
+                        }
+                        .t-input:focus {
+                            border-color: #2563eb;
+                            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+                        }
                         .t-input::placeholder { color: #9ca3af; }
-                        .t-input-readonly { display: block; width: 100%; padding: 7px 10px; font-size: 0.875rem; color: #6b7280; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; outline: none; cursor: not-allowed; }
+                        .t-input-readonly {
+                            display: block;
+                            width: 100%;
+                            padding: 7px 10px;
+                            font-size: 0.875rem;
+                            color: #6b7280;
+                            background-color: #f9fafb;
+                            border: 1px solid #e5e7eb;
+                            border-radius: 6px;
+                            outline: none;
+                            cursor: not-allowed;
+                        }
                         .t-section { margin-bottom: 14px; }
-                        .t-section-title { font-size: 0.8rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #e5e7eb; }
+                        .t-section-title {
+                            font-size: 0.8rem;
+                            font-weight: 700;
+                            color: #6b7280;
+                            text-transform: uppercase;
+                            letter-spacing: 0.05em;
+                            margin-bottom: 8px;
+                            padding-bottom: 4px;
+                            border-bottom: 1px solid #e5e7eb;
+                        }
                         .t-grid { display: grid; gap: 10px; }
                         .t-grid-4 { grid-template-columns: 2fr 1fr 1fr 1fr; }
                         .t-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
                         .t-grid-2 { grid-template-columns: 1fr 2fr; }
                         .t-error { color: #dc2626; font-size: 0.75rem; margin-top: 2px; display: block; }
-                        .t-drop { border: 2px dashed #d1d5db; border-radius: 6px; padding: 10px 14px; background: #f9fafb; text-align: center; transition: border-color 0.2s, background 0.2s; }
+                        .t-drop {
+                            border: 2px dashed #d1d5db;
+                            border-radius: 6px;
+                            padding: 10px 14px;
+                            background: #f9fafb;
+                            text-align: center;
+                            transition: border-color 0.2s, background 0.2s;
+                        }
                         .t-drop:hover { border-color: #93c5fd; background: #eff6ff; }
                         .t-drop input[type="file"] { cursor: pointer; font-size: 0.8rem; width: 100%; }
                         .t-drop-hint { font-size: 0.7rem; color: #9ca3af; margin-top: 4px; margin-bottom: 0; }
@@ -45,13 +94,21 @@
                         .t-btn-cancel:hover { background: #f3f4f6; }
                         .t-btn-submit { background: #2563eb; color: #fff; padding: 7px 20px; border-radius: 6px; border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: background 0.15s; box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2); }
                         .t-btn-submit:hover { background: #1d4ed8; }
-                        .t-attach-list { margin-bottom: 10px; padding: 8px 10px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; }
-                        .t-attach-item { display: flex; align-items: center; justify-content: space-between; padding: 4px 8px; background: #fff; border: 1px solid #e5e7eb; border-radius: 4px; font-size: 0.8rem; }
-                        .t-attach-item + .t-attach-item { margin-top: 6px; }
-                        .t-attach-link { color: #2563eb; text-decoration: none; font-weight: 500; }
-                        .t-attach-link:hover { text-decoration: underline; }
-                        .t-attach-delete { color: #dc2626; cursor: pointer; font-size: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 4px; }
-                    </style>
+                                            
+                        .ts-wrapper { width: 100% !important; padding: 0 !important; border: none !important; background: none !important; box-shadow: none !important; min-height: 0 !important; outline: none !important; }
+                        .ts-wrapper * { box-sizing: border-box !important; }
+                        .ts-wrapper.single .ts-control { padding: 7px 10px 7px 30px !important; font-size: 0.875rem !important; background-color: #fff !important; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="%239ca3af"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>') !important; background-repeat: no-repeat !important; background-position: left 10px center !important; background-size: 1.5em 1.5em !important; border: 1px solid #d1d5db !important; border-radius: 6px !important; box-shadow: none !important; min-height: 0 !important; height: auto !important; }
+                        .ts-wrapper.single .ts-control::after { display: none !important; }
+                        .ts-wrapper.single .ts-control > input { padding: 0 !important; margin: 0 !important; font-size: 0.875rem !important; line-height: 1.5rem !important; height: 1.5rem !important; min-height: 0 !important; }
+                        .ts-wrapper.single .ts-control > .item { margin: 0 !important; padding: 0 !important; font-size: 0.875rem !important; line-height: 1.5rem !important; color: #111827 !important; }
+                        .ts-wrapper.single.focus .ts-control { border-color: #3b82f6 !important; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important; }
+                        .ts-dropdown { border: 1px solid #d1d5db !important; border-radius: 6px !important; margin-top: 2px !important; box-shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -1px rgba(0,0,0,.06) !important; background: #fff !important; z-index: 99999 !important; }
+                        .ts-dropdown .option { padding: 7px 10px !important; font-size: 0.875rem !important; color: #111827 !important; }
+                        .ts-dropdown .option:hover, .ts-dropdown .option.active { background-color: #f3f4f6 !important; color: #111827 !important; }
+                        .ts-dropdown .option.selected { background-color: #e5e7eb !important; }
+</style>
+
+
 
                     <form action="{{ route('tickets.update', $ticket->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
@@ -119,9 +176,17 @@
                         {{-- Issue Description --}}
                         <div class="t-section">
                             <div class="t-section-title">Issue Description</div>
-                            <div>
-                                <label for="request_details" class="t-label">Details</label>
-                                <textarea name="request_details" id="request_details" rows="2" required class="t-input" placeholder="Describe the issue or request...">{{ old('request_details', $ticket->request_details) }}</textarea>
+                            <div class="t-grid" style="gap: 12px;">
+                                <div>
+                                    <label for="request" class="t-label">Short Summary (Title)</label>
+                                    <input type="text" name="request" id="request" value="{{ old('request', $ticket->request) }}" required class="t-input" placeholder="e.g. Need new mouse, Software installation...">
+                                    @error('request') <span class="t-error">{{ $message }}</span> @enderror
+                                </div>
+                                <div>
+                                    <label for="request_details" class="t-label">Details</label>
+                                    <textarea name="request_details" id="request_details" rows="3" required class="t-input" placeholder="Describe the issue or request...">{{ old('request_details', $ticket->request_details) }}</textarea>
+                                    @error('request_details') <span class="t-error">{{ $message }}</span> @enderror
+                                </div>
                             </div>
                         </div>
 
@@ -206,3 +271,33 @@
         }
     }
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        new TomSelect("#requested_by", {
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            }
+        });
+    });
+    function deleteAttachment(id) {
+        if(confirm('Are you sure you want to delete this attachment?')) {
+            fetch(`/tickets/attachments/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            }).then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    document.getElementById(`attach-${id}`).remove();
+                }
+            });
+        }
+    }
+</script>
+

@@ -5,37 +5,7 @@
 
     <div style="padding: 10px 0;">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
-            <style>
-                .dk-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 12px; }
-                .dk-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-                .dk-grid-70-30 { display: grid; grid-template-columns: 2.2fr 1fr; gap: 12px; margin-bottom: 12px; align-items: stretch; }
-                
-                .dk-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 14px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
-                .dk-card-accent { border-left: 4px solid; }
-                .dk-kpi-label { font-size: 0.7rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; }
-                .dk-kpi-value { font-size: 1.4rem; font-weight: 800; color: #111827; line-height: 1.1; margin: 2px 0; }
-                .dk-kpi-sub { font-size: 0.65rem; font-weight: 500; color: #9ca3af; }
-                .dk-kpi-icon { position: absolute; top: 12px; right: 12px; width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
-                .dk-kpi-icon svg { width: 16px; height: 16px; }
-                
-                .dk-section-title { font-size: 0.75rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
-                .dk-chart-wrap { position: relative; height: 180px; }
-                
-                /* Tickets Table Styles */
-                .dk-table-wrap { overflow-x: auto; background: #fff; border-radius: 8px; border: 1px solid #e5e7eb; height: 100%; display: flex; flex-direction: column; }
-                .dk-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; flex-grow: 1; }
-                .dk-table th { text-align: left; font-weight: 700; color: #6b7280; text-transform: uppercase; padding: 6px 10px; border-bottom: 1px solid #e5e7eb; background: #f9fafb; }
-                .dk-table td { padding: 6px 10px; border-bottom: 1px solid #f3f4f6; color: #374151; }
-                .dk-table tbody tr { transition: background-color 0.15s; cursor: pointer; }
-                .dk-table tbody tr:hover { background-color: #f8fafc; }
-                .dk-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.65rem; font-weight: 600; }
-                .dk-badge-open { background: #fffbeb; color: #f59e0b; }
-                .dk-badge-progress { background: #eff6ff; color: #3b82f6; }
-                .dk-badge-resolved { background: #ecfdf5; color: #10b981; }
-                .dk-badge-closed { background: #f3f4f6; color: #6b7280; }
-                .dk-pagination { padding: 4px 10px; border-top: 1px solid #e5e7eb; background: #fff; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; font-size: 0.7rem;}
-            </style>
+            @vite(['resources/css/dashboard.css', 'resources/js/dashboard.js'])
 
             {{-- Row 1: KPI Overview --}}
             <div class="dk-grid-5">
@@ -86,7 +56,7 @@
             {{-- Row 3: Actionable Data (Table + Volume) --}}
             <div class="dk-grid-70-30">
                 {{-- Tickets Table --}}
-                <div class="dk-table-wrap">
+                <div class="dk-table-wrap" id="recent-tickets-container">
                     <div style="padding: 8px 12px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center;">
                         <h3 class="dk-section-title" style="margin: 0; color: #111827;">Recent Tickets</h3>
                         <a href="{{ route('tickets.create') }}" style="background-color: #2563eb; color: #fff; padding: 4px 12px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; text-decoration: none;">+ New Ticket</a>
@@ -105,13 +75,24 @@
                         <tbody>
                             @forelse ($recentTickets as $ticket)
                                 <tr onclick="window.location='{{ route('tickets.show', $ticket->id) }}'">
-                                    <td style="font-weight: 600; color: #3b82f6;">{{ $ticket->ticket_no }}</td>
+                                    <td style="font-weight: 600; color: #3b82f6; white-space: nowrap;">
+                                        {{ $ticket->ticket_no }}
+                                    </td>
                                     <td>{{ $ticket->request_type }}</td>
                                     <td>
-                                        {{ Str::limit($ticket->requested_by, 20) }}
-                                        @if($ticket->branch && strtoupper($ticket->branch) !== 'HEAD OFFICE')
-                                            <span class="dk-badge" style="background: #e0e7ff; color: #4338ca; margin-left: 4px; font-size: 0.6rem; padding: 2px 6px;">Remote</span>
-                                        @endif
+                                        <div style="display: flex; align-items: center; gap: 6px;">
+                                            {{ Str::limit($ticket->requested_by, 20) }}
+                                            @if ($ticket->branch && strtoupper($ticket->branch) === 'HEAD OFFICE')
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#0ea5e9" style="width: 14px; height: 14px; flex-shrink: 0;" title="Head Office">
+                                                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-2.25a1.5 1.5 0 0 1 1.5-1.5h3a1.5 1.5 0 0 1 1.5 1.5V21" />
+                                                </svg>
+                                            @elseif($ticket->branch)
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#4f46e5" style="width: 14px; height: 14px; flex-shrink: 0;" title="Remote Branch ({{ $ticket->branch }})">
+                                                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                                                </svg>
+                                            @endif
+                                        </div>
                                     </td>
                                     <td>{{ $ticket->assisted_by == 'IT03' ? 'Tristan Railey Tan' : ($ticket->assisted_by == 'IT04' ? 'John Paul Villacorta' : $ticket->assisted_by) }}</td>
                                     <td>
@@ -165,20 +146,24 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <script>
-        const ff = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-        const gc = '#f3f4f6';
-        const base = {
-            responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1f2937', titleFont: { size: 10, family: ff }, bodyFont: { size: 10, family: ff }, padding: 8, cornerRadius: 5 } },
-            scales: { x: { grid: { display: false }, ticks: { font: { size: 9, family: ff }, color: '#9ca3af' } }, y: { grid: { color: gc }, ticks: { font: { size: 9, family: ff }, color: '#9ca3af', precision: 0 }, beginAtZero: true } }
+        @php 
+            $tL=[]; $tR=[]; $tU=[]; 
+            foreach($techPerformance as $c=>$d){ 
+                $tL[]=$assistedByMap[$c]??$c; 
+                $tR[]=$d['resolved']; 
+                $tU[]=$d['unresolved']; 
+            } 
+        @endphp
+        window.dashboardData = {
+            requestTypes: {
+                keys: {!! json_encode(array_keys($byRequestType)) !!},
+                values: {!! json_encode(array_values($byRequestType)) !!}
+            },
+            techPerformance: {
+                labels: {!! json_encode($tL) !!},
+                resolved: {!! json_encode($tR) !!},
+                unresolved: {!! json_encode($tU) !!}
+            }
         };
-
-        // Donut Chart - Request Types (With numbers inside the chart)
-        const dc = ['#3b82f6','#6366f1','#8b5cf6','#ec4899','#f59e0b','#10b981','#ef4444','#14b8a6'];
-        new Chart(document.getElementById('donutChart'), { type: 'doughnut', data: { labels: {!! json_encode(array_keys($byRequestType)) !!}, datasets: [{ data: {!! json_encode(array_values($byRequestType)) !!}, backgroundColor: dc.slice(0, {{ count($byRequestType) }}), borderWidth: 2, borderColor: '#fff', hoverOffset: 4 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '55%', plugins: { legend: { position: 'right', labels: { font: { size: 10, family: ff }, padding: 10, boxWidth: 12 } }, tooltip: { ...base.plugins.tooltip, callbacks: { label: function(c) { const t = c.dataset.data.reduce((a,b)=>a+b,0); return c.label+': '+c.parsed+' tickets ('+(t>0?((c.parsed/t)*100).toFixed(1):'0.0')+'%)'; } } } } } });
-
-        // Technician Performance - Horizontal Bar (With numbers on tooltip)
-        @php $tL=[]; $tR=[]; $tU=[]; foreach($techPerformance as $c=>$d){ $tL[]=$assistedByMap[$c]??$c; $tR[]=$d['resolved']; $tU[]=$d['unresolved']; } @endphp
-        new Chart(document.getElementById('techChart'), { type: 'bar', data: { labels: {!! json_encode($tL) !!}, datasets: [ { label: 'Resolved', data: {!! json_encode($tR) !!}, backgroundColor: '#10b981', borderRadius: 4, barPercentage: 0.6 }, { label: 'Unresolved', data: {!! json_encode($tU) !!}, backgroundColor: '#f59e0b', borderRadius: 4, barPercentage: 0.6 } ] }, options: { ...base, indexAxis: 'y', plugins: { ...base.plugins, legend: { display: true, position: 'top', labels: { font: { size: 10, family: ff }, boxWidth: 12, padding: 8 } }, tooltip: { ...base.plugins.tooltip, callbacks: { label: function(c) { return c.dataset.label + ': ' + c.parsed.x + ' tickets'; } } } }, scales: { x: { ...base.scales.y, grid: { color: gc } }, y: { ...base.scales.x, grid: { display: false } } } } });
     </script>
 </x-app-layout>
