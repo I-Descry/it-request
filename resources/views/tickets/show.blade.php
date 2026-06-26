@@ -1,14 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('View Ticket') }} — {{ $ticket->ticket_no }}
         </h2>
     </x-slot>
 
     <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-visible shadow-sm sm:rounded-lg">
-                <div class="p-4 text-gray-900">
+            <div class="bg-white dark:bg-gray-800 overflow-visible shadow-sm sm:rounded-lg">
+                <div class="p-4 text-gray-900 dark:text-gray-100">
 
                     @if (session('success'))
                         <div style="color: green; margin-bottom: 12px; font-weight: bold; font-size: 0.9rem;">
@@ -66,11 +66,11 @@
                     <div class="dk-panel dk-grid-2">
                         <div>
                             <strong class="dk-text-label">Details of the Issue:</strong>
-                            <div style="margin-top: 4px; white-space: pre-wrap; background: #fff; padding: 8px; border: 1px solid #e5e7eb; border-radius: 4px; min-height: 50px;">{{ $ticket->request_details }}</div>
+                            <div style="margin-top: 4px; white-space: pre-wrap; background: var(--bg-input); padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; min-height: 50px;">{{ $ticket->request_details }}</div>
                         </div>
                         <div>
                             <strong class="dk-text-label">Admin Remarks:</strong>
-                            <div style="margin-top: 4px; white-space: pre-wrap; background: #fff; padding: 8px; border: 1px solid #e5e7eb; border-radius: 4px; min-height: 50px;">{{ $ticket->remarks ?? 'N/A' }}</div>
+                            <div style="margin-top: 4px; white-space: pre-wrap; background: var(--bg-input); padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; min-height: 50px;">{{ $ticket->remarks ?? 'N/A' }}</div>
                         </div>
                     </div>
 
@@ -82,7 +82,7 @@
                     @if ($ticket->attachments->count() > 0)
                         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
                             @foreach ($ticket->attachments as $attachment)
-                                <div style="border: 1px solid #e5e7eb; border-radius: 6px; padding: 8px; background-color: #f9fafb;">
+                                <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; background-color: var(--panel-bg);">
                                     {{-- File Preview --}}
                                     @php
                                         $isImage = str_starts_with($attachment->file_type, 'image/');
@@ -111,7 +111,7 @@
                                             </audio>
                                         </div>
                                     @else
-                                        <div style="margin-bottom: 6px; text-align: center; padding: 10px; background-color: #e5e7eb; border-radius: 4px;">
+                                        <div style="margin-bottom: 6px; text-align: center; padding: 10px; background-color: var(--border-color); border-radius: 4px;">
                                             <span style="font-size: 1.5rem;">📄</span>
                                         </div>
                                     @endif
@@ -119,7 +119,7 @@
                                     <p style="font-weight: bold; font-size: 0.75rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 2px;" data-tooltip="{{ $attachment->file_name }}">
                                         {{ $attachment->file_name }}
                                     </p>
-                                    <p style="font-size: 0.7rem; color: #6b7280; margin-bottom: 6px;">
+                                    <p style="font-size: 0.7rem; color: var(--text-light); margin-bottom: 6px;">
                                         {{ strtoupper(pathinfo($attachment->file_name, PATHINFO_EXTENSION)) }} • {{ $fileSizeMB }} MB
                                     </p>
 
@@ -128,14 +128,14 @@
                                         ⬇️
                                     </a>
                                     <a href="{{ $fileUrl }}" target="_blank"
-                                       style="display: inline-block; background-color: #6b7280; color: #fff; padding: 3px 8px; border-radius: 4px; text-decoration: none; font-size: 0.75rem; margin-left: 2px;">
+                                       style="display: inline-block; background-color: var(--text-light); color: #fff; padding: 3px 8px; border-radius: 4px; text-decoration: none; font-size: 0.75rem; margin-left: 2px;">
                                         🔗
                                     </a>
                                 </div>
                             @endforeach
                         </div>
                     @else
-                        <p style="color: #6b7280; font-style: italic;">No attachments for this ticket.</p>
+                        <p style="color: var(--text-light); font-style: italic;">No attachments for this ticket.</p>
                     @endif
 
                 </div>

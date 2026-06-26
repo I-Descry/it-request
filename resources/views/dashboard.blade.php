@@ -9,31 +9,31 @@
 
             {{-- Row 1: KPI Overview --}}
             <div class="dk-grid-5">
-                <div class="dk-card dk-card-accent" style="border-left-color: #3b82f6;">
+                <div class="dk-card dk-card-accent dk-clickable-card" style="border-left-color: #3b82f6; cursor: pointer;" onclick="window.location='{{ route('tickets.index') }}'">
                     <div class="dk-kpi-icon" style="background: #eff6ff;"><svg fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
                     <div class="dk-kpi-label">Total Active</div>
                     <div class="dk-kpi-value">{{ $totalActive }}</div>
                     <div class="dk-kpi-sub">Total recorded in system</div>
                 </div>
-                <div class="dk-card dk-card-accent" style="border-left-color: #3b82f6;">
+                <div class="dk-card dk-card-accent dk-clickable-card" style="border-left-color: #3b82f6; cursor: pointer;" onclick="window.location='{{ route('tickets.index', ['status' => 'In Progress']) }}'">
                     <div class="dk-kpi-icon" style="background: #eff6ff;"><svg fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
                     <div class="dk-kpi-label">In Progress</div>
                     <div class="dk-kpi-value">{{ $byStatus['In Progress'] ?? 0 }}</div>
                     <div class="dk-kpi-sub">{{ $totalActive > 0 ? number_format((($byStatus['In Progress'] ?? 0) / $totalActive) * 100, 1) : '0.0' }}%</div>
                 </div>
-                <div class="dk-card dk-card-accent" style="border-left-color: #f59e0b;">
-                    <div class="dk-kpi-icon" style="background: #fffbeb;"><svg fill="none" stroke="#f59e0b" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg></div>
+                <div class="dk-card dk-card-accent dk-clickable-card" style="border-left-color: #f59e0b; cursor: pointer;" onclick="window.location='{{ route('tickets.index', ['status' => 'Escalated']) }}'">
+                    <div class="dk-kpi-icon" style="background: var(--bg-card)beb;"><svg fill="none" stroke="#f59e0b" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg></div>
                     <div class="dk-kpi-label">Escalated</div>
                     <div class="dk-kpi-value">{{ $byStatus['Escalated'] ?? 0 }}</div>
                     <div class="dk-kpi-sub">{{ $totalActive > 0 ? number_format((($byStatus['Escalated'] ?? 0) / $totalActive) * 100, 1) : '0.0' }}%</div>
                 </div>
-                <div class="dk-card dk-card-accent" style="border-left-color: #10b981;">
+                <div class="dk-card dk-card-accent dk-clickable-card" style="border-left-color: #10b981; cursor: pointer;" onclick="window.location='{{ route('tickets.index', ['status' => 'Resolved']) }}'">
                     <div class="dk-kpi-icon" style="background: #ecfdf5;"><svg fill="none" stroke="#10b981" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
                     <div class="dk-kpi-label">Resolved</div>
                     <div class="dk-kpi-value">{{ $byStatus['Resolved'] ?? 0 }}</div>
                     <div class="dk-kpi-sub">{{ $totalActive > 0 ? number_format((($byStatus['Resolved'] ?? 0) / $totalActive) * 100, 1) : '0.0' }}%</div>
                 </div>
-                <div class="dk-card dk-card-accent" style="border-left-color: #6b7280;">
+                <div class="dk-card dk-card-accent dk-clickable-card" style="border-left-color: var(--text-light); cursor: pointer;" onclick="window.location='{{ route('tickets.index', ['status' => 'Not Complete']) }}'">
                     <div class="dk-kpi-icon" style="background: #f3f4f6;"><svg fill="none" stroke="#6b7280" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
                     <div class="dk-kpi-label">Not Complete</div>
                     <div class="dk-kpi-value">{{ $byStatus['Not Complete'] ?? 0 }}</div>
@@ -57,9 +57,9 @@
             <div class="dk-grid-70-30">
                 {{-- Tickets Table --}}
                 <div class="dk-table-wrap" id="recent-tickets-container">
-                    <div style="padding: 8px 12px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="padding: 8px 12px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
                         <h3 class="dk-section-title" style="margin: 0; color: #111827;">Recent Tickets</h3>
-                        <a href="{{ route('tickets.create') }}" style="background-color: #2563eb; color: #fff; padding: 4px 12px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; text-decoration: none;">+ New Ticket</a>
+                        <a href="{{ route('tickets.create') }}" style="background-color: #2563eb; color: var(--bg-card); padding: 4px 12px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; text-decoration: none;">+ New Ticket</a>
                     </div>
                     <table class="dk-table">
                         <thead>
@@ -74,7 +74,7 @@
                         </thead>
                         <tbody>
                             @forelse ($recentTickets as $ticket)
-                                <tr onclick="window.location='{{ route('tickets.show', $ticket->id) }}'">
+                                <tr onclick="window.location='{{ route('tickets.show', $ticket->ticket_no) }}'">
                                     <td style="font-weight: 600; color: #3b82f6; white-space: nowrap;">
                                         {{ $ticket->ticket_no }}
                                     </td>
@@ -107,7 +107,7 @@
                                         @endphp
                                         <span class="dk-badge {{ $badgeClass }}">{{ $ticket->status }}</span>
                                     </td>
-                                    <td style="color: #6b7280;">{{ $ticket->created_at->format('M d, Y') }}</td>
+                                    <td style="color: var(--text-light);">{{ $ticket->created_at->format('M d, Y') }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -125,15 +125,15 @@
                 <div class="dk-card" style="justify-content: flex-start;">
                     <div class="dk-section-title">Request Volume</div>
                     <div style="display: flex; flex-direction: column; gap: 8px; flex-grow: 1;">
-                        <div style="background: #f8fafc; padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e8f0; flex: 1;">
+                        <div style="background: var(--th-bg); padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color); flex: 1;">
                             <div class="dk-kpi-label" style="margin: 0;">Today</div>
                             <div class="dk-kpi-value" style="margin: 0; font-size: 1.1rem; color: #3b82f6;">{{ $todayCount }} <span style="font-size: 0.75rem; color: #9ca3af; font-weight: 600;">({{ $totalActive > 0 ? number_format(($todayCount / $totalActive) * 100, 1) : '0.0' }}%)</span></div>
                         </div>
-                        <div style="background: #f8fafc; padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e8f0; flex: 1;">
+                        <div style="background: var(--th-bg); padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color); flex: 1;">
                             <div class="dk-kpi-label" style="margin: 0;">This Week</div>
                             <div class="dk-kpi-value" style="margin: 0; font-size: 1.1rem; color: #6366f1;">{{ $weekCount }} <span style="font-size: 0.75rem; color: #9ca3af; font-weight: 600;">({{ $totalActive > 0 ? number_format(($weekCount / $totalActive) * 100, 1) : '0.0' }}%)</span></div>
                         </div>
-                        <div style="background: #f8fafc; padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e8f0; flex: 1;">
+                        <div style="background: var(--th-bg); padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color); flex: 1;">
                             <div class="dk-kpi-label" style="margin: 0;">This Month</div>
                             <div class="dk-kpi-value" style="margin: 0; font-size: 1.1rem; color: #8b5cf6;">{{ $monthCount }} <span style="font-size: 0.75rem; color: #9ca3af; font-weight: 600;">({{ $totalActive > 0 ? number_format(($monthCount / $totalActive) * 100, 1) : '0.0' }}%)</span></div>
                         </div>

@@ -7,8 +7,8 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-visible shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+            <div class="bg-white dark:bg-gray-800 overflow-visible shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
                     
                     @if (session('success'))
                         <div style="color: green; margin-bottom: 15px; font-weight: bold;">
@@ -23,31 +23,31 @@
                         <button type="button" onclick="openHierarchyModal()" class="dk-btn dk-btn-secondary">
                             ⚙️ Manage Hierarchy
                         </button>
-                        <a href="{{ route('employees.directory') }}" class="dk-btn dk-btn-secondary" style="background-color: #4b5563;">
+                        <a href="{{ route('employees.directory') }}" class="dk-btn dk-btn-secondary" style="background-color: var(--text-secondary);">
                             📇 Directory
                         </a>
                     </div>
 
                     <!-- Search & Filter Form -->
-                    <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
+                    <div style="background: var(--panel-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px;">
                         <form method="GET" action="{{ route('employees.index') }}" id="filterForm" style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
                             <!-- Hidden inputs for sorting -->
                             <input type="hidden" name="sort_by" id="sort_by" value="{{ request('sort_by', 'last_name') }}">
                             <input type="hidden" name="sort_dir" id="sort_dir" value="{{ request('sort_dir', 'asc') }}">
                             
                             <div style="flex: 1; min-width: 250px;">
-                                <label for="search" style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 5px;">Search Employees</label>
+                                <label for="search" style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px;">Search Employees</label>
                                 <div style="position: relative;">
-                                    <div style="position: absolute; top: 9px; left: 10px; color: #94a3b8;">
+                                    <div style="position: absolute; top: 9px; left: 10px; color: var(--text-muted);">
                                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                                     </div>
-                                    <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="ID, Name, Position..." style="width: 100%; padding: 8px 10px 8px 35px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; outline: none;">
+                                    <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="ID, Name, Position..." style="width: 100%; padding: 8px 10px 8px 35px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem; outline: none;">
                                 </div>
                             </div>
                             
                             <div style="width: 180px;">
-                                <label for="filter_dept" style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 5px;">Department Filter</label>
-                                <select name="filter_dept" id="filter_dept" style="width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; outline: none;" onchange="document.getElementById('filterForm').submit();">
+                                <label for="filter_dept" style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px;">Department Filter</label>
+                                <select name="filter_dept" id="filter_dept" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem; outline: none;" onchange="document.getElementById('filterForm').requestSubmit();">
                                     <option value="">All Departments</option>
                                     @foreach(array_keys($hierarchy) as $dept)
                                         <option value="{{ $dept }}" {{ request('filter_dept') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
@@ -56,8 +56,8 @@
                             </div>
 
                             <div style="width: 180px;">
-                                <label for="filter_branch" style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 5px;">Branch Filter</label>
-                                <select name="filter_branch" id="filter_branch" style="width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; outline: none;" onchange="document.getElementById('filterForm').submit();">
+                                <label for="filter_branch" style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px;">Branch Filter</label>
+                                <select name="filter_branch" id="filter_branch" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem; outline: none;" onchange="document.getElementById('filterForm').requestSubmit();">
                                     <option value="">All Branches</option>
                                     @foreach(['HEAD OFFICE', 'NDD BACOLOD', 'NDD BAESA', 'NDD BATAAN', 'NDD BATANGAS', 'NDD CAVITE', 'NDD CDO', 'NDD CEBU', 'NDD DAVAO', 'NDD DIPOLOG', 'NDD DUMAGUETE', 'NDD ILOILO', 'NDD LA UNION', 'NDD LAGUNA', 'NDD LAS PIÑAS', 'NDD NUEVA ECIJA', 'NDD PULILAN', 'NDD ROXAS', 'NDD SAN FRANCISCO', 'NDD TACLOBAN', 'NDD TARLAC', 'NDD TAYTAY'] as $br)
                                         <option value="{{ $br }}" {{ request('filter_branch') == $br ? 'selected' : '' }}>{{ $br }}</option>
@@ -89,8 +89,8 @@
                             document.getElementById('filterForm').submit();
                         }
                     </script>
-
-                    <div class="dk-table-wrap">
+                    <div id="employees-table-container">
+                        <div class="dk-table-wrap">
                         <table class="dk-table" style="white-space: nowrap;">
                             <thead>
                                 @php
@@ -117,8 +117,31 @@
                                         <td style="font-weight: bold;">{{ $employee->full_name }}</td>
                                         <td>{{ $employee->position }}</td>
                                         <td>{{ $employee->department ?? '—' }}</td>
-                                        <td>{{ $employee->branch }}</td>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 6px;">
+                                                @if ($employee->branch && strtoupper($employee->branch) === 'HEAD OFFICE')
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#2563eb" style="width: 14px; height: 14px; flex-shrink: 0;" title="Head Office">
+                                                      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-2.25a1.5 1.5 0 0 1 1.5-1.5h3a1.5 1.5 0 0 1 1.5 1.5V21" />
+                                                    </svg>
+                                                    <span style="color: var(--text-secondary);">{{ $employee->branch }}</span>
+                                                @elseif($employee->branch)
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#4f46e5" style="width: 14px; height: 14px; flex-shrink: 0;" title="Remote Branch">
+                                                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                                                    </svg>
+                                                    <span style="color: var(--text-secondary);">{{ $employee->branch }}</span>
+                                                @else
+                                                    <span style="color: #9ca3af;">N/A</span>
+                                                @endif
+                                            </div>
+                                        </td>
                                         <td style="text-align: center;">
+                                            <a href="{{ route('employees.show', $employee->id) }}" class="action-btn view" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; color: #2563eb;" data-tooltip="View Employee">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px;">
+                                                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                                </svg>
+                                            </a>
                                             <a href="{{ route('employees.edit', $employee->id) }}" class="action-btn edit" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; color: #059669;" data-tooltip="Edit Employee">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px;">
                                                   <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
@@ -128,31 +151,101 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" style="text-align: center; padding: 20px; color: #6b7280;">No employees recorded yet.</td>
+                                        <td colspan="6" style="text-align: center; padding: 20px; color: var(--text-light);">No employees recorded yet.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
                         </table>
-                    </div>
-                    
-                    <div style="margin-top: 15px;">
-                        {{ $employees->links() }}
-                    </div>
+                      </div>
+                      
+                      <div style="margin-top: 15px;">
+                          {{ $employees->links() }}
+                      </div>
+                  </div>
 
-                </div>
+                  <script>
+                      document.addEventListener("DOMContentLoaded", function() {
+                          
+                          // Handle form submission via AJAX
+                          const filterForm = document.getElementById('filterForm');
+                          if (filterForm) {
+                              filterForm.addEventListener('submit', function(e) {
+                                  e.preventDefault();
+                                  const url = this.action + '?' + new URLSearchParams(new FormData(this)).toString();
+                                  const container = document.getElementById("employees-table-container");
+                                  
+                                  const currentScroll = window.scrollY;
+                                  container.style.minHeight = container.offsetHeight + "px";
+                                  container.style.opacity = "0.5";
+                                  container.style.pointerEvents = "none";
+                                  
+                                  fetch(url, { headers: { "X-Requested-With": "XMLHttpRequest" } })
+                                  .then(res => res.text())
+                                  .then(html => {
+                                      const parser = new DOMParser();
+                                      const doc = parser.parseFromString(html, "text/html");
+                                      const newContainer = doc.getElementById("employees-table-container");
+                                      if (newContainer) {
+                                          container.innerHTML = newContainer.innerHTML;
+                                      }
+                                      container.style.opacity = "1";
+                                      container.style.pointerEvents = "auto";
+                                      container.style.minHeight = "";
+                                      
+                                      window.scrollTo(0, currentScroll);
+                                      window.history.pushState({}, "", url);
+                                  });
+                              });
+                          }
+
+                          document.body.addEventListener("click", function(e) {
+                              if (e.target.closest("#employees-table-container .pagination a") || e.target.closest("#employees-table-container nav a")) {
+                                  e.preventDefault();
+                                  const url = e.target.closest("a").href;
+                                  const container = document.getElementById("employees-table-container");
+                                  
+                                  // Lock height and scroll
+                                  const currentScroll = window.scrollY;
+                                  container.style.minHeight = container.offsetHeight + "px";
+                                  
+                                  container.style.opacity = "0.5";
+                                  container.style.pointerEvents = "none";
+                                  
+                                  fetch(url, { headers: { "X-Requested-With": "XMLHttpRequest" } })
+                                  .then(res => res.text())
+                                  .then(html => {
+                                      const parser = new DOMParser();
+                                      const doc = parser.parseFromString(html, "text/html");
+                                      const newContainer = doc.getElementById("employees-table-container");
+                                      if (newContainer) {
+                                          container.innerHTML = newContainer.innerHTML;
+                                      }
+                                      container.style.opacity = "1";
+                                      container.style.pointerEvents = "auto";
+                                      container.style.minHeight = "";
+                                      
+                                      // Restore scroll position
+                                      window.scrollTo(0, currentScroll);
+                                      window.history.pushState({}, "", url);
+                                  });
+                              }
+                          });
+                      });
+                  </script>
+              </div>
             </div>
         </div>
     </div>
     <!-- Delete Confirm Modal -->
     <div id="deleteConfirmModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 60; flex-direction: column; align-items: center; justify-content: center;">
-        <div style="background: #fff; width: 90%; max-width: 400px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); padding: 20px; text-align: center;">
+        <div style="background: var(--bg-card); width: 90%; max-width: 400px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); padding: 20px; text-align: center;">
             <div style="color: #ef4444; margin-bottom: 15px;">
                 <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin: 0 auto;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
             </div>
-            <h3 style="font-size: 1.2rem; font-weight: 700; color: #1e293b; margin-bottom: 10px;">Confirm Deletion</h3>
-            <p id="deleteConfirmMsg" style="font-size: 0.95rem; color: #64748b; margin-bottom: 20px;"></p>
+            <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin-bottom: 10px;">Confirm Deletion</h3>
+            <p id="deleteConfirmMsg" style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px;"></p>
             <div style="display: flex; gap: 10px; justify-content: center;">
-                <button type="button" onclick="closeDeleteConfirm()" style="background: #e2e8f0; color: #475569; padding: 8px 20px; border-radius: 6px; border: none; font-weight: 600; cursor: pointer;">Cancel</button>
+                <button type="button" onclick="closeDeleteConfirm()" style="background: #e2e8f0; color: var(--text-secondary); padding: 8px 20px; border-radius: 6px; border: none; font-weight: 600; cursor: pointer;">Cancel</button>
                 <button type="button" onclick="executeDelete()" style="background: #334155; color: #fff; padding: 8px 20px; border-radius: 6px; border: none; font-weight: 600; cursor: pointer;">Delete</button>
             </div>
         </div>
@@ -164,12 +257,12 @@
         <div style="background: #eef5f9; width: 90%; max-width: 1000px; max-height: 90vh; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden; display: flex; flex-direction: column;">
             
             <!-- Modal Header -->
-            <div style="background: #fff; padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
-                <h2 style="font-weight: 600; font-size: 1.1rem; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+            <div style="background: var(--bg-card); padding: 15px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="font-weight: 600; font-size: 1.1rem; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                     Manage Asset Hierarchy
                 </h2>
-                <button type="button" onclick="closeHierarchyModal()" style="background: transparent; border: none; font-size: 1.5rem; color: #64748b; cursor: pointer; line-height: 1;">&times;</button>
+                <button type="button" onclick="closeHierarchyModal()" style="background: transparent; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer; line-height: 1;">&times;</button>
             </div>
 
             <!-- Modal Body -->
@@ -179,8 +272,8 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 10px;">
                     <div id="breadcrumb" style="font-size: 0.95rem;"></div>
                     <div style="display: flex; gap: 10px; align-items: center;">
-                        <span style="font-size: 0.8rem; color: #94a3b8;" id="drill-hint">Click a pill to drill down</span>
-                        <button type="button" onclick="closeHierarchyModal()" style="background: #fff; color: #64748b; padding: 6px 12px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 0.85rem; font-weight: 600; cursor: pointer;">Cancel</button>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);" id="drill-hint">Click a pill to drill down</span>
+                        <button type="button" onclick="closeHierarchyModal()" style="background: var(--bg-card); color: var(--text-muted); padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.85rem; font-weight: 600; cursor: pointer;">Cancel</button>
                         <button type="button" onclick="saveHierarchyAjax()" id="saveHierarchyBtn" style="background: #1f2937; color: #fff; padding: 6px 16px; border-radius: 6px; border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; box-shadow: 0 1px 3px rgba(31, 41, 55, 0.2);">Save Changes</button>
                     </div>
                 </div>
@@ -193,8 +286,8 @@
     <style>
         .pill-wrapper { position: relative; display: inline-block; margin: 5px; }
         .pill { 
-            background: #fff; padding: 12px 28px; border-radius: 9999px; font-weight: 600; 
-            color: #334155; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; 
+            background: var(--bg-card); padding: 12px 28px; border-radius: 9999px; font-weight: 600; 
+            color: var(--text-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid var(--border-color); 
             cursor: pointer; transition: all 0.2s; white-space: nowrap; font-size: 0.95rem; 
         }
         .pill:hover { border-color: #cbd5e1; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
@@ -209,15 +302,15 @@
         }
         .pill-wrapper:hover .action-bar, .action-bar:hover { opacity: 1; pointer-events: auto; top: -25px; }
 
-        .action-btn { 
+        .pill-action-btn { 
             width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; 
             justify-content: center; color: #fff; border: 2px solid #fff; cursor: pointer; 
             transition: transform 0.15s, z-index 0s; margin-left: -8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative;
         }
-        .action-btn:first-child { margin-left: 0; z-index: 3; }
-        .action-btn:nth-child(2) { z-index: 2; }
-        .action-btn:nth-child(3) { z-index: 1; }
-        .action-btn:hover { transform: scale(1.15); z-index: 10 !important; }
+        .pill-action-btn:first-child { margin-left: 0; z-index: 3; }
+        .pill-action-btn:nth-child(2) { z-index: 2; }
+        .pill-action-btn:nth-child(3) { z-index: 1; }
+        .pill-action-btn:hover { transform: scale(1.15); z-index: 10 !important; }
 
         .view-btn { background: #64748b; }
         .edit-btn { background: #4b5563; }
@@ -226,9 +319,9 @@
         .pill-add { 
             width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; 
             justify-content: center; background: transparent; border: 2px dashed #94a3b8; 
-            color: #94a3b8; cursor: pointer; transition: all 0.2s; margin: 5px;
+            color: var(--text-muted); cursor: pointer; transition: all 0.2s; margin: 5px;
         }
-        .pill-add:hover { border-color: #64748b; color: #64748b; background: rgba(255,255,255,0.5); }
+        .pill-add:hover { border-color: var(--text-muted); color: var(--text-muted); background: rgba(255,255,255,0.5); }
     </style>
 
     <script>
@@ -304,7 +397,7 @@
                 breadcrumb.innerHTML = `<span style="color:#475569; font-weight:600; display:flex; align-items:center;">${homeIcon} Overview</span>`;
                 drillHint.style.display = 'inline';
 
-                html += `<div style="text-align: center; margin-top: 20px; margin-bottom: 25px; font-size: 0.8rem; color: #64748b; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">Departments</div>`;
+                html += `<div style="text-align: center; margin-top: 20px; margin-bottom: 25px; font-size: 0.8rem; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">Departments</div>`;
                 html += `<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center; max-width: 900px; margin: 0 auto;">`;
                 
                 for (const dept in hierarchyData) {
@@ -322,7 +415,7 @@
                 html += `<div style="display: flex; flex-direction: column; align-items: center; margin-top: 10px;">`;
                 html += `<div style="margin-bottom: 0;">` + generatePill(currentDept, 'dept-active', currentDept) + `</div>`;
                 html += `<div style="width: 2px; height: 35px; border-left: 2px dashed #cbd5e1; margin: 0 0 15px 0;"></div>`;
-                html += `<div style="font-size: 0.8rem; color: #64748b; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 25px;">Positions for ${currentDept}</div>`;
+                html += `<div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 25px;">Positions for ${currentDept}</div>`;
                 
                 html += `<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center; max-width: 900px; margin: 0 auto;">`;
                 if(hierarchyData[currentDept]) {
@@ -348,12 +441,12 @@
             let safeName = name.replace(/'/g, "\\'");
             let safeId = typeof identifier === 'string' ? identifier.replace(/'/g, "\\'") : identifier;
 
-            let viewBtn = type === 'dept' ? `<button type="button" class="action-btn view" data-tooltip="View / Drill Down" onclick="drillDown('${safeId}')">${iconView}</button>` : '';
+            let viewBtn = type === 'dept' ? `<button type="button" class="pill-action-btn view-btn" data-tooltip="View / Drill Down" onclick="drillDown('${safeId}')">${iconView}</button>` : '';
             let editFn = (type === 'dept' || type === 'dept-active') ? `editDept(this, '${safeId}')` : `editPos(this, ${identifier})`;
             let delFn = (type === 'dept' || type === 'dept-active') ? `delDept('${safeId}')` : `delPos(${identifier})`;
             
-            let editBtn = `<button type="button" class="action-btn edit" data-tooltip="Edit Name" onclick="${editFn}">${iconEdit}</button>`;
-            let delBtn = `<button type="button" class="action-btn delete" data-tooltip="Delete" onclick="${delFn}">${iconTrash}</button>`;
+            let editBtn = `<button type="button" class="pill-action-btn edit-btn" data-tooltip="Edit Name" onclick="${editFn}">${iconEdit}</button>`;
+            let delBtn = `<button type="button" class="pill-action-btn del-btn" data-tooltip="Delete" onclick="${delFn}">${iconTrash}</button>`;
             let onClick = type === 'dept' ? `onclick="drillDown('${safeId}')"` : '';
             
             let pillClass = type === 'dept-active' ? 'pill active' : 'pill';

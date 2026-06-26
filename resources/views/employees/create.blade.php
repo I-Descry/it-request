@@ -1,37 +1,37 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Add Employee') }}
         </h2>
     </x-slot>
 
     <div class="py-3">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-4 text-gray-900">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-4 text-gray-900 dark:text-gray-100">
 
                     <div style="margin-bottom: 10px;">
-                        <a href="{{ route('employees.index') }}" style="color: #6b7280; text-decoration: none; font-size: 0.85rem; font-weight: 500; display: inline-flex; align-items: center; gap: 4px;">
+                        <a href="{{ route('employees.index') }}" style="color: var(--text-light); text-decoration: none; font-size: 0.85rem; font-weight: 500; display: inline-flex; align-items: center; gap: 4px;">
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
                             Back to Employees
                         </a>
                     </div>
 
                     <style>
-                        .t-label { display: block; font-size: 0.8rem; font-weight: 600; color: #374151; margin-bottom: 4px; letter-spacing: 0.01em; }
-                        .t-input { display: block; width: 100%; padding: 7px 10px; font-size: 0.875rem; color: #111827; background: #fff; border: 1px solid #d1d5db; border-radius: 6px; outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+                        .t-label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; letter-spacing: 0.01em; }
+                        .t-input { display: block; width: 100%; padding: 7px 10px; font-size: 0.875rem; color: var(--text-primary); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
                         .t-input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12); }
-                        .t-input::placeholder { color: #9ca3af; }
+                        .t-input::placeholder { color: var(--text-muted); }
                         .t-section { margin-bottom: 14px; }
-                        .t-section-title { font-size: 0.8rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #e5e7eb; }
+                        .t-section-title { font-size: 0.8rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border-color); }
                         .t-grid { display: grid; gap: 10px; }
                         .t-grid-2 { grid-template-columns: 1fr 1fr; }
                         .t-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
                         .t-error { color: #dc2626; font-size: 0.75rem; margin-top: 2px; display: block; }
-                        .t-footer { display: flex; justify-content: flex-end; align-items: center; gap: 12px; padding-top: 10px; border-top: 1px solid #e5e7eb; }
-                        .t-btn-cancel { text-decoration: none; color: #6b7280; font-size: 0.85rem; font-weight: 500; padding: 7px 16px; border-radius: 6px; border: 1px solid #d1d5db; background: #fff; transition: background 0.15s; }
-                        .t-btn-cancel:hover { background: #f3f4f6; }
-                        .t-btn-submit { background: #2563eb; color: #fff; padding: 7px 20px; border-radius: 6px; border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: background 0.15s; box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2); }
+                        .t-footer { display: flex; justify-content: flex-end; align-items: center; gap: 12px; padding-top: 10px; border-top: 1px solid var(--border-color); }
+                        .t-btn-cancel { text-decoration: none; color: var(--text-light); font-size: 0.85rem; font-weight: 500; padding: 7px 16px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); transition: background 0.15s; }
+                        .t-btn-cancel:hover { background: var(--th-bg); }
+                        .t-btn-submit { background: #2563eb; color: var(--bg-card); padding: 7px 20px; border-radius: 6px; border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: background 0.15s; box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2); }
                         .t-btn-submit:hover { background: #1d4ed8; }
                     </style>
 
@@ -48,7 +48,7 @@
                                     @error('first_name') <span class="t-error">{{ $message }}</span> @enderror
                                 </div>
                                 <div>
-                                    <label for="middle_name" class="t-label">Middle Name <span style="color:#9ca3af; font-weight:400;">(optional)</span></label>
+                                    <label for="middle_name" class="t-label">Middle Name <span style="color: var(--text-muted); font-weight:400;">(optional)</span></label>
                                     <input type="text" name="middle_name" id="middle_name" value="{{ old('middle_name') }}" class="t-input" placeholder="e.g. Santos">
                                     @error('middle_name') <span class="t-error">{{ $message }}</span> @enderror
                                 </div>
@@ -60,7 +60,7 @@
                                     @error('last_name') <span class="t-error">{{ $message }}</span> @enderror
                                 </div>
                                 <div>
-                                    <label for="suffix" class="t-label">Suffix <span style="color:#9ca3af; font-weight:400;">(optional)</span></label>
+                                    <label for="suffix" class="t-label">Suffix <span style="color: var(--text-muted); font-weight:400;">(optional)</span></label>
                                     <input type="text" name="suffix" id="suffix" value="{{ old('suffix') }}" class="t-input" placeholder="e.g. Jr., Sr., III">
                                     @error('suffix') <span class="t-error">{{ $message }}</span> @enderror
                                 </div>
@@ -72,9 +72,9 @@
                             <div class="t-section-title">Employment Details</div>
                             <div class="t-grid t-grid-3" style="margin-bottom: 10px;">
                                 <div>
-                                    <label for="nfp_id" class="t-label">Employee ID <span style="color:#9ca3af; font-weight:400;">(optional)</span></label>
-                                    <div style="display: flex; align-items: stretch; border: 1px solid #d1d5db; border-radius: 6px; overflow: hidden; background: #fff; transition: border-color 0.15s, box-shadow 0.15s;" onfocusin="this.style.borderColor='#2563eb'; this.style.boxShadow='0 0 0 3px rgba(37, 99, 235, 0.12)';" onfocusout="this.style.borderColor='#d1d5db'; this.style.boxShadow='none';">
-                                        <span style="background: #f9fafb; color: #111827; padding: 7px 10px; font-size: 0.875rem; border-right: 1px solid #d1d5db; display: flex; align-items: center;">NFP-</span>
+                                    <label for="nfp_id" class="t-label">Employee ID <span style="color: var(--text-muted); font-weight:400;">(optional)</span></label>
+                                    <div style="display: flex; align-items: stretch; border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; background: var(--bg-card); transition: border-color 0.15s, box-shadow 0.15s;" onfocusin="this.style.borderColor='#2563eb'; this.style.boxShadow='0 0 0 3px rgba(37, 99, 235, 0.12)';" onfocusout="this.style.borderColor='#d1d5db'; this.style.boxShadow='none';">
+                                        <span style="background: var(--panel-bg); color: var(--text-primary); padding: 7px 10px; font-size: 0.875rem; border-right: 1px solid #d1d5db; display: flex; align-items: center;">NFP-</span>
                                         <input type="text" name="nfp_id" id="nfp_id" value="{{ str_replace('NFP-', '', old('nfp_id')) }}" maxlength="4" class="t-input" style="border: none; border-radius: 0; box-shadow: none; outline: none; width: 100%;" placeholder="e.g. 1234">
                                     </div>
                                     @error('nfp_id') <span class="t-error" style="display:block; margin-top:4px;">{{ $message }}</span> @enderror
@@ -109,9 +109,9 @@
                                     @error('branch') <span class="t-error">{{ $message }}</span> @enderror
                                 </div>
                                 <div>
-                                    <label for="contact_no_suffix" class="t-label">Contact No. <span style="color:#9ca3af; font-weight:400;">(optional)</span></label>
-                                    <div style="display: flex; align-items: stretch; border: 1px solid #d1d5db; border-radius: 6px; overflow: hidden; background: #fff; transition: border-color 0.15s, box-shadow 0.15s;" onfocusin="this.style.borderColor='#2563eb'; this.style.boxShadow='0 0 0 3px rgba(37, 99, 235, 0.12)';" onfocusout="this.style.borderColor='#d1d5db'; this.style.boxShadow='none';">
-                                        <span style="background: #f9fafb; color: #111827; padding: 7px 10px; font-size: 0.875rem; border-right: 1px solid #d1d5db; display: flex; align-items: center;">+63</span>
+                                    <label for="contact_no_suffix" class="t-label">Contact No. <span style="color: var(--text-muted); font-weight:400;">(optional)</span></label>
+                                    <div style="display: flex; align-items: stretch; border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; background: var(--bg-card); transition: border-color 0.15s, box-shadow 0.15s;" onfocusin="this.style.borderColor='#2563eb'; this.style.boxShadow='0 0 0 3px rgba(37, 99, 235, 0.12)';" onfocusout="this.style.borderColor='#d1d5db'; this.style.boxShadow='none';">
+                                        <span style="background: var(--panel-bg); color: var(--text-primary); padding: 7px 10px; font-size: 0.875rem; border-right: 1px solid #d1d5db; display: flex; align-items: center;">+63</span>
                                         <input type="text" name="contact_no_suffix" id="contact_no_suffix" value="{{ str_replace('+63', '', old('contact_no')) }}" maxlength="10" class="t-input" style="border: none; border-radius: 0; box-shadow: none; outline: none; width: 100%;" placeholder="e.g. 9123456789" oninput="this.value = this.value.replace(/[^0-9]/g, ''); document.getElementById('contact_no_hidden').value = this.value ? '+63' + this.value : '';">
                                         <input type="hidden" name="contact_no" id="contact_no_hidden" value="{{ old('contact_no') }}">
                                     </div>

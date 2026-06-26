@@ -20,6 +20,7 @@ class TicketController extends Controller
         'Service Request',
         'Access Request',
         'Account Creation',
+        'Account Deactivation',
         'Password Reset',
         'Hardware Issue',
         'Software Issue',
@@ -34,15 +35,17 @@ class TicketController extends Controller
         'Asset Management',
         'Relocation / Deployment',
         'Data Migration',
+        'Backup & Restore',
+        'Security',
     ];
 
     /**
      * Show the dashboard with all active tickets.
      */
-    public function index()
+    public function index(Request $request)
     {
         // Fetch all active tickets (soft-deleted are automatically excluded)
-        $tickets = Ticket::withCount('attachments')->latest()->paginate(10);
+        $query = Ticket::withCount('attachments')->latest(); if ($request->has('status') && $request->status !== '') { $query->where('status', $request->status); } $tickets = $query->paginate(10)->appends($request->query());
 
         return view('tickets.index', compact('tickets'));
     }
@@ -175,7 +178,7 @@ class TicketController extends Controller
                 ->delete();
         }
 
-        return redirect()->route('tickets.show', $ticket->id)->with('success', 'Ticket updated successfully!');
+        return redirect()->route('tickets.show', $ticket->ticket_no)->with('success', 'Ticket updated successfully!');
     }
 
     /**

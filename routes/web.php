@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/employees/hierarchy', [App\Http\Controllers\HierarchyController::class, 'update'])->name('employees.hierarchy.update');
     Route::get('/employees/directory', [App\Http\Controllers\EmployeeController::class, 'directory'])->name('employees.directory');
     Route::get('/employees/create', [App\Http\Controllers\EmployeeController::class, 'create'])->name('employees.create');
+    Route::get('/employees/{employee}', [App\Http\Controllers\EmployeeController::class, 'show'])->name('employees.show');
     Route::post('/employees', [App\Http\Controllers\EmployeeController::class, 'store'])->name('employees.store');
     Route::get('/employees/{employee}/edit', [App\Http\Controllers\EmployeeController::class, 'edit'])->name('employees.edit');
     Route::put('/employees/{employee}', [App\Http\Controllers\EmployeeController::class, 'update'])->name('employees.update');

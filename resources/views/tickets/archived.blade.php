@@ -7,8 +7,8 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-visible shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+            <div class="bg-white dark:bg-gray-800 overflow-visible shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
                     
                     @if (session('success'))
                         <div style="color: green; margin-bottom: 15px; font-weight: bold;">
@@ -19,16 +19,16 @@
                     {{-- Tab Bar --}}
                     <div style="display: flex; gap: 0; margin-bottom: 20px; border-bottom: 2px solid #e5e7eb;">
                         <a href="{{ route('tickets.index') }}"
-                           style="padding: 10px 24px; font-weight: bold; text-decoration: none; border-bottom: 3px solid transparent; color: #6b7280; margin-bottom: -2px;">
+                           style="padding: 10px 24px; font-weight: bold; text-decoration: none; border-bottom: 3px solid transparent; color: var(--text-light); margin-bottom: -2px;">
                             📋 Active Tickets
                         </a>
                         <a href="{{ route('tickets.archived') }}"
-                           style="padding: 10px 24px; font-weight: bold; text-decoration: none; border-bottom: 3px solid #000; color: #000; margin-bottom: -2px;">
+                           style="padding: 10px 24px; font-weight: bold; text-decoration: none; border-bottom: 3px solid var(--text-primary); color: var(--text-primary); margin-bottom: -2px;">
                             🗄️ Archived Tickets
                         </a>
                     </div>
 
-                    <p style="margin-bottom: 15px; color: #6b7280; font-size: 0.9rem;">
+                    <p style="margin-bottom: 15px; color: var(--text-light); font-size: 0.9rem;">
                         These tickets have been archived for backup purposes. They are kept forever and cannot be permanently deleted.
                     </p>
 
@@ -48,7 +48,7 @@
                                     <th>Original Date</th>
                                     <th>Archived At</th>
                                     <th>Archived By</th>
-                                    <th style="position: sticky; right: 0; background-color: #f8fafc; z-index: 2; box-shadow: -4px 0 8px rgba(0,0,0,0.06);">Actions</th>
+                                    <th style="position: sticky; right: 0; background-color: var(--th-bg); z-index: 2; box-shadow: -4px 0 8px rgba(0,0,0,0.06);">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -65,13 +65,13 @@
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#2563eb" style="width: 14px; height: 14px; flex-shrink: 0;" title="Head Office">
                                                   <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-2.25a1.5 1.5 0 0 1 1.5-1.5h3a1.5 1.5 0 0 1 1.5 1.5V21" />
                                                 </svg>
-                                                <span style="color: #4b5563;">{{ $ticket->branch }}</span>
+                                                <span style="color: var(--text-secondary);">{{ $ticket->branch }}</span>
                                             @elseif($ticket->branch)
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#4f46e5" style="width: 14px; height: 14px; flex-shrink: 0;" title="Remote Branch">
                                                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                                   <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                                                 </svg>
-                                                <span style="color: #4b5563;">{{ $ticket->branch }}</span>
+                                                <span style="color: var(--text-secondary);">{{ $ticket->branch }}</span>
                                             @else
                                                 <span style="color: #9ca3af;">N/A</span>
                                             @endif
@@ -86,11 +86,11 @@
                                     <td>
                                             @php
                                                 $statusColor = match($ticket->status) {
-                                                    'Open', 'Escalated' => 'background-color: #fffbeb; color: #f59e0b;',
+                                                    'Open', 'Escalated' => 'background-color: var(--bg-card)beb; color: #f59e0b;',
                                                     'In Progress' => 'background-color: #eff6ff; color: #3b82f6;',
                                                     'Resolved' => 'background-color: #ecfdf5; color: #10b981;',
-                                                    'Closed', 'Not Complete' => 'background-color: #f3f4f6; color: #6b7280;',
-                                                    default => 'background-color: #f3f4f6; color: #6b7280;',
+                                                    'Closed', 'Not Complete' => 'background-color: #f3f4f6; color: var(--text-light);',
+                                                    default => 'background-color: #f3f4f6; color: var(--text-light);',
                                                 };
                                             @endphp
                                         <span class="dk-badge" style="{{ $statusColor }}">
@@ -129,7 +129,7 @@
                         </table>
                     </div>
 
-                    <div style="padding: 1rem 1.5rem; border-top: 1px solid #e5e7eb; background: #fff; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
+                    <div style="padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); background: var(--bg-card); border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
                         {{ $archivedTickets->links() }}
                     </div>
 

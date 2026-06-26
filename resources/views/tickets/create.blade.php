@@ -1,14 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Record a New IT Request') }}
         </h2>
     </x-slot>
 
     <div class="py-3">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-4 text-gray-900">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-4 text-gray-900 dark:text-gray-100">
 
                     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.default.min.css" rel="stylesheet">
 <style>
@@ -16,7 +16,7 @@
                             display: block;
                             font-size: 0.8rem;
                             font-weight: 600;
-                            color: #374151;
+                            color: var(--text-primary);
                             margin-bottom: 4px;
                             letter-spacing: 0.01em;
                         }
@@ -25,9 +25,9 @@
                             width: 100%;
                             padding: 7px 10px;
                             font-size: 0.875rem;
-                            color: #111827;
-                            background-color: #fff;
-                            border: 1px solid #d1d5db;
+                            color: var(--text-primary);
+                            background-color: var(--bg-card);
+                            border: 1px solid var(--border-color);
                             border-radius: 6px;
                             outline: none;
                             transition: border-color 0.15s, box-shadow 0.15s;
@@ -36,15 +36,15 @@
                             border-color: #2563eb;
                             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
                         }
-                        .t-input::placeholder { color: #9ca3af; }
+                        .t-input::placeholder { color: var(--text-muted); }
                         .t-input-readonly {
                             display: block;
                             width: 100%;
                             padding: 7px 10px;
                             font-size: 0.875rem;
-                            color: #6b7280;
-                            background-color: #f9fafb;
-                            border: 1px solid #e5e7eb;
+                            color: var(--text-light);
+                            background-color: var(--panel-bg);
+                            border: 1px solid var(--border-color);
                             border-radius: 6px;
                             outline: none;
                             cursor: not-allowed;
@@ -53,12 +53,12 @@
                         .t-section-title {
                             font-size: 0.8rem;
                             font-weight: 700;
-                            color: #6b7280;
+                            color: var(--text-light);
                             text-transform: uppercase;
                             letter-spacing: 0.05em;
                             margin-bottom: 8px;
                             padding-bottom: 4px;
-                            border-bottom: 1px solid #e5e7eb;
+                            border-bottom: 1px solid var(--border-color);
                         }
                         .t-grid { display: grid; gap: 10px; }
                         .t-grid-4 { grid-template-columns: 2fr 1fr 1fr 1fr; }
@@ -69,29 +69,29 @@
                             border: 2px dashed #d1d5db;
                             border-radius: 6px;
                             padding: 10px 14px;
-                            background: #f9fafb;
+                            background: var(--panel-bg);
                             text-align: center;
                             transition: border-color 0.2s, background 0.2s;
                         }
                         .t-drop:hover { border-color: #93c5fd; background: #eff6ff; }
                         .t-drop input[type="file"] { cursor: pointer; font-size: 0.8rem; width: 100%; }
-                        .t-drop-hint { font-size: 0.7rem; color: #9ca3af; margin-top: 4px; margin-bottom: 0; }
-                        .t-footer { display: flex; justify-content: flex-end; align-items: center; gap: 12px; padding-top: 10px; border-top: 1px solid #e5e7eb; }
-                        .t-btn-cancel { text-decoration: none; color: #6b7280; font-size: 0.85rem; font-weight: 500; padding: 7px 16px; border-radius: 6px; border: 1px solid #d1d5db; background: #fff; transition: background 0.15s; }
-                        .t-btn-cancel:hover { background: #f3f4f6; }
-                        .t-btn-submit { background: #2563eb; color: #fff; padding: 7px 20px; border-radius: 6px; border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: background 0.15s; box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2); }
+                        .t-drop-hint { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; margin-bottom: 0; }
+                        .t-footer { display: flex; justify-content: flex-end; align-items: center; gap: 12px; padding-top: 10px; border-top: 1px solid var(--border-color); }
+                        .t-btn-cancel { text-decoration: none; color: var(--text-light); font-size: 0.85rem; font-weight: 500; padding: 7px 16px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); transition: background 0.15s; }
+                        .t-btn-cancel:hover { background: var(--th-bg); }
+                        .t-btn-submit { background: #2563eb; color: var(--bg-card); padding: 7px 20px; border-radius: 6px; border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: background 0.15s; box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2); }
                         .t-btn-submit:hover { background: #1d4ed8; }
                                             
                         .ts-wrapper { width: 100% !important; padding: 0 !important; border: none !important; background: none !important; box-shadow: none !important; min-height: 0 !important; outline: none !important; }
                         .ts-wrapper * { box-sizing: border-box !important; }
-                        .ts-wrapper.single .ts-control { padding: 7px 10px 7px 30px !important; font-size: 0.875rem !important; background-color: #fff !important; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="%239ca3af"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>') !important; background-repeat: no-repeat !important; background-position: left 10px center !important; background-size: 1.5em 1.5em !important; border: 1px solid #d1d5db !important; border-radius: 6px !important; box-shadow: none !important; min-height: 0 !important; height: auto !important; }
+                        .ts-wrapper.single .ts-control { padding: 7px 10px 7px 30px !important; font-size: 0.875rem !important; background-color: var(--bg-card) !important; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="%239ca3af"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>') !important; background-repeat: no-repeat !important; background-position: left 10px center !important; background-size: 1.5em 1.5em !important; border: 1px solid var(--border-color) !important; border-radius: 6px !important; box-shadow: none !important; min-height: 0 !important; height: auto !important; }
                         .ts-wrapper.single .ts-control::after { display: none !important; }
                         .ts-wrapper.single .ts-control > input { padding: 0 !important; margin: 0 !important; font-size: 0.875rem !important; line-height: 1.5rem !important; height: 1.5rem !important; min-height: 0 !important; }
-                        .ts-wrapper.single .ts-control > .item { margin: 0 !important; padding: 0 !important; font-size: 0.875rem !important; line-height: 1.5rem !important; color: #111827 !important; }
+                        .ts-wrapper.single .ts-control > .item { margin: 0 !important; padding: 0 !important; font-size: 0.875rem !important; line-height: 1.5rem !important; color: var(--text-primary) !important; }
                         .ts-wrapper.single.focus .ts-control { border-color: #3b82f6 !important; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important; }
-                        .ts-dropdown { border: 1px solid #d1d5db !important; border-radius: 6px !important; margin-top: 2px !important; box-shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -1px rgba(0,0,0,.06) !important; background: #fff !important; z-index: 99999 !important; }
-                        .ts-dropdown .option { padding: 7px 10px !important; font-size: 0.875rem !important; color: #111827 !important; }
-                        .ts-dropdown .option:hover, .ts-dropdown .option.active { background-color: #f3f4f6 !important; color: #111827 !important; }
+                        .ts-dropdown { border: 1px solid var(--border-color) !important; border-radius: 6px !important; margin-top: 2px !important; box-shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -1px rgba(0,0,0,.06) !important; background: var(--bg-card) !important; z-index: 99999 !important; }
+                        .ts-dropdown .option { padding: 7px 10px !important; font-size: 0.875rem !important; color: var(--text-primary) !important; }
+                        .ts-dropdown .option:hover, .ts-dropdown .option.active { background-color: var(--th-bg) !important; color: var(--text-primary) !important; }
                         .ts-dropdown .option.selected { background-color: #e5e7eb !important; }
 </style>
 
@@ -145,7 +145,7 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <label for="affected_system" class="t-label">Affected System <span style="color:#9ca3af; font-weight:400;">(optional)</span></label>
+                                    <label for="affected_system" class="t-label">Affected System <span style="color: var(--text-muted); font-weight:400;">(optional)</span></label>
                                     <input type="text" name="affected_system" id="affected_system" value="{{ old('affected_system') }}" class="t-input" placeholder="e.g. Payroll, Email">
                                 </div>
                                 <div>
@@ -190,7 +190,7 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <label for="remarks" class="t-label">Remarks / Resolution Details <span style="color:#9ca3af; font-weight:400;">(optional)</span></label>
+                                    <label for="remarks" class="t-label">Remarks / Resolution Details <span style="color: var(--text-muted); font-weight:400;">(optional)</span></label>
                                     <input type="text" name="remarks" id="remarks" value="{{ old('remarks') }}" class="t-input" placeholder="Brief resolution notes...">
                                 </div>
                             </div>
@@ -200,7 +200,7 @@
                         <div class="t-section">
                             <div class="t-section-title">Attachments</div>
                             <div>
-                                <label for="attachments" class="t-label">Upload Files <span style="color:#9ca3af; font-weight:400;">(optional)</span></label>
+                                <label for="attachments" class="t-label">Upload Files <span style="color: var(--text-muted); font-weight:400;">(optional)</span></label>
                                 <div class="t-drop">
                                     <input type="file" name="attachments[]" id="attachments" multiple accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx,.mp4,.avi,.mov,.wmv,.webm,.mkv,.mp3,.wav,.ogg,.aac,.wma,.flac">
                                     <p class="t-drop-hint">Images, PDFs, Docs, Audio, Video — Max 25MB per file</p>

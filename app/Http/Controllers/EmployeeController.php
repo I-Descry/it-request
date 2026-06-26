@@ -8,6 +8,14 @@ use Illuminate\Http\Request;
 class EmployeeController extends Controller
 {
     /**
+     * Display the specified resource.
+     */
+    public function show(Employee $employee)
+    {
+        return view('employees.show', compact('employee'));
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
