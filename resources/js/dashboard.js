@@ -55,7 +55,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 labels: data.techPerformance.labels, 
                 datasets: [ 
                     { label: 'Resolved', data: data.techPerformance.resolved, backgroundColor: '#10b981', borderRadius: 4, barPercentage: 0.6 }, 
-                    { label: 'Unresolved', data: data.techPerformance.unresolved, backgroundColor: '#f59e0b', borderRadius: 4, barPercentage: 0.6 } 
+                    { label: 'In Progress', data: data.techPerformance.in_progress, backgroundColor: '#3b82f6', borderRadius: 4, barPercentage: 0.6 }, 
+                    { label: 'Escalated', data: data.techPerformance.escalated, backgroundColor: '#f59e0b', borderRadius: 4, barPercentage: 0.6 } 
                 ] 
             }, 
             options: { 

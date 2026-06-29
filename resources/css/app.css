@@ -273,13 +273,15 @@ input:focus, select:focus, textarea:focus {
 }
 
 /* Global Tables Design */
-.dk-table-wrap { overflow-x: auto; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-color); height: 100%; display: flex; flex-direction: column; }
+.dk-table-wrap { overflow-x: auto; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-color); height: 100%; display: flex; flex-direction: column; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.dk-table-wrap:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); border-color: var(--border-color-focus); }
 .dk-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.8rem; }
 .dk-table th { background: var(--th-bg); padding: 10px; text-align: left; font-size: 0.75rem; color: var(--th-text); font-weight: 600; border-bottom: 1px solid var(--th-border); }
 .dk-table td { padding: 8px 10px; border-bottom: 1px solid var(--td-border); color: var(--text-primary); white-space: nowrap; }
 .dk-table tbody tr { transition: background-color 0.15s; cursor: pointer; background-color: var(--bg-card); }
 .dk-table tbody tr:hover { background-color: var(--bg-hover); }
-.dk-badge { display: inline-block; padding: 3px 10px; border-radius: 9999px; font-size: 0.8rem; font-weight: bold; }
+.dk-badge { display: inline-block; padding: 3px 10px; border-radius: 9999px; font-size: 0.8rem; font-weight: bold; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.dk-badge:hover { transform: translateY(-1px) scale(1.05); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
 .dk-badge-open { background: var(--badge-open-bg); color: var(--badge-open-text); }
 .dk-badge-progress { background: var(--badge-prog-bg); color: var(--badge-prog-text); }
 .dk-badge-resolved { background: var(--badge-res-bg); color: var(--badge-res-text); }
@@ -293,13 +295,29 @@ input:focus, select:focus, textarea:focus {
     border-radius: 6px;
     padding: 12px;
     margin-bottom: 20px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.dk-panel:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-color: var(--border-color-focus);
 }
 .dk-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 .dk-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .dk-text-label { color: var(--text-secondary); font-size: 0.85rem; }
 
 /* Dashboard overrides if any */
-.dk-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 14px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
+.dk-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 14px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.dk-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); border-color: var(--border-color-focus); }
 .dk-kpi-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
 .dk-kpi-value { font-size: 1.4rem; font-weight: 800; color: var(--text-primary); line-height: 1.1; margin: 2px 0; }
 .dk-kpi-sub { font-size: 0.65rem; font-weight: 500; color: var(--text-light); }
+
+/* Remove Laravel/Tailwind Pagination Focus Outline */
+.dk-pagination nav a:focus,
+.dk-pagination nav span:focus,
+.dk-pagination nav button:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    --tw-ring-shadow: 0 0 transparent !important;
+}

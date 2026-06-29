@@ -100,9 +100,11 @@
                                     <td>{{ $ticket->request_type }}</td>
                                     <td>
                                         <div style="display: flex; align-items: center; gap: 6px;">
-                                            {{ Str::limit($ticket->requested_by, 20) }}
+                                            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px;">
+                                                {{ $ticket->requested_by }}
+                                            </div>
                                             @if ($ticket->branch && strtoupper($ticket->branch) === 'HEAD OFFICE')
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#0ea5e9" style="width: 14px; height: 14px; flex-shrink: 0;" title="Head Office">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#2563eb" style="width: 14px; height: 14px; flex-shrink: 0;" title="Head Office">
                                                   <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-2.25a1.5 1.5 0 0 1 1.5-1.5h3a1.5 1.5 0 0 1 1.5 1.5V21" />
                                                 </svg>
                                             @elseif($ticket->branch)
@@ -168,7 +170,11 @@
                                   <tbody>
                                       @foreach($topRequestors as $req)
                                       <tr style="border-bottom: 1px solid var(--border-color);">
-                                          <td style="padding: 10px 0; font-weight: 600; color: var(--text-primary);">{{ Str::limit($req->requested_by, 16) }}</td>
+                                          <td style="padding: 10px 0; font-weight: 600; color: var(--text-primary);">
+                                              <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">
+                                                  {{ $req->requested_by }}
+                                              </div>
+                                          </td>
                                           <td style="padding: 10px 0; text-align: center; color: #3b82f6; font-weight: 700;">{{ $req->total }}</td>
                                       </tr>
                                       @endforeach
@@ -188,11 +194,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <script>
         @php 
-            $tL=[]; $tR=[]; $tU=[]; 
+            $tL=[]; $tR=[]; $tI=[]; $tE=[]; 
             foreach($techPerformance as $c=>$d){ 
                 $tL[]=$assistedByMap[$c]??$c; 
                 $tR[]=$d['resolved']; 
-                $tU[]=$d['unresolved']; 
+                $tI[]=$d['in_progress']; 
+                $tE[]=$d['escalated']; 
             } 
         @endphp
         window.dashboardData = {
@@ -203,7 +210,8 @@
             techPerformance: {
                 labels: {!! json_encode($tL) !!},
                 resolved: {!! json_encode($tR) !!},
-                unresolved: {!! json_encode($tU) !!}
+                in_progress: {!! json_encode($tI) !!},
+                escalated: {!! json_encode($tE) !!}
             }
         };
     </script>

@@ -28,7 +28,7 @@
                         <a href="{{ route('tickets.index') }}" class="dk-btn dk-btn-secondary">
                             ← Back to Tickets
                         </a>
-                        <a href="{{ route('tickets.edit', $ticket->id) }}" class="dk-btn dk-btn-warning">
+                        <a href="{{ route('tickets.edit', $ticket->ticket_no) }}" class="dk-btn dk-btn-warning">
                             ✏️ Edit Ticket
                         </a>
                     </div>
@@ -59,7 +59,27 @@
                         </div>
                         <div><strong class="dk-text-label">Position:</strong> <br>{{ $ticket->position ?? 'N/A' }}</div>
                         <div><strong class="dk-text-label">Department:</strong> <br>{{ $ticket->department ?? 'N/A' }}</div>
-                        <div><strong class="dk-text-label">Branch:</strong> <br>{{ $ticket->branch ?? 'N/A' }}</div>
+                        <div>
+                            <strong class="dk-text-label">Branch:</strong> <br>
+                            @if ($ticket->branch && strtoupper($ticket->branch) === 'HEAD OFFICE')
+                                <div style="display: flex; align-items: center; gap: 4px; margin-top: 2px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#2563eb" style="width: 14px; height: 14px; flex-shrink: 0;" title="Head Office">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-2.25a1.5 1.5 0 0 1 1.5-1.5h3a1.5 1.5 0 0 1 1.5 1.5V21" />
+                                    </svg>
+                                    {{ $ticket->branch }}
+                                </div>
+                            @elseif($ticket->branch)
+                                <div style="display: flex; align-items: center; gap: 4px; margin-top: 2px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#4f46e5" style="width: 14px; height: 14px; flex-shrink: 0;" title="Remote Branch">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                                    </svg>
+                                    {{ $ticket->branch }}
+                                </div>
+                            @else
+                                N/A
+                            @endif
+                        </div>
                         
                         <div><strong class="dk-text-label">Affected System:</strong> <br>{{ $ticket->affected_system ?? 'N/A' }}</div>
                         <div><strong class="dk-text-label">Assisted By:</strong> <br>{{ $ticket->assisted_by ?? 'N/A' }}</div>

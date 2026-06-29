@@ -125,15 +125,16 @@ class DashboardController extends Controller
             'Both' => 'Both',
         ];
 
-        // Technician performance: resolved vs unresolved
+        // Technician performance: resolved vs in progress vs escalated
         $techPerformance = $baseQuery()->selectRaw("assisted_by, status, count(*) as count")
             ->groupBy('assisted_by', 'status')
             ->get()
             ->groupBy('assisted_by')
             ->map(function ($rows) {
                 $resolved = $rows->where('status', 'Resolved')->sum('count');
-                $unresolved = $rows->whereIn('status', ['In Progress', 'Escalated', 'Not Complete'])->sum('count');
-                return ['resolved' => $resolved, 'unresolved' => $unresolved, 'total' => $resolved + $unresolved];
+                $inProgress = $rows->where('status', 'In Progress')->sum('count');
+                $escalated = $rows->whereIn('status', ['Escalated', 'Not Complete', 'Open'])->sum('count');
+                return ['resolved' => $resolved, 'in_progress' => $inProgress, 'escalated' => $escalated, 'total' => $resolved + $inProgress + $escalated];
             })
             ->toArray();
 

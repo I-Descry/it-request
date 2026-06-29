@@ -57,13 +57,16 @@ class EmployeeController extends Controller
 
     public function directory()
     {
+        // Fetch hierarchy for proper position sorting
+        $hierarchy = \App\Http\Controllers\HierarchyController::getHierarchy();
+        
         // Group by department, then position is handled in the view
         $employeesByDept = Employee::orderBy('department')
-                                   ->orderBy('position')
                                    ->orderBy('last_name')
                                    ->get()
                                    ->groupBy('department');
-        return view('employees.directory', compact('employeesByDept'));
+                                   
+        return view('employees.directory', compact('employeesByDept', 'hierarchy'));
     }
 
     /**

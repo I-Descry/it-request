@@ -18,8 +18,9 @@
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
                             Back to Employees
                         </a>
-                        <a href="{{ route('employees.edit', $employee->id) }}" class="dk-btn dk-btn-warning">
-                            âœï¸ Edit Employee
+                        <a href="{{ route('employees.edit', $employee->id) }}" class="dk-btn dk-btn-warning" style="display: flex; align-items: center; gap: 6px;">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                            Edit Employee
                         </a>
                     </div>
 

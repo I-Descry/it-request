@@ -18,13 +18,16 @@
 
                     <div style="display: flex; gap: 10px; margin-bottom: 20px;">
                         <a href="{{ route('employees.create') }}" class="dk-btn dk-btn-primary">
-                            + Add Employee
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right: 6px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                            Add Employee
                         </a>
-                        <button type="button" onclick="openHierarchyModal()" class="dk-btn dk-btn-secondary">
-                            ⚙️ Manage Hierarchy
+                        <button type="button" onclick="openHierarchyModal()" class="dk-btn dk-btn-outline">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right: 6px;"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                            Manage Hierarchy
                         </button>
-                        <a href="{{ route('employees.directory') }}" class="dk-btn dk-btn-secondary" style="background-color: var(--text-secondary);">
-                            📇 Directory
+                        <a href="{{ route('employees.directory') }}" class="dk-btn dk-btn-secondary">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right: 6px;"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/></svg>
+                            Directory
                         </a>
                     </div>
 
@@ -254,7 +257,7 @@
     <!-- Hierarchy Modal Backdrop -->
     <div id="hierarchyModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; flex-direction: column; align-items: center; justify-content: center;">
         <!-- Modal Content -->
-        <div style="background: #eef5f9; width: 90%; max-width: 1000px; max-height: 90vh; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden; display: flex; flex-direction: column;">
+        <div style="background: var(--panel-bg); width: 90%; max-width: 1000px; max-height: 90vh; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden; display: flex; flex-direction: column;">
             
             <!-- Modal Header -->
             <div style="background: var(--bg-card); padding: 15px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
@@ -273,8 +276,8 @@
                     <div id="breadcrumb" style="font-size: 0.95rem;"></div>
                     <div style="display: flex; gap: 10px; align-items: center;">
                         <span style="font-size: 0.8rem; color: var(--text-muted);" id="drill-hint">Click a pill to drill down</span>
-                        <button type="button" onclick="closeHierarchyModal()" style="background: var(--bg-card); color: var(--text-muted); padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.85rem; font-weight: 600; cursor: pointer;">Cancel</button>
-                        <button type="button" onclick="saveHierarchyAjax()" id="saveHierarchyBtn" style="background: #1f2937; color: #fff; padding: 6px 16px; border-radius: 6px; border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; box-shadow: 0 1px 3px rgba(31, 41, 55, 0.2);">Save Changes</button>
+                        <button type="button" onclick="closeHierarchyModal()" class="dk-btn dk-btn-outline">Cancel</button>
+                        <button type="button" onclick="saveHierarchyAjax()" id="saveHierarchyBtn" class="dk-btn dk-btn-primary">Save Changes</button>
                     </div>
                 </div>
 
@@ -287,12 +290,26 @@
         .pill-wrapper { position: relative; display: inline-block; margin: 5px; }
         .pill { 
             background: var(--bg-card); padding: 12px 28px; border-radius: 9999px; font-weight: 600; 
-            color: var(--text-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid var(--border-color); 
-            cursor: pointer; transition: all 0.2s; white-space: nowrap; font-size: 0.95rem; 
+            color: var(--text-primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid var(--border-color); 
+            cursor: pointer; white-space: nowrap; font-size: 0.95rem; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .pill:hover { border-color: #cbd5e1; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .pill.active { background: #374151; color: #fff; border-color: #1f2937; cursor: default; }
-        .pill.active:hover { box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .pill:hover { 
+            border-color: #3b82f6; 
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2), 0 4px 6px -4px rgba(59, 130, 246, 0.1);
+        }
+        .pill.active { 
+            background: var(--bg-card); 
+            color: var(--text-primary); 
+            border-color: #3b82f6; 
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); 
+            cursor: default; 
+        }
+        .pill.active:hover { 
+            transform: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
 
         .action-bar { 
             position: absolute; top: -20px; left: 50%; transform: translateX(-50%); display: flex; 
@@ -304,13 +321,18 @@
 
         .pill-action-btn { 
             width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; 
-            justify-content: center; color: #fff; border: 2px solid #fff; cursor: pointer; 
-            transition: transform 0.15s, z-index 0s; margin-left: -8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative;
+            justify-content: center; color: #fff; border: 2px solid var(--bg-card); cursor: pointer; 
+            margin-left: -8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .pill-action-btn:first-child { margin-left: 0; z-index: 3; }
         .pill-action-btn:nth-child(2) { z-index: 2; }
         .pill-action-btn:nth-child(3) { z-index: 1; }
-        .pill-action-btn:hover { transform: scale(1.15); z-index: 10 !important; }
+        .pill-action-btn:hover { 
+            z-index: 10 !important; 
+            transform: scale(1.15) translateY(-2px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.15);
+        }
 
         .view-btn { background: #64748b; }
         .edit-btn { background: #4b5563; }
@@ -319,9 +341,14 @@
         .pill-add { 
             width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; 
             justify-content: center; background: transparent; border: 2px dashed #94a3b8; 
-            color: var(--text-muted); cursor: pointer; transition: all 0.2s; margin: 5px;
+            color: var(--text-muted); cursor: pointer; margin: 5px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .pill-add:hover { border-color: var(--text-muted); color: var(--text-muted); background: rgba(255,255,255,0.5); }
+        .pill-add:hover { 
+            border-color: #3b82f6; color: #3b82f6; background: rgba(59, 130, 246, 0.1); 
+            transform: scale(1.1) translateY(-2px);
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);
+        }
     </style>
 
     <script>
@@ -483,11 +510,9 @@
             element.contentEditable = "true";
             element.focus();
             element.style.cursor = "text";
-            element.style.outline = "2px solid #4b5563";
-            element.style.backgroundColor = "#ffffff";
-            if (element.classList.contains('active')) {
-                element.style.color = "#000";
-            }
+            element.style.outline = "2px dashed var(--border-color-focus)";
+            element.style.backgroundColor = "var(--bg-body)";
+            element.style.color = "var(--text-primary)";
             
             let range = document.createRange();
             range.selectNodeContents(element);
