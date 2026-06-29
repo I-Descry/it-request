@@ -39,10 +39,10 @@
                         <div><strong class="dk-text-label">Status:</strong> <br>
                             @php
                                 $statusColor = match($ticket->status) {
-                                    'Open' => 'dk-badge-open',
+                                    'Open', 'Escalated' => 'dk-badge-open',
                                     'In Progress' => 'dk-badge-progress',
                                     'Resolved' => 'dk-badge-resolved',
-                                    'Closed' => 'dk-badge-closed',
+                                    'Closed', 'Not Complete' => 'dk-badge-closed',
                                     default => 'dk-badge-closed',
                                 };
                             @endphp
@@ -53,7 +53,10 @@
                         <div><strong class="dk-text-label">Request Type:</strong> <br>{{ $ticket->request_type }}</div>
                         <div><strong class="dk-text-label">Request:</strong> <br>{{ $ticket->request ?? '—' }}</div>
                         
-                        <div><strong class="dk-text-label">Requested By:</strong> <br>{{ $ticket->requested_by }}</div>
+                        <div>
+                            <strong class="dk-text-label">Requested By:</strong> <br>
+                            <span style="font-size: 1.05rem; font-weight: 500;">{{ $ticket->requested_by }}</span>
+                        </div>
                         <div><strong class="dk-text-label">Position:</strong> <br>{{ $ticket->position ?? 'N/A' }}</div>
                         <div><strong class="dk-text-label">Department:</strong> <br>{{ $ticket->department ?? 'N/A' }}</div>
                         <div><strong class="dk-text-label">Branch:</strong> <br>{{ $ticket->branch ?? 'N/A' }}</div>
@@ -61,6 +64,26 @@
                         <div><strong class="dk-text-label">Affected System:</strong> <br>{{ $ticket->affected_system ?? 'N/A' }}</div>
                         <div><strong class="dk-text-label">Assisted By:</strong> <br>{{ $ticket->assisted_by ?? 'N/A' }}</div>
                         <div><strong class="dk-text-label">Date Created:</strong> <br>{{ $ticket->created_at->format('M d, Y h:i A') }}</div>
+                        
+                        @if(isset($stats))
+                        <div>
+                            <strong class="dk-text-label">Request Frequency:</strong>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px;">
+                                <div style="background: var(--th-bg); border: 1px solid var(--border-color); padding: 5px 10px; border-radius: 6px; display: flex; align-items: center; gap: 6px;">
+                                    <span style="color: var(--text-secondary); font-size: 0.75rem;">Today</span>
+                                    <b style="color: #3b82f6; font-size: 0.9rem;">{{ $stats['today'] }}</b>
+                                </div>
+                                <div style="background: var(--th-bg); border: 1px solid var(--border-color); padding: 5px 10px; border-radius: 6px; display: flex; align-items: center; gap: 6px;">
+                                    <span style="color: var(--text-secondary); font-size: 0.75rem;">Week</span>
+                                    <b style="color: #6366f1; font-size: 0.9rem;">{{ $stats['this_week'] }}</b>
+                                </div>
+                                <div style="background: var(--th-bg); border: 1px solid var(--border-color); padding: 5px 10px; border-radius: 6px; display: flex; align-items: center; gap: 6px;">
+                                    <span style="color: var(--text-secondary); font-size: 0.75rem;">Month</span>
+                                    <b style="color: #8b5cf6; font-size: 0.9rem;">{{ $stats['this_month'] }}</b>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
                     </div>
 
                     <div class="dk-panel dk-grid-2">

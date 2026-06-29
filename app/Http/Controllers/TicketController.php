@@ -57,7 +57,25 @@ class TicketController extends Controller
     {
         $ticket->load('attachments');
 
-        return view('tickets.show', compact('ticket'));
+        // Calculate requestor statistics
+        $requestor = $ticket->requested_by;
+        $stats = [
+            'today' => \App\Models\Ticket::where('requested_by', $requestor)
+                             ->whereDate('created_at', \Carbon\Carbon::today())
+                             ->count(),
+            'this_week' => \App\Models\Ticket::where('requested_by', $requestor)
+                                 ->whereBetween('created_at', [
+                                     \Carbon\Carbon::now()->startOfWeek(),
+                                     \Carbon\Carbon::now()->endOfWeek()
+                                 ])
+                                 ->count(),
+            'this_month' => \App\Models\Ticket::where('requested_by', $requestor)
+                                  ->whereMonth('created_at', \Carbon\Carbon::now()->month)
+                                  ->whereYear('created_at', \Carbon\Carbon::now()->year)
+                                  ->count(),
+        ];
+
+        return view('tickets.show', compact('ticket', 'stats'));
     }
 
     /**

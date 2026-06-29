@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const data = window.dashboardData;
     const ff = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-    const gc = '#f3f4f6';
+    const gc = 'rgba(156, 163, 175, 0.15)'; // Soft gray that works in both light and dark modes
     const base = {
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1f2937', titleFont: { size: 10, family: ff }, bodyFont: { size: 10, family: ff }, padding: 8, cornerRadius: 5 } },
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 maintainAspectRatio: false, 
                 cutout: '55%', 
                 plugins: { 
-                    legend: { position: 'right', labels: { font: { size: 10, family: ff }, padding: 10, boxWidth: 12 } }, 
+                    legend: { position: 'right', labels: { font: { size: 10, family: ff }, padding: 10, boxWidth: 12, color: '#9ca3af' } }, 
                     tooltip: { 
                         ...base.plugins.tooltip, 
                         callbacks: { 
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 indexAxis: 'y', 
                 plugins: { 
                     ...base.plugins, 
-                    legend: { display: true, position: 'top', labels: { font: { size: 10, family: ff }, boxWidth: 12, padding: 8 } }, 
+                    legend: { display: true, position: 'top', labels: { font: { size: 10, family: ff }, boxWidth: 12, padding: 8, color: '#9ca3af' } }, 
                     tooltip: { 
                         ...base.plugins.tooltip, 
                         callbacks: { label: function(c) { return c.dataset.label + ': ' + c.parsed.x + ' tickets'; } } 

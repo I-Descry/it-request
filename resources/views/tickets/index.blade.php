@@ -30,7 +30,16 @@
                         </div>
                         @if(request()->has('status') && request()->status !== '')
                             <div>
-                                <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Filtered by Status: <span class="dk-badge dk-badge-open" style="margin-right: 8px;">{{ request('status') }}</span></span>
+                                @php
+                                    $filterBadgeClass = match(request('status')) {
+                                        'Open', 'Escalated' => 'dk-badge-open',
+                                        'In Progress' => 'dk-badge-progress',
+                                        'Resolved' => 'dk-badge-resolved',
+                                        'Closed', 'Not Complete' => 'dk-badge-closed',
+                                        default => 'dk-badge-closed',
+                                    };
+                                @endphp
+                                <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Filtered by Status: <span class="dk-badge {{ $filterBadgeClass }}" style="margin-right: 8px;">{{ request('status') }}</span></span>
                                 <a href="{{ route('tickets.index') }}" style="font-size: 0.85rem; color: #ef4444; text-decoration: none; font-weight: 600;">× Clear</a>
                             </div>
                         @endif
@@ -98,15 +107,15 @@
                                         
                                         <td>
                                             @php
-                                                $statusColor = match($ticket->status) {
-                                                    'Open', 'Escalated' => 'background-color: var(--bg-card)beb; color: #f59e0b;',
-                                                    'In Progress' => 'background-color: #eff6ff; color: #3b82f6;',
-                                                    'Resolved' => 'background-color: #ecfdf5; color: #10b981;',
-                                                    'Closed', 'Not Complete' => 'background-color: #f3f4f6; color: var(--text-light);',
-                                                    default => 'background-color: #f3f4f6; color: var(--text-light);',
+                                                $badgeClass = match($ticket->status) {
+                                                    'Open', 'Escalated' => 'dk-badge-open',
+                                                    'In Progress' => 'dk-badge-progress',
+                                                    'Resolved' => 'dk-badge-resolved',
+                                                    'Closed', 'Not Complete' => 'dk-badge-closed',
+                                                    default => 'dk-badge-closed',
                                                 };
                                             @endphp
-                                            <span class="dk-badge" style="{{ $statusColor }}">
+                                            <span class="dk-badge {{ $badgeClass }}">
                                                 {{ $ticket->status }}
                                             </span>
                                         </td>
