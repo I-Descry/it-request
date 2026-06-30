@@ -38,6 +38,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/employees', [App\Http\Controllers\EmployeeController::class, 'store'])->name('employees.store');
     Route::get('/employees/{employee}/edit', [App\Http\Controllers\EmployeeController::class, 'edit'])->name('employees.edit');
     Route::put('/employees/{employee}', [App\Http\Controllers\EmployeeController::class, 'update'])->name('employees.update');
+
+    Route::get('/logs', [App\Http\Controllers\ActivityLogController::class, 'index'])->name('logs.index');
 });
 
 require __DIR__.'/auth.php';

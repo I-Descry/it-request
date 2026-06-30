@@ -183,6 +183,51 @@
 
                 </div>
             </div>
+
+            <!-- Activity Logs / History Timeline -->
+            <div class="dk-panel" style="margin-top: 20px;">
+                <h3 style="margin-top: 0; color: var(--text-primary); border-bottom: 1px solid var(--border-color); padding-bottom: 8px; margin-bottom: 16px;">
+                    Ticket History
+                </h3>
+                
+                @if($ticket->activityLogs->count() > 0)
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        @foreach($ticket->activityLogs as $log)
+                            <div style="display: flex; gap: 12px; align-items: flex-start;">
+                                <div style="min-width: 140px; font-size: 0.8rem; color: var(--text-secondary); text-align: right; padding-top: 2px;">
+                                    {{ $log->created_at->format('M d, Y h:i A') }}
+                                </div>
+                                <div style="width: 2px; background-color: var(--border-color); align-self: stretch; margin: 0 4px; position: relative;">
+                                    <div style="position: absolute; top: 4px; left: -4px; width: 10px; height: 10px; border-radius: 50%; background-color: {{ $log->action === 'created' ? '#10b981' : '#3b82f6' }};"></div>
+                                </div>
+                                <div style="flex: 1; padding-bottom: 16px;">
+                                    <div style="font-weight: 600; color: var(--text-primary);">{{ $log->description }}</div>
+                                    
+                                    @if($log->action === 'updated' && isset($log->properties['dirty']))
+                                        <div style="font-size: 0.85rem; margin-top: 6px; display: flex; flex-direction: column; gap: 4px; background: var(--bg-body); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color);">
+                                            @foreach($log->properties['dirty'] as $key => $newValue)
+                                                @if($key !== 'updated_at')
+                                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                                        <span style="color: var(--text-muted); font-weight: 600; text-transform: capitalize;">{{ str_replace('_', ' ', $key) }}:</span>
+                                                        <span style="color: #ef4444; text-decoration: line-through;">{{ $log->properties['old'][$key] ?? 'null' }}</span>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 12px; height: 12px; color: #9ca3af;">
+                                                          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                                                        </svg>
+                                                        <span style="color: #10b981; font-weight: 600;">{{ $newValue ?? 'null' }}</span>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p style="color: var(--text-light); font-style: italic;">No history recorded yet.</p>
+                @endif
+            </div>
+
         </div>
     </div>
 </x-app-layout>

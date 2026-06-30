@@ -134,7 +134,37 @@ class EmployeeController extends Controller
             'contact_no'  => 'nullable|string|max:255',
         ]);
 
+        $oldFullName = $employee->full_name;
+
         $employee->update($validated);
+
+        $newFullName = $employee->full_name;
+
+        // Cascade updates to all tickets involving this employee
+        \App\Models\Ticket::withoutEvents(function () use ($oldFullName, $newFullName, $employee) {
+            \App\Models\Ticket::where('requested_by', $oldFullName)->get()->each(function ($ticket) use ($newFullName, $employee) {
+                // Keep track of old attributes for the log
+                $oldAttrs = $ticket->getAttributes();
+
+                $ticket->update([
+                    'requested_by' => $newFullName,
+                    'position'     => $employee->position,
+                    'branch'       => $employee->branch,
+                    'department'   => $employee->department,
+                ]);
+
+                // Manually log it with a descriptive message linking back to the employee
+                $ticket->activityLogs()->create([
+                    'action' => 'updated',
+                    'description' => 'System sync: Cascaded from Employee update',
+                    'properties' => [
+                        'old' => $oldAttrs,
+                        'new' => $ticket->getAttributes(),
+                        'dirty' => $ticket->getChanges()
+                    ]
+                ]);
+            });
+        });
 
         return redirect()->route('employees.index')->with('success', 'Employee updated successfully!');
     }

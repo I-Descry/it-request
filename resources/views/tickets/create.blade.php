@@ -73,7 +73,7 @@
                             text-align: center;
                             transition: border-color 0.2s, background 0.2s;
                         }
-                        .t-drop:hover { border-color: #93c5fd; background: #eff6ff; }
+                        .t-drop:hover { border-color: var(--border-color-focus); background: var(--bg-hover); }
                         .t-drop input[type="file"] { cursor: pointer; font-size: 0.8rem; width: 100%; }
                         .t-drop-hint { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; margin-bottom: 0; }
                         .t-footer { display: flex; justify-content: flex-end; align-items: center; gap: 12px; padding-top: 10px; border-top: 1px solid var(--border-color); }

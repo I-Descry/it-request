@@ -33,4 +33,34 @@ class Employee extends Model
         }
         return $name;
     }
+
+    public function activityLogs()
+    {
+        return $this->morphMany(ActivityLog::class, 'subject')->orderBy('created_at', 'desc');
+    }
+
+    protected static function booted()
+    {
+        static::created(function ($employee) {
+            $employee->activityLogs()->create([
+                'action' => 'created',
+                'description' => 'Employee created',
+                'properties' => ['new' => $employee->getAttributes()]
+            ]);
+        });
+
+        static::updated(function ($employee) {
+            if ($employee->isDirty()) {
+                $employee->activityLogs()->create([
+                    'action' => 'updated',
+                    'description' => 'Employee updated',
+                    'properties' => [
+                        'old' => $employee->getOriginal(),
+                        'new' => $employee->getAttributes(),
+                        'dirty' => $employee->getDirty()
+                    ]
+                ]);
+            }
+        });
+    }
 }
