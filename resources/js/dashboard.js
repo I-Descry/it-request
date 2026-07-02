@@ -30,6 +30,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 responsive: true, 
                 maintainAspectRatio: false, 
                 cutout: '55%', 
+                onClick: (event, elements, chart) => {
+                    if (elements.length > 0) {
+                        const index = elements[0].index;
+                        const label = chart.data.labels[index];
+                        window.location.href = `/tickets?request_type=${encodeURIComponent(label)}`;
+                    }
+                },
+                onHover: (event, elements, chart) => {
+                    event.native.target.style.cursor = elements.length > 0 ? 'pointer' : 'default';
+                },
                 plugins: { 
                     legend: { position: 'right', labels: { font: { size: 10, family: ff }, padding: 10, boxWidth: 12, color: '#9ca3af' } }, 
                     tooltip: { 
@@ -49,15 +59,28 @@ document.addEventListener('DOMContentLoaded', function() {
     // Technician Performance - Horizontal Bar
     const techEl = document.getElementById('techChart');
     if (techEl && data.techPerformance) {
+        const datasets = [];
+
+        const sumResolved = data.techPerformance.resolved.reduce((a, b) => a + b, 0);
+        if (sumResolved > 0) {
+            datasets.push({ label: 'Resolved', data: data.techPerformance.resolved, backgroundColor: '#10b981', borderRadius: 4, barPercentage: 0.6 });
+        }
+
+        const sumInProgress = data.techPerformance.in_progress.reduce((a, b) => a + b, 0);
+        if (sumInProgress > 0) {
+            datasets.push({ label: 'In Progress', data: data.techPerformance.in_progress, backgroundColor: '#3b82f6', borderRadius: 4, barPercentage: 0.6 });
+        }
+
+        const sumEscalated = data.techPerformance.escalated.reduce((a, b) => a + b, 0);
+        if (sumEscalated > 0) {
+            datasets.push({ label: 'Escalated', data: data.techPerformance.escalated, backgroundColor: '#f59e0b', borderRadius: 4, barPercentage: 0.6 });
+        }
+
         new Chart(techEl, { 
             type: 'bar', 
             data: { 
                 labels: data.techPerformance.labels, 
-                datasets: [ 
-                    { label: 'Resolved', data: data.techPerformance.resolved, backgroundColor: '#10b981', borderRadius: 4, barPercentage: 0.6 }, 
-                    { label: 'In Progress', data: data.techPerformance.in_progress, backgroundColor: '#3b82f6', borderRadius: 4, barPercentage: 0.6 }, 
-                    { label: 'Escalated', data: data.techPerformance.escalated, backgroundColor: '#f59e0b', borderRadius: 4, barPercentage: 0.6 } 
-                ] 
+                datasets: datasets
             }, 
             options: { 
                 ...base, 

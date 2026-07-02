@@ -45,7 +45,17 @@ class TicketController extends Controller
     public function index(Request $request)
     {
         // Fetch all active tickets (soft-deleted are automatically excluded)
-        $query = Ticket::withCount('attachments')->latest(); if ($request->has('status') && $request->status !== '') { $query->where('status', $request->status); } $tickets = $query->paginate(10)->appends($request->query());
+        $query = Ticket::withCount('attachments')->latest(); 
+        
+        if ($request->has('status') && $request->status !== '') { 
+            $query->where('status', $request->status); 
+        } 
+        
+        if ($request->has('request_type') && $request->request_type !== '') { 
+            $query->where('request_type', $request->request_type); 
+        } 
+        
+        $tickets = $query->paginate(10)->appends($request->query());
 
         return view('tickets.index', compact('tickets'));
     }

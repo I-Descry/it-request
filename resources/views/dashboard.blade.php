@@ -67,7 +67,7 @@
                     <div class="dk-chart-wrap"><canvas id="donutChart"></canvas></div>
                 </div>
                 <div class="dk-card">
-                    <h3 style="margin: 0 0 16px 0; font-size: 0.95rem; color: var(--text-primary); font-weight: 600;">Technician Performance</h3>
+                    <h3 style="margin: 0 0 16px 0; font-size: 0.95rem; color: var(--text-primary); font-weight: 600;">IT Staff Performance</h3>
                     <div class="dk-chart-wrap"><canvas id="techChart"></canvas></div>
                 </div>
             </div>

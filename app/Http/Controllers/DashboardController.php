@@ -21,9 +21,17 @@ class DashboardController extends Controller
             'all_time' => 'All Time',
         ];
 
-        $selectedTimeframe = request('timeframe', 'this_month');
+        // Persist the timeframe filter in session
+        if (request()->has('timeframe')) {
+            $selectedTimeframe = request('timeframe');
+            session(['dashboard_timeframe' => $selectedTimeframe]);
+        } else {
+            $selectedTimeframe = session('dashboard_timeframe', 'this_month');
+        }
+
         if (!array_key_exists($selectedTimeframe, $timeframes)) {
             $selectedTimeframe = 'this_month';
+            session(['dashboard_timeframe' => $selectedTimeframe]);
         }
 
         $now = Carbon::now();
