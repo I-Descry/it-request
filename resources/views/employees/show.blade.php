@@ -14,14 +14,37 @@
                 <div class="p-6 text-gray-900 dark:text-gray-100 dark:text-gray-100">
 
                     <div style="margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
-                        <a href="{{ route('employees.index') }}" style="color: var(--text-light); text-decoration: none; font-size: 0.85rem; font-weight: 500; display: inline-flex; align-items: center; gap: 4px;">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-                            Back to Employees
-                        </a>
-                        <a href="{{ route('employees.edit', $employee->id) }}" class="dk-btn dk-btn-warning" style="display: flex; align-items: center; gap: 6px;">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-                            Edit Employee
-                        </a>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <a href="{{ route('employees.index') }}" style="color: var(--text-light); text-decoration: none; font-size: 0.85rem; font-weight: 500; display: inline-flex; align-items: center; gap: 4px;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                                Back to Employees
+                            </a>
+                            <a href="{{ route('employees.edit', $employee->id) }}" class="dk-btn dk-btn-warning" style="display: flex; align-items: center; gap: 6px;">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                Edit Employee
+                            </a>
+                        </div>
+                        <div style="display: flex; gap: 6px; align-items: center;">
+                            @if($prevEmployee)
+                                <a href="{{ route('employees.show', $prevEmployee->id) }}" style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); text-decoration: none; transition: all 0.15s;" title="{{ $prevEmployee->full_name }}" onmouseover="this.style.borderColor='#2563eb'; this.style.color='#2563eb';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.color='var(--text-primary)';">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                                </a>
+                            @else
+                                <span style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-muted); opacity: 0.4; cursor: not-allowed;">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                                </span>
+                            @endif
+                            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">{{ $employee->last_name }}, {{ $employee->first_name }}</span>
+                            @if($nextEmployee)
+                                <a href="{{ route('employees.show', $nextEmployee->id) }}" style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); text-decoration: none; transition: all 0.15s;" title="{{ $nextEmployee->full_name }}" onmouseover="this.style.borderColor='#2563eb'; this.style.color='#2563eb';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.color='var(--text-primary)';">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                                </a>
+                            @else
+                                <span style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-muted); opacity: 0.4; cursor: not-allowed;">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                                </span>
+                            @endif
+                        </div>
                     </div>
 
                     <div style="background: var(--panel-bg); border-radius: 8px; border: 1px solid var(--border-color); padding: 25px;">

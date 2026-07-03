@@ -24,13 +24,39 @@
                     @endif
 
                     {{-- Action Buttons --}}
-                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                        <a href="{{ route('tickets.index') }}" class="dk-btn dk-btn-secondary">
-                            ← Back to Tickets
-                        </a>
-                        <a href="{{ route('tickets.edit', $ticket->ticket_no) }}" class="dk-btn dk-btn-warning">
-                            ✏️ Edit Ticket
-                        </a>
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <a href="{{ route('tickets.index') }}" class="dk-btn dk-btn-secondary">
+                                ← Back to Tickets
+                            </a>
+                            <a href="{{ route('tickets.edit', $ticket->ticket_no) }}" class="dk-btn dk-btn-warning">
+                                ✏️ Edit Ticket
+                            </a>
+                            <a href="{{ route('tickets.create', ['from' => $ticket->ticket_no]) }}" class="dk-btn dk-btn-secondary" style="background: var(--bg-card); border: 1px solid #6366f1; color: #6366f1;">
+                                📋 Duplicate
+                            </a>
+                        </div>
+                        <div style="display: flex; gap: 6px; align-items: center;">
+                            @if($prevTicket)
+                                <a href="{{ route('tickets.show', $prevTicket->ticket_no) }}" style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); text-decoration: none; transition: all 0.15s;" title="{{ $prevTicket->ticket_no }}" onmouseover="this.style.borderColor='#2563eb'; this.style.color='#2563eb';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.color='var(--text-primary)';">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                                </a>
+                            @else
+                                <span style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-muted); opacity: 0.4; cursor: not-allowed;">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                                </span>
+                            @endif
+                            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">{{ $ticket->ticket_no }}</span>
+                            @if($nextTicket)
+                                <a href="{{ route('tickets.show', $nextTicket->ticket_no) }}" style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); text-decoration: none; transition: all 0.15s;" title="{{ $nextTicket->ticket_no }}" onmouseover="this.style.borderColor='#2563eb'; this.style.color='#2563eb';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.color='var(--text-primary)';">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                                </a>
+                            @else
+                                <span style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-muted); opacity: 0.4; cursor: not-allowed;">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                                </span>
+                            @endif
+                        </div>
                     </div>
 
                     {{-- Ticket Details --}}

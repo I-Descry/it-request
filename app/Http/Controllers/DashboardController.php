@@ -87,8 +87,15 @@ class DashboardController extends Controller
                 break;
         }
 
-        $baseQuery = function () use ($startDate, $endDate) {
-            return Ticket::whereBetween('created_at', [$startDate, $endDate]);
+        // Check for exclusions (from Chart legend clicks)
+        $excludedTypes = request()->input('exclude', []);
+
+        $baseQuery = function () use ($startDate, $endDate, $excludedTypes) {
+            $query = Ticket::whereBetween('created_at', [$startDate, $endDate]);
+            if (!empty($excludedTypes)) {
+                $query->whereNotIn('request_type', $excludedTypes);
+            }
+            return $query;
         };
 
         // KPI counts
@@ -117,10 +124,17 @@ class DashboardController extends Controller
             ->pluck('count', 'status')
             ->toArray();
 
-        $archivedCount = ArchiveTicket::whereBetween('created_at', [$startDate, $endDate])->count();
+        // Archived count (not affected by request type filter typically, but we'll leave it as is since it's separate)
+        $archivedCount = ArchiveTicket::whereBetween('created_at', [$startDate, $endDate]);
+        if (!empty($excludedTypes)) {
+            $archivedCount->whereNotIn('request_type', $excludedTypes);
+        }
+        $archivedCount = $archivedCount->count();
 
-        // By request type
-        $byRequestType = $baseQuery()->selectRaw('request_type, count(*) as count')
+        // By request type (we want the original counts for the donut chart, so we use a non-excluded query here!)
+        // Wait, if we exclude it, the chart still needs the original data so it can toggle it back on.
+        $chartQuery = Ticket::whereBetween('created_at', [$startDate, $endDate]);
+        $byRequestType = $chartQuery->selectRaw('request_type, count(*) as count')
             ->groupBy('request_type')
             ->orderByDesc('count')
             ->pluck('count', 'request_type')
@@ -146,9 +160,6 @@ class DashboardController extends Controller
             })
             ->toArray();
 
-        // Recent Tickets (Paginated)
-        $recentTickets = $baseQuery()->orderBy('created_at', 'desc')->paginate(5)->appends(['timeframe' => $selectedTimeframe]);
-
         // Top Requestors
         $topRequestors = $baseQuery()->selectRaw("requested_by, COUNT(*) as total")
             ->groupBy('requested_by')
@@ -156,11 +167,33 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
+        // Calculate optimal pagination based on the right column's data height
+        $metricsCount = count($metrics);
+        $requestorsCount = $topRequestors->count();
+        
+        // Mathematically, each metric and each requestor takes up exactly 1 row height equivalent (~40px)
+        // By adding them together, the left table height will perfectly match the right column height.
+        $optimalPagination = max(5, $metricsCount + $requestorsCount);
+
+        // Recent Tickets (Paginated)
+        $recentTickets = $baseQuery()->orderBy('created_at', 'desc')->paginate($optimalPagination)->appends(['timeframe' => $selectedTimeframe, 'exclude' => $excludedTypes]);
+
+        if (request()->ajax() && request()->has('exclude')) {
+            return response()->json([
+                'totalActive' => $totalActive,
+                'metrics' => $metrics,
+                'byStatus' => $byStatus,
+                'techPerformance' => $techPerformance,
+                'topRequestors' => view('partials.dashboard.top_requestors', compact('topRequestors'))->render(),
+                'recentTickets' => view('partials.dashboard.recent_tickets', compact('recentTickets'))->render(),
+            ]);
+        }
+
         return view('dashboard', compact(
             'totalActive', 'timeframes', 'selectedTimeframe', 'metrics',
             'byStatus', 'archivedCount',
             'byRequestType', 'techPerformance', 'assistedByMap',
-            'recentTickets', 'topRequestors'
+            'recentTickets', 'topRequestors', 'excludedTypes'
         ));
     }
 }

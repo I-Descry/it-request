@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Record a New IT Request') }}
+            {{ isset($sourceTicket) ? __('Duplicate Request — from ' . $sourceTicket->ticket_no) : __('Record a New IT Request') }}
         </h2>
     </x-slot>
 
@@ -109,7 +109,7 @@
                                     <select name="requested_by" id="requested_by" required class="t-input" onchange="fillEmployeeData()">
                                         <option value="">— Select Employee —</option>
                                         @foreach ($employees as $emp)
-                                            <option value="{{ $emp->full_name }}" data-position="{{ $emp->position }}" data-branch="{{ $emp->branch }}" data-department="{{ $emp->department }}" {{ old('requested_by') == $emp->full_name ? 'selected' : '' }}>
+                                            <option value="{{ $emp->full_name }}" data-position="{{ $emp->position }}" data-branch="{{ $emp->branch }}" data-department="{{ $emp->department }}" {{ (old('requested_by') ?? ($sourceTicket->requested_by ?? '')) == $emp->full_name ? 'selected' : '' }}>
                                                 {{ $emp->full_name }}
                                             </option>
                                         @endforeach
@@ -118,15 +118,15 @@
                                 </div>
                                 <div>
                                     <label for="position" class="t-label">Position</label>
-                                    <input type="text" name="position" id="position" value="{{ old('position') }}" readonly class="t-input-readonly" placeholder="Auto-filled">
+                                    <input type="text" name="position" id="position" value="{{ old('position') ?? ($sourceTicket->position ?? '') }}" readonly class="t-input-readonly" placeholder="Auto-filled">
                                 </div>
                                 <div>
                                     <label for="department" class="t-label">Department</label>
-                                    <input type="text" name="department" id="department" value="{{ old('department') }}" readonly class="t-input-readonly" placeholder="Auto-filled">
+                                    <input type="text" name="department" id="department" value="{{ old('department') ?? ($sourceTicket->department ?? '') }}" readonly class="t-input-readonly" placeholder="Auto-filled">
                                 </div>
                                 <div>
                                     <label for="branch" class="t-label">Branch</label>
-                                    <input type="text" name="branch" id="branch" value="{{ old('branch') }}" readonly class="t-input-readonly" placeholder="Auto-filled">
+                                    <input type="text" name="branch" id="branch" value="{{ old('branch') ?? ($sourceTicket->branch ?? '') }}" readonly class="t-input-readonly" placeholder="Auto-filled">
                                 </div>
                             </div>
                         </div>
@@ -140,20 +140,20 @@
                                     <select name="request_type" id="request_type" required class="t-input">
                                         <option value="">— Select Type —</option>
                                         @foreach ($requestTypes as $type)
-                                            <option value="{{ $type }}" {{ old('request_type') == $type ? 'selected' : '' }}>{{ $type }}</option>
+                                            <option value="{{ $type }}" {{ (old('request_type') ?? ($sourceTicket->request_type ?? '')) == $type ? 'selected' : '' }}>{{ $type }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div>
                                     <label for="affected_system" class="t-label">Affected System <span style="color: var(--text-muted); font-weight:400;">(optional)</span></label>
-                                    <input type="text" name="affected_system" id="affected_system" value="{{ old('affected_system') }}" class="t-input" placeholder="e.g. Payroll, Email">
+                                    <input type="text" name="affected_system" id="affected_system" value="{{ old('affected_system') ?? ($sourceTicket->affected_system ?? '') }}" class="t-input" placeholder="e.g. Payroll, Email">
                                 </div>
                                 <div>
                                     <label for="assisted_by" class="t-label">Assisted By</label>
                                     <select name="assisted_by" id="assisted_by" class="t-input">
-                                        <option value="IT03">Tristan Railey Tan</option>
-                                        <option value="IT04">John Paul Villacorta</option>
-                                        <option value="Both">Both</option>
+                                        <option value="IT03" {{ (old('assisted_by') ?? ($sourceTicket->assisted_by ?? '')) == 'IT03' ? 'selected' : '' }}>Tristan Railey Tan</option>
+                                        <option value="IT04" {{ (old('assisted_by') ?? ($sourceTicket->assisted_by ?? '')) == 'IT04' ? 'selected' : '' }}>John Paul Villacorta</option>
+                                        <option value="Both" {{ (old('assisted_by') ?? ($sourceTicket->assisted_by ?? '')) == 'Both' ? 'selected' : '' }}>Both</option>
                                     </select>
                                 </div>
                             </div>
@@ -165,12 +165,12 @@
                             <div class="t-grid" style="gap: 12px;">
                                 <div>
                                     <label for="request" class="t-label">Short Summary (Title)</label>
-                                    <input type="text" name="request" id="request" value="{{ old('request') }}" required class="t-input" placeholder="e.g. Need new mouse, Software installation...">
+                                    <input type="text" name="request" id="request" value="{{ old('request') ?? ($sourceTicket->request ?? '') }}" required class="t-input" placeholder="e.g. Need new mouse, Software installation...">
                                     @error('request') <span class="t-error">{{ $message }}</span> @enderror
                                 </div>
                                 <div>
                                     <label for="request_details" class="t-label">Details</label>
-                                    <textarea name="request_details" id="request_details" rows="3" required class="t-input" placeholder="Describe the issue or request in detail...">{{ old('request_details') }}</textarea>
+                                    <textarea name="request_details" id="request_details" rows="3" required class="t-input" placeholder="Describe the issue or request in detail...">{{ old('request_details') ?? ($sourceTicket->request_details ?? '') }}</textarea>
                                     @error('request_details') <span class="t-error">{{ $message }}</span> @enderror
                                 </div>
                             </div>
@@ -183,15 +183,16 @@
                                 <div>
                                     <label for="status" class="t-label">Status</label>
                                     <select name="status" id="status" class="t-input">
-                                        <option value="In Progress">In Progress</option>
-                                        <option value="Escalated">Escalated</option>
-                                        <option value="Resolved" selected>Resolved</option>
-                                        <option value="Not Complete">Not Complete</option>
+                                        @php $dupStatus = old('status') ?? ($sourceTicket->status ?? 'Resolved'); @endphp
+                                        <option value="In Progress" {{ $dupStatus == 'In Progress' ? 'selected' : '' }}>In Progress</option>
+                                        <option value="Escalated" {{ $dupStatus == 'Escalated' ? 'selected' : '' }}>Escalated</option>
+                                        <option value="Resolved" {{ $dupStatus == 'Resolved' ? 'selected' : '' }}>Resolved</option>
+                                        <option value="Not Complete" {{ $dupStatus == 'Not Complete' ? 'selected' : '' }}>Not Complete</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label for="remarks" class="t-label">Remarks / Resolution Details <span style="color: var(--text-muted); font-weight:400;">(optional)</span></label>
-                                    <input type="text" name="remarks" id="remarks" value="{{ old('remarks') }}" class="t-input" placeholder="Brief resolution notes...">
+                                    <input type="text" name="remarks" id="remarks" value="{{ old('remarks') ?? ($sourceTicket->remarks ?? '') }}" class="t-input" placeholder="Brief resolution notes...">
                                 </div>
                             </div>
                         </div>

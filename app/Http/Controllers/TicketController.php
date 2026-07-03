@@ -67,6 +67,10 @@ class TicketController extends Controller
     {
         $ticket->load('attachments');
 
+        // Previous / Next navigation
+        $prevTicket = Ticket::where('id', '<', $ticket->id)->orderBy('id', 'desc')->first();
+        $nextTicket = Ticket::where('id', '>', $ticket->id)->orderBy('id', 'asc')->first();
+
         // Calculate requestor statistics
         $requestor = $ticket->requested_by;
         $stats = [
@@ -85,18 +89,24 @@ class TicketController extends Controller
                                   ->count(),
         ];
 
-        return view('tickets.show', compact('ticket', 'stats'));
+        return view('tickets.show', compact('ticket', 'stats', 'prevTicket', 'nextTicket'));
     }
 
     /**
      * Show the form to create a new ticket.
+     * Supports ?from=TICKET_NO to pre-fill form from an existing ticket (duplicate).
      */
-    public function create()
+    public function create(Request $request)
     {
         $requestTypes = self::REQUEST_TYPES;
         $employees = \App\Models\Employee::orderBy('last_name')->get();
 
-        return view('tickets.create', compact('requestTypes', 'employees'));
+        $sourceTicket = null;
+        if ($request->has('from')) {
+            $sourceTicket = Ticket::where('ticket_no', $request->from)->first();
+        }
+
+        return view('tickets.create', compact('requestTypes', 'employees', 'sourceTicket'));
     }
 
     /**

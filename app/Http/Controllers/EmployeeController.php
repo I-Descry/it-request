@@ -12,7 +12,20 @@ class EmployeeController extends Controller
      */
     public function show(Employee $employee)
     {
-        return view('employees.show', compact('employee'));
+        // Previous / Next navigation (alphabetical by last_name)
+        $prevEmployee = Employee::where('last_name', '<', $employee->last_name)
+            ->orWhere(function ($q) use ($employee) {
+                $q->where('last_name', $employee->last_name)->where('id', '<', $employee->id);
+            })
+            ->orderBy('last_name', 'desc')->orderBy('id', 'desc')->first();
+
+        $nextEmployee = Employee::where('last_name', '>', $employee->last_name)
+            ->orWhere(function ($q) use ($employee) {
+                $q->where('last_name', $employee->last_name)->where('id', '>', $employee->id);
+            })
+            ->orderBy('last_name', 'asc')->orderBy('id', 'asc')->first();
+
+        return view('employees.show', compact('employee', 'prevEmployee', 'nextEmployee'));
     }
 
     /**
