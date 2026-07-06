@@ -93,11 +93,20 @@
                         </div>
                     </div>
       
-                      {{-- Top Requestors --}}
+                      {{-- Top Requestors / Department Requests (Toggle) --}}
                       <div class="dk-card" style="padding: 16px;">
-                          <h3 style="margin: 0 0 16px 0; font-size: 0.95rem; color: var(--text-primary); font-weight: 600;">Top Requestors</h3>
+                          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                              <h3 id="toggle-title" style="margin: 0; font-size: 0.95rem; color: var(--text-primary); font-weight: 600;">Top Requestors</h3>
+                              <div style="display: flex; background: var(--bg-main); border-radius: 6px; padding: 2px; gap: 2px;">
+                                  <button id="btn-requestors" onclick="toggleView('requestors')" style="padding: 4px 10px; border-radius: 4px; border: none; font-size: 0.7rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; background: #3b82f6; color: #fff;">People</button>
+                                  <button id="btn-departments" onclick="toggleView('departments')" style="padding: 4px 10px; border-radius: 4px; border: none; font-size: 0.7rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; background: transparent; color: #9ca3af;">Dept</button>
+                              </div>
+                          </div>
                           <div id="requestors-container" style="width: 100%; overflow-x: auto;">
                               @include('partials.dashboard.top_requestors')
+                          </div>
+                          <div id="department-container" style="width: 100%; overflow-x: auto; display: none;">
+                              @include('partials.dashboard.department_breakdown')
                           </div>
                       </div>
                   </div>
@@ -130,5 +139,31 @@
                 escalated: {!! json_encode($tE) !!}
             }
         };
+
+        function toggleView(view) {
+            const reqContainer = document.getElementById('requestors-container');
+            const deptContainer = document.getElementById('department-container');
+            const btnReq = document.getElementById('btn-requestors');
+            const btnDept = document.getElementById('btn-departments');
+            const title = document.getElementById('toggle-title');
+
+            if (view === 'requestors') {
+                reqContainer.style.display = '';
+                deptContainer.style.display = 'none';
+                title.textContent = 'Top Requestors';
+                btnReq.style.background = '#3b82f6';
+                btnReq.style.color = '#fff';
+                btnDept.style.background = 'transparent';
+                btnDept.style.color = '#9ca3af';
+            } else {
+                reqContainer.style.display = 'none';
+                deptContainer.style.display = '';
+                title.textContent = 'Top Departments';
+                btnDept.style.background = '#3b82f6';
+                btnDept.style.color = '#fff';
+                btnReq.style.background = 'transparent';
+                btnReq.style.color = '#9ca3af';
+            }
+        }
     </script>
 </x-app-layout>

@@ -23,7 +23,7 @@
                                         <td>{{ $ticket->request_type }}</td>
                                         <td>
                                             <div style="display: flex; align-items: center; gap: 6px;">
-                                                <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px;">
+                                                <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">
                                                     {{ $ticket->requested_by }}
                                                 </div>
                                                 @if ($ticket->branch && strtoupper($ticket->branch) === 'HEAD OFFICE')
@@ -38,7 +38,7 @@
                                                 @endif
                                             </div>
                                         </td>
-                                        <td>{{ $ticket->assisted_by == 'IT03' ? 'Tristan Railey Tan' : ($ticket->assisted_by == 'IT04' ? 'John Paul Villacorta' : $ticket->assisted_by) }}</td>
+                                        <td>{{ $ticket->assisted_by }}</td>
                                         <td>
                                             @php
                                                 $badgeClass = match($ticket->status) {

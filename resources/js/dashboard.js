@@ -146,6 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 // Update HTML partials
                                 document.getElementById('requestors-container').innerHTML = data.topRequestors;
                                 document.getElementById('recent-tickets-container').innerHTML = data.recentTickets;
+                                document.getElementById('department-container').innerHTML = data.departmentBreakdown;
 
                                 // Update Tech Chart
                                 if (window.techChartInstance && data.techPerformance) {

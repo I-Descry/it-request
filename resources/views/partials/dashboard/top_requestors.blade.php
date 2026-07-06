@@ -13,7 +13,7 @@
                                                   {{ $req->requested_by }}
                                               </div>
                                           </td>
-                                          <td style="padding: 10px 0; text-align: center; color: #3b82f6; font-weight: 700;">{{ $req->total }}</td>
+                                          <td style="padding: 10px 0; text-align: center; color: #f59e0b; font-weight: 700;">{{ $req->total }}</td>
                                       </tr>
                                       @endforeach
                                   </tbody>

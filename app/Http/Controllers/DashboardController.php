@@ -106,16 +106,16 @@ class DashboardController extends Controller
         $monthsPassed = max(1, $daysPassed / 30.44);
 
         $metrics = [];
-        $metrics[] = ['label' => 'Total Requests', 'value' => $totalActive, 'color' => '#3b82f6'];
+        $metrics[] = ['label' => 'Total Requests', 'value' => $totalActive, 'color' => '#10b981'];
 
         if (in_array($selectedTimeframe, ['this_week', 'last_7_days', 'this_month', 'last_month'])) {
-            $metrics[] = ['label' => 'Avg / Day', 'value' => round($totalActive / $daysPassed, 1), 'color' => '#6366f1'];
+            $metrics[] = ['label' => 'Avg / Day', 'value' => round($totalActive / $daysPassed, 1), 'color' => '#06b6d4'];
             if (in_array($selectedTimeframe, ['this_month', 'last_month'])) {
-                $metrics[] = ['label' => 'Avg / Week', 'value' => round($totalActive / $weeksPassed, 1), 'color' => '#8b5cf6'];
+                $metrics[] = ['label' => 'Avg / Week', 'value' => round($totalActive / $weeksPassed, 1), 'color' => '#f59e0b'];
             }
         } elseif (in_array($selectedTimeframe, ['this_year', 'all_time'])) {
-            $metrics[] = ['label' => 'Avg / Week', 'value' => round($totalActive / $weeksPassed, 1), 'color' => '#6366f1'];
-            $metrics[] = ['label' => 'Avg / Month', 'value' => round($totalActive / $monthsPassed, 1), 'color' => '#8b5cf6'];
+            $metrics[] = ['label' => 'Avg / Week', 'value' => round($totalActive / $weeksPassed, 1), 'color' => '#06b6d4'];
+            $metrics[] = ['label' => 'Avg / Month', 'value' => round($totalActive / $monthsPassed, 1), 'color' => '#f59e0b'];
         }
 
         // Status counts
@@ -167,12 +167,18 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
+        // Department Breakdown (Top 5)
+        $departmentBreakdown = $baseQuery()->selectRaw("department, COUNT(*) as total")
+            ->groupBy('department')
+            ->orderByDesc('total')
+            ->limit(5)
+            ->get();
+
         // Calculate optimal pagination based on the right column's data height
         $metricsCount = count($metrics);
         $requestorsCount = $topRequestors->count();
         
-        // Mathematically, each metric and each requestor takes up exactly 1 row height equivalent (~40px)
-        // By adding them together, the left table height will perfectly match the right column height.
+        // Each metric and each requestor/department row takes ~1 ticket row height (~40px)
         $optimalPagination = max(5, $metricsCount + $requestorsCount);
 
         // Recent Tickets (Paginated)
@@ -186,6 +192,7 @@ class DashboardController extends Controller
                 'techPerformance' => $techPerformance,
                 'topRequestors' => view('partials.dashboard.top_requestors', compact('topRequestors'))->render(),
                 'recentTickets' => view('partials.dashboard.recent_tickets', compact('recentTickets'))->render(),
+                'departmentBreakdown' => view('partials.dashboard.department_breakdown', compact('departmentBreakdown'))->render(),
             ]);
         }
 
@@ -193,7 +200,7 @@ class DashboardController extends Controller
             'totalActive', 'timeframes', 'selectedTimeframe', 'metrics',
             'byStatus', 'archivedCount',
             'byRequestType', 'techPerformance', 'assistedByMap',
-            'recentTickets', 'topRequestors', 'excludedTypes'
+            'recentTickets', 'topRequestors', 'departmentBreakdown', 'excludedTypes'
         ));
     }
 }
