@@ -78,9 +78,9 @@ class DashboardController extends Controller
             case 'all_time':
                 $startDate = Carbon::create(2000, 1, 1);
                 $endDate = clone $now;
-                $firstTicket = Ticket::orderBy('created_at')->first();
-                if ($firstTicket) {
-                    $daysPassed = max(1, $firstTicket->created_at->diffInDays($now));
+                $firstTicketDate = Ticket::min('created_at');
+                if ($firstTicketDate) {
+                    $daysPassed = max(1, Carbon::parse($firstTicketDate)->diffInDays($now));
                 } else {
                     $daysPassed = 1;
                 }
@@ -98,9 +98,16 @@ class DashboardController extends Controller
             return $query;
         };
 
-        // KPI counts
-        $totalActive = $baseQuery()->count();
-        
+        // $totalActive is calculated below after we fetch $byStatus to avoid an extra COUNT query
+        // Status counts
+        $byStatus = $baseQuery()->selectRaw('status, count(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        // KPI counts (derived from status counts to save a query)
+        $totalActive = array_sum($byStatus);
+
         // Dynamic Averages
         $weeksPassed = max(1, $daysPassed / 7);
         $monthsPassed = max(1, $daysPassed / 30.44);
@@ -117,12 +124,6 @@ class DashboardController extends Controller
             $metrics[] = ['label' => 'Avg / Week', 'value' => round($totalActive / $weeksPassed, 1), 'color' => '#06b6d4'];
             $metrics[] = ['label' => 'Avg / Month', 'value' => round($totalActive / $monthsPassed, 1), 'color' => '#f59e0b'];
         }
-
-        // Status counts
-        $byStatus = $baseQuery()->selectRaw('status, count(*) as count')
-            ->groupBy('status')
-            ->pluck('count', 'status')
-            ->toArray();
 
         // Archived count (not affected by request type filter typically, but we'll leave it as is since it's separate)
         $archivedCount = ArchiveTicket::whereBetween('created_at', [$startDate, $endDate]);

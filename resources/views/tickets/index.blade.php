@@ -17,7 +17,7 @@
                     @endif
 
                     {{-- Tab Bar --}}
-                    <div style="display: flex; gap: 0; margin-bottom: 20px; border-bottom: 2px solid var(--border-color); align-items: center; justify-content: space-between;">
+                    <div style="display: flex; gap: 0; margin-bottom: 20px; border-bottom: 2px solid var(--border-color); align-items: center;">
                         <div style="display: flex; gap: 0;">
                             <a href="{{ route('tickets.index') }}"
                                style="padding: 10px 24px; font-weight: bold; text-decoration: none; border-bottom: 3px solid var(--text-primary); color: var(--text-primary); margin-bottom: -2px;">
@@ -28,44 +28,111 @@
                                 🗄️ Archived Tickets
                             </a>
                         </div>
-                        @if(request()->has('status') && request()->status !== '')
-                            <div>
-                                @php
-                                    $filterBadgeClass = match(request('status')) {
-                                        'Open', 'Escalated' => 'dk-badge-open',
-                                        'In Progress' => 'dk-badge-progress',
-                                        'Resolved' => 'dk-badge-resolved',
-                                        'Closed', 'Not Complete' => 'dk-badge-closed',
-                                        default => 'dk-badge-closed',
-                                    };
-                                @endphp
-                                <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Filtered by Status: <span class="dk-badge {{ $filterBadgeClass }}" style="margin-right: 8px;">{{ request('status') }}</span></span>
-                                <a href="{{ route('tickets.index') }}" style="font-size: 0.85rem; color: #ef4444; text-decoration: none; font-weight: 600;">× Clear</a>
-                            </div>
-                        @endif
                     </div>
 
-                    <a href="{{ route('tickets.create') }}">
-                        <button style="background-color: var(--text-primary); color: var(--bg-card); padding: 8px 15px; border-radius: 5px; cursor: pointer;">
-                            + Record New Request
-                        </button>
-                    </a>
-                    <br><br>
+                    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                        <a href="{{ route('tickets.create') }}" class="dk-btn dk-btn-primary">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right: 6px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                            Record New Request
+                        </a>
+                    </div>
+
+                    <!-- Search & Filter Form -->
+                    <div style="background: var(--panel-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+                        <form method="GET" action="{{ route('tickets.index') }}" id="filterForm" style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
+                            <!-- Hidden inputs for sorting -->
+                            <input type="hidden" name="sort_by" id="sort_by" value="{{ request('sort_by', 'created_at') }}">
+                            <input type="hidden" name="sort_dir" id="sort_dir" value="{{ request('sort_dir', 'desc') }}">
+                            
+                            <div style="flex: 1; min-width: 200px;">
+                                <label for="search" style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px;">Search Tickets</label>
+                                <div style="position: relative;">
+                                    <div style="position: absolute; top: 9px; left: 10px; color: var(--text-muted);">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                                    </div>
+                                    <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Ticket No, Requestor, Type..." style="width: 100%; padding: 8px 10px 8px 35px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem; outline: none;">
+                                </div>
+                            </div>
+                            
+                            <div style="width: 150px;">
+                                <label for="status" style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px;">Status</label>
+                                <select name="status" id="status" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem; outline: none;" onchange="document.getElementById('filterForm').requestSubmit();">
+                                    <option value="">All Statuses</option>
+                                    @foreach(['Open', 'In Progress', 'Resolved', 'Closed', 'Escalated', 'Not Complete'] as $stat)
+                                        <option value="{{ $stat }}" {{ request('status') == $stat ? 'selected' : '' }}>{{ $stat }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            
+                            <div style="width: 150px;">
+                                <label for="filter_dept" style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px;">Department</label>
+                                <select name="filter_dept" id="filter_dept" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem; outline: none;" onchange="document.getElementById('filterForm').requestSubmit();">
+                                    <option value="">All Departments</option>
+                                    @foreach(array_keys($hierarchy) as $dept)
+                                        <option value="{{ $dept }}" {{ request('filter_dept') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div style="width: 150px;">
+                                <label for="filter_branch" style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px;">Branch</label>
+                                <select name="filter_branch" id="filter_branch" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem; outline: none;" onchange="document.getElementById('filterForm').requestSubmit();">
+                                    <option value="">All Branches</option>
+                                    @foreach(['HEAD OFFICE', 'NDD BACOLOD', 'NDD BAESA', 'NDD BATAAN', 'NDD BATANGAS', 'NDD CAVITE', 'NDD CDO', 'NDD CEBU', 'NDD DAVAO', 'NDD DIPOLOG', 'NDD DUMAGUETE', 'NDD ILOILO', 'NDD LA UNION', 'NDD LAGUNA', 'NDD LAS PIÑAS', 'NDD NUEVA ECIJA', 'NDD PULILAN', 'NDD ROXAS', 'NDD SAN FRANCISCO', 'NDD TACLOBAN', 'NDD TARLAC', 'NDD TAYTAY'] as $br)
+                                        <option value="{{ $br }}" {{ request('filter_branch') == $br ? 'selected' : '' }}>{{ $br }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div>
+                                <button type="submit" class="dk-btn dk-btn-primary" style="height: 38px;">Filter</button>
+                            </div>
+                            @if(request()->hasAny(['search', 'filter_dept', 'filter_branch', 'status', 'request_type']))
+                            <div>
+                                <a href="{{ route('tickets.index') }}" class="dk-btn dk-btn-outline" style="height: 38px;">Clear</a>
+                            </div>
+                            @endif
+                        </form>
+                    </div>
+
+                    <script>
+                        function sortBy(column) {
+                            let currentSort = document.getElementById('sort_by').value;
+                            let currentDir = document.getElementById('sort_dir').value;
+                            if (currentSort === column) {
+                                document.getElementById('sort_dir').value = currentDir === 'asc' ? 'desc' : 'asc';
+                            } else {
+                                document.getElementById('sort_by').value = column;
+                                document.getElementById('sort_dir').value = 'asc';
+                            }
+                            document.getElementById('filterForm').submit();
+                        }
+                    </script>
 
                     {{-- Scrollable Table Container --}}                    <div id="tickets-table-container">
                         <div class="dk-table-wrap">
                         <table class="dk-table" style="min-width: 1100px;">
                             <thead>
-                                <tr>
-                                    <th>Ticket No.</th>
-                                    <th>Requested By</th>
-                                    <th>Position</th>
-                                    <th>Branch</th>
-                                    <th>Request Type</th>
+                                @php
+                                    $sortCol = request('sort_by', 'created_at');
+                                    $sortDir = request('sort_dir', 'desc');
+                                    if (!function_exists('sortArrow')) {
+                                        function sortArrow($col, $sCol, $sDir) {
+                                            if ($col !== $sCol) return "<span style='color: #cbd5e1; font-size: 0.8rem; margin-left: 4px;'>↕</span>";
+                                            return $sDir === 'asc' ? "<span style='color: #1f2937; font-size: 0.8rem; margin-left: 4px;'>↑</span>" : "<span style='color: #1f2937; font-size: 0.8rem; margin-left: 4px;'>↓</span>";
+                                        }
+                                    }
+                                @endphp
+                                <tr style="user-select: none;">
+                                    <th style="cursor: pointer;" onclick="sortBy('ticket_no')">Ticket No. {!! sortArrow('ticket_no', $sortCol, $sortDir) !!}</th>
+                                    <th style="cursor: pointer;" onclick="sortBy('requested_by')">Requested By {!! sortArrow('requested_by', $sortCol, $sortDir) !!}</th>
+                                    <th style="cursor: pointer;" onclick="sortBy('position')">Position {!! sortArrow('position', $sortCol, $sortDir) !!}</th>
+                                    <th style="cursor: pointer;" onclick="sortBy('branch')">Branch {!! sortArrow('branch', $sortCol, $sortDir) !!}</th>
+                                    <th style="cursor: pointer;" onclick="sortBy('request_type')">Request Type {!! sortArrow('request_type', $sortCol, $sortDir) !!}</th>
                                     <th>Request</th>
-                                    <th>Status</th>
+                                    <th style="cursor: pointer;" onclick="sortBy('status')">Status {!! sortArrow('status', $sortCol, $sortDir) !!}</th>
                                     <th style="text-align: center;">Assisted By</th>
-                                    <th>Date Created</th>
+                                    <th style="cursor: pointer;" onclick="sortBy('created_at')">Date Created {!! sortArrow('created_at', $sortCol, $sortDir) !!}</th>
                                     <th style="position: sticky; right: 0; background-color: var(--th-bg); z-index: 2; box-shadow: -4px 0 8px rgba(0,0,0,0.06);">Actions</th>
                                 </tr>
                             </thead>

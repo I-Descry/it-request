@@ -58,6 +58,15 @@
                                 </select>
                             </div>
 
+                            <div style="width: 140px;">
+                                <label for="filter_status" style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px;">Status Filter</label>
+                                <select name="filter_status" id="filter_status" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem; outline: none;" onchange="document.getElementById('filterForm').requestSubmit();">
+                                    <option value="Active" {{ request('filter_status', 'Active') == 'Active' ? 'selected' : '' }}>Active</option>
+                                    <option value="Resigned" {{ request('filter_status') == 'Resigned' ? 'selected' : '' }}>Resigned</option>
+                                    <option value="All" {{ request('filter_status') == 'All' ? 'selected' : '' }}>All Statuses</option>
+                                </select>
+                            </div>
+
                             <div style="width: 180px;">
                                 <label for="filter_branch" style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px;">Branch Filter</label>
                                 <select name="filter_branch" id="filter_branch" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem; outline: none;" onchange="document.getElementById('filterForm').requestSubmit();">
@@ -117,7 +126,12 @@
                                 @forelse ($employees as $employee)
                                     <tr>
                                         <td>{{ $employee->nfp_id }}</td>
-                                        <td style="font-weight: bold;">{{ $employee->full_name }}</td>
+                                        <td style="font-weight: bold;">
+                                            {{ $employee->full_name }}
+                                            @if($employee->employment_status === 'Resigned')
+                                                <span style="font-size: 0.7rem; background: #fee2e2; color: #991b1b; padding: 2px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle;">Resigned</span>
+                                            @endif
+                                        </td>
                                         <td>{{ $employee->position }}</td>
                                         <td>{{ $employee->department ?? '—' }}</td>
                                         <td>
@@ -150,6 +164,26 @@
                                                   <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                                 </svg>
                                             </a>
+                                            @if($employee->employment_status === 'Active')
+                                            <form action="{{ route('employees.offboard', $employee->id) }}" method="POST" style="display: inline-block; margin: 0;" onsubmit="return confirm('Are you sure you want to mark this employee as resigned?');">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="action-btn edit" style="background: none; border: none; padding: 0; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; color: #d97706;" data-tooltip="Mark as Resigned">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px;">
+                                                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                            @endif
+                                            <form action="{{ route('employees.destroy', $employee->id) }}" method="POST" style="display: inline-block; margin: 0;" onsubmit="return confirm('Are you sure you want to delete this employee record? (This is a soft-delete).');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="action-btn edit" style="background: none; border: none; padding: 0; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; color: #dc2626;" data-tooltip="Delete Employee">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px;">
+                                                      <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                                    </svg>
+                                                </button>
+                                            </form>
                                         </td>
                                     </tr>
                                 @empty

@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/tickets/{ticket}/edit', [TicketController::class, 'edit'])->name('tickets.edit');
     Route::put('/tickets/{ticket}', [TicketController::class, 'update'])->name('tickets.update');
     Route::delete('/tickets/{ticket}', [TicketController::class, 'destroy'])->name('tickets.destroy');
+    Route::delete('/tickets/attachments/{id}', [TicketController::class, 'destroyAttachment'])->name('tickets.attachments.destroy');
     Route::post('/tickets/{id}/restore', [TicketController::class, 'restore'])->name('tickets.restore');
 
     /* --- 3. EMPLOYEE ROUTES --- */
@@ -38,6 +39,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/employees', [App\Http\Controllers\EmployeeController::class, 'store'])->name('employees.store');
     Route::get('/employees/{employee}/edit', [App\Http\Controllers\EmployeeController::class, 'edit'])->name('employees.edit');
     Route::put('/employees/{employee}', [App\Http\Controllers\EmployeeController::class, 'update'])->name('employees.update');
+    Route::delete('/employees/{employee}', [App\Http\Controllers\EmployeeController::class, 'destroy'])->name('employees.destroy');
+    Route::patch('/employees/{employee}/offboard', [App\Http\Controllers\EmployeeController::class, 'offboard'])->name('employees.offboard');
 
     Route::get('/logs', [App\Http\Controllers\ActivityLogController::class, 'index'])->name('logs.index');
 });

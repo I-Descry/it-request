@@ -1,11 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 id="ticket-header-title" class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('View Ticket') }} — {{ $ticket->ticket_no }}
         </h2>
     </x-slot>
 
-    <div class="py-4">
+    <div id="ticket-content-container" class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-visible shadow-sm sm:rounded-lg">
                 <div class="p-4 text-gray-900 dark:text-gray-100">
@@ -38,7 +38,7 @@
                         </div>
                         <div style="display: flex; gap: 6px; align-items: center;">
                             @if($prevTicket)
-                                <a href="{{ route('tickets.show', $prevTicket->ticket_no) }}" style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); text-decoration: none; transition: all 0.15s;" title="{{ $prevTicket->ticket_no }}" onmouseover="this.style.borderColor='#2563eb'; this.style.color='#2563eb';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.color='var(--text-primary)';">
+                                <a href="{{ route('tickets.show', $prevTicket->ticket_no) }}" class="ajax-nav-btn" style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); text-decoration: none; transition: all 0.15s;" title="{{ $prevTicket->ticket_no }}" onmouseover="this.style.borderColor='#2563eb'; this.style.color='#2563eb';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.color='var(--text-primary)';">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
                                 </a>
                             @else
@@ -48,7 +48,7 @@
                             @endif
                             <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">{{ $ticket->ticket_no }}</span>
                             @if($nextTicket)
-                                <a href="{{ route('tickets.show', $nextTicket->ticket_no) }}" style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); text-decoration: none; transition: all 0.15s;" title="{{ $nextTicket->ticket_no }}" onmouseover="this.style.borderColor='#2563eb'; this.style.color='#2563eb';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.color='var(--text-primary)';">
+                                <a href="{{ route('tickets.show', $nextTicket->ticket_no) }}" class="ajax-nav-btn" style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); text-decoration: none; transition: all 0.15s;" title="{{ $nextTicket->ticket_no }}" onmouseover="this.style.borderColor='#2563eb'; this.style.color='#2563eb';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.color='var(--text-primary)';">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                                 </a>
                             @else
@@ -256,4 +256,54 @@
 
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const container = document.getElementById('ticket-content-container');
+            if (!container) return;
+
+            container.addEventListener('click', function(e) {
+                const btn = e.target.closest('.ajax-nav-btn');
+                if (!btn) return;
+
+                e.preventDefault();
+                const url = btn.href;
+
+                container.style.opacity = '0.5';
+                container.style.pointerEvents = 'none';
+
+                fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                    .then(response => response.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+
+                        const newHeader = doc.getElementById('ticket-header-title');
+                        const oldHeader = document.getElementById('ticket-header-title');
+                        if (newHeader && oldHeader) {
+                            oldHeader.innerHTML = newHeader.innerHTML;
+                        }
+
+                        const newContent = doc.getElementById('ticket-content-container');
+                        if (newContent) {
+                            container.innerHTML = newContent.innerHTML;
+                        }
+
+                        container.style.opacity = '1';
+                        container.style.pointerEvents = 'auto';
+
+                        window.history.pushState({}, '', url);
+                        if (doc.title) document.title = doc.title;
+                    })
+                    .catch(err => {
+                        console.error('AJAX navigation failed', err);
+                        window.location.href = url;
+                    });
+            });
+
+            window.addEventListener('popstate', function() {
+                window.location.reload();
+            });
+        });
+    </script>
 </x-app-layout>

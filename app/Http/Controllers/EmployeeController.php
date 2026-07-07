@@ -53,9 +53,14 @@ class EmployeeController extends Controller
             $query->where('branch', $request->filter_branch);
         }
 
+        $statusFilter = $request->input('filter_status', 'Active');
+        if ($statusFilter !== 'All') {
+            $query->where('employment_status', $statusFilter);
+        }
+
         $sortBy = $request->input('sort_by', 'last_name');
         $sortDir = $request->input('sort_dir', 'asc');
-        $validColumns = ['nfp_id', 'first_name', 'last_name', 'position', 'department', 'branch'];
+        $validColumns = ['nfp_id', 'first_name', 'last_name', 'position', 'department', 'branch', 'employment_status'];
         if (in_array($sortBy, $validColumns)) {
             $query->orderBy($sortBy, $sortDir === 'desc' ? 'desc' : 'asc');
         } else {
@@ -65,7 +70,7 @@ class EmployeeController extends Controller
         $employees = $query->paginate(10)->appends($request->query());
         $hierarchy = \App\Http\Controllers\HierarchyController::getHierarchy();
         
-        return view('employees.index', compact('employees', 'hierarchy'));
+        return view('employees.index', compact('employees', 'hierarchy', 'statusFilter'));
     }
 
     public function directory()
@@ -74,7 +79,8 @@ class EmployeeController extends Controller
         $hierarchy = \App\Http\Controllers\HierarchyController::getHierarchy();
         
         // Group by department, then position is handled in the view
-        $employeesByDept = Employee::orderBy('department')
+        $employeesByDept = Employee::where('employment_status', 'Active')
+                                   ->orderBy('department')
                                    ->orderBy('last_name')
                                    ->get()
                                    ->groupBy('department');
@@ -110,6 +116,8 @@ class EmployeeController extends Controller
             'branch'      => 'required|string|max:255',
             'department'  => 'nullable|string|max:255',
             'contact_no'  => 'nullable|string|max:255',
+            'employment_status' => 'nullable|string|in:Active,Resigned',
+            'resigned_date'     => 'nullable|date',
         ]);
 
         Employee::create($validated);
@@ -145,6 +153,8 @@ class EmployeeController extends Controller
             'branch'      => 'required|string|max:255',
             'department'  => 'nullable|string|max:255',
             'contact_no'  => 'nullable|string|max:255',
+            'employment_status' => 'required|string|in:Active,Resigned',
+            'resigned_date'     => 'nullable|date',
         ]);
 
         $oldFullName = $employee->full_name;
@@ -154,31 +164,57 @@ class EmployeeController extends Controller
         $newFullName = $employee->full_name;
 
         // Cascade updates to all tickets involving this employee
-        \App\Models\Ticket::withoutEvents(function () use ($oldFullName, $newFullName, $employee) {
-            \App\Models\Ticket::where('requested_by', $oldFullName)->get()->each(function ($ticket) use ($newFullName, $employee) {
-                // Keep track of old attributes for the log
-                $oldAttrs = $ticket->getAttributes();
-
-                $ticket->update([
+        $ticketIds = \App\Models\Ticket::where('requested_by', $oldFullName)->pluck('id')->toArray();
+        
+        if (!empty($ticketIds)) {
+            \App\Models\Ticket::withoutEvents(function () use ($ticketIds, $newFullName, $employee) {
+                \App\Models\Ticket::whereIn('id', $ticketIds)->update([
                     'requested_by' => $newFullName,
                     'position'     => $employee->position,
                     'branch'       => $employee->branch,
                     'department'   => $employee->department,
                 ]);
 
-                // Manually log it with a descriptive message linking back to the employee
-                $ticket->activityLogs()->create([
-                    'action' => 'updated',
-                    'description' => 'System sync: Cascaded from Employee update',
-                    'properties' => [
-                        'old' => $oldAttrs,
-                        'new' => $ticket->getAttributes(),
-                        'dirty' => $ticket->getChanges()
-                    ]
-                ]);
+                // Bulk insert activity logs
+                $logs = [];
+                $now = now();
+                foreach ($ticketIds as $id) {
+                    $logs[] = [
+                        'action'       => 'updated',
+                        'subject_type' => 'App\Models\Ticket',
+                        'subject_id'   => $id,
+                        'description'  => 'System sync: Cascaded from Employee update',
+                        'properties'   => json_encode(['note' => "Updated via employee ({$newFullName}) sync"]),
+                        'created_at'   => $now,
+                        'updated_at'   => $now,
+                    ];
+                }
+                \App\Models\ActivityLog::insert($logs);
             });
-        });
+        }
 
         return redirect()->route('employees.index')->with('success', 'Employee updated successfully!');
+    }
+
+    /**
+     * Mark an employee as Resigned.
+     */
+    public function offboard(Request $request, Employee $employee)
+    {
+        $employee->update([
+            'employment_status' => 'Resigned',
+            'resigned_date'     => now(),
+        ]);
+        
+        return redirect()->back()->with('success', 'Employee successfully marked as Resigned.');
+    }
+
+    /**
+     * Remove the specified resource from storage (Soft Delete).
+     */
+    public function destroy(Employee $employee)
+    {
+        $employee->delete();
+        return redirect()->route('employees.index')->with('success', 'Employee record successfully deleted.');
     }
 }

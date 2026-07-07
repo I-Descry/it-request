@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight flex items-center gap-2">
+        <h2 id="employee-header-title" class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
@@ -8,7 +8,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-12" style="background-color: var(--th-bg); min-height: calc(100vh - 65px);">
+    <div id="employee-content-container" class="py-12" style="background-color: var(--th-bg); min-height: calc(100vh - 65px);">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg" style="background: var(--bg-card); border: 1px solid var(--border-color);">
                 <div class="p-6 text-gray-900 dark:text-gray-100 dark:text-gray-100">
@@ -26,7 +26,7 @@
                         </div>
                         <div style="display: flex; gap: 6px; align-items: center;">
                             @if($prevEmployee)
-                                <a href="{{ route('employees.show', $prevEmployee->id) }}" style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); text-decoration: none; transition: all 0.15s;" title="{{ $prevEmployee->full_name }}" onmouseover="this.style.borderColor='#2563eb'; this.style.color='#2563eb';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.color='var(--text-primary)';">
+                                <a href="{{ route('employees.show', $prevEmployee->id) }}" class="ajax-nav-btn" style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); text-decoration: none; transition: all 0.15s;" title="{{ $prevEmployee->full_name }}" onmouseover="this.style.borderColor='#2563eb'; this.style.color='#2563eb';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.color='var(--text-primary)';">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
                                 </a>
                             @else
@@ -36,7 +36,7 @@
                             @endif
                             <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">{{ $employee->last_name }}, {{ $employee->first_name }}</span>
                             @if($nextEmployee)
-                                <a href="{{ route('employees.show', $nextEmployee->id) }}" style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); text-decoration: none; transition: all 0.15s;" title="{{ $nextEmployee->full_name }}" onmouseover="this.style.borderColor='#2563eb'; this.style.color='#2563eb';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.color='var(--text-primary)';">
+                                <a href="{{ route('employees.show', $nextEmployee->id) }}" class="ajax-nav-btn" style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); text-decoration: none; transition: all 0.15s;" title="{{ $nextEmployee->full_name }}" onmouseover="this.style.borderColor='#2563eb'; this.style.color='#2563eb';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.color='var(--text-primary)';">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                                 </a>
                             @else
@@ -104,6 +104,19 @@
                                     <span style="display: block; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 4px;">Contact No.</span>
                                     <div style="font-size: 1rem; color: var(--text-primary); font-weight: 500;">{{ $employee->contact_no ?? '—' }}</div>
                                 </div>
+                                <div>
+                                    <span style="display: block; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 4px;">Status</span>
+                                    <div style="font-size: 1rem; color: var(--text-primary); font-weight: 500;">
+                                        @if($employee->employment_status === 'Active')
+                                            <span style="background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 4px; font-size: 0.85rem;">Active</span>
+                                        @else
+                                            <span style="background: #fee2e2; color: #991b1b; padding: 2px 8px; border-radius: 4px; font-size: 0.85rem;">Resigned</span>
+                                            @if($employee->resigned_date)
+                                                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">as of {{ \Carbon\Carbon::parse($employee->resigned_date)->format('M d, Y') }}</div>
+                                            @endif
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -112,4 +125,54 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const container = document.getElementById('employee-content-container');
+            if (!container) return;
+
+            container.addEventListener('click', function(e) {
+                const btn = e.target.closest('.ajax-nav-btn');
+                if (!btn) return;
+
+                e.preventDefault();
+                const url = btn.href;
+
+                container.style.opacity = '0.5';
+                container.style.pointerEvents = 'none';
+
+                fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                    .then(response => response.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+
+                        const newHeader = doc.getElementById('employee-header-title');
+                        const oldHeader = document.getElementById('employee-header-title');
+                        if (newHeader && oldHeader) {
+                            oldHeader.innerHTML = newHeader.innerHTML;
+                        }
+
+                        const newContent = doc.getElementById('employee-content-container');
+                        if (newContent) {
+                            container.innerHTML = newContent.innerHTML;
+                        }
+
+                        container.style.opacity = '1';
+                        container.style.pointerEvents = 'auto';
+
+                        window.history.pushState({}, '', url);
+                        if (doc.title) document.title = doc.title;
+                    })
+                    .catch(err => {
+                        console.error('AJAX navigation failed', err);
+                        window.location.href = url;
+                    });
+            });
+
+            window.addEventListener('popstate', function() {
+                window.location.reload();
+            });
+        });
+    </script>
 </x-app-layout>

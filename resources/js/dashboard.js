@@ -10,27 +10,50 @@ document.addEventListener('DOMContentLoaded', function() {
         scales: { x: { grid: { display: false }, ticks: { font: { size: 9, family: ff }, color: '#9ca3af' } }, y: { grid: { color: gc }, ticks: { font: { size: 9, family: ff }, color: '#9ca3af', precision: 0 }, beginAtZero: true } }
     };
 
-    // Donut Chart - Request Types (Harmonious & High Contrast Tailwind Palette)
-    const dc = [
-        '#3b82f6', // Blue
-        '#f59e0b', // Amber
-        '#10b981', // Emerald
-        '#ec4899', // Pink
-        '#06b6d4', // Cyan
-        '#f97316', // Orange
-        '#8b5cf6', // Violet
-        '#84cc16', // Lime
-        '#f43f5e', // Rose
-        '#14b8a6', // Teal
-        '#a855f7', // Purple
-        '#eab308', // Yellow
-        '#0ea5e9', // Sky
-        '#ef4444', // Red
-        '#22c55e', // Green
-        '#d946ef', // Fuchsia
-        '#6366f1', // Indigo
-        '#64748b'  // Slate
-    ];
+    // Helper to get stable color for request types
+    function getStableColor(label) {
+        // Predefined mappings for common request types to ensure good initial contrast
+        const mappedColors = {
+            'Incident': '#ef4444', // Red
+            'Service Request': '#3b82f6', // Blue
+            'Access Request': '#f59e0b', // Amber
+            'Account Creation': '#10b981', // Emerald
+            'Account Deactivation': '#64748b', // Slate
+            'Password Reset': '#8b5cf6', // Violet
+            'Hardware Issue': '#f97316', // Orange
+            'Software Issue': '#06b6d4', // Cyan
+            'Network Issue': '#ec4899', // Pink
+            'Printer Issue': '#84cc16', // Lime
+            'Email Issue': '#f43f5e', // Rose
+            'Installation': '#14b8a6', // Teal
+            'Configuration': '#a855f7', // Purple
+            'Maintenance': '#eab308', // Yellow
+            'Upgrade': '#0ea5e9', // Sky
+            'Troubleshooting': '#22c55e', // Green
+            'Asset Management': '#d946ef', // Fuchsia
+            'Relocation / Deployment': '#6366f1', // Indigo
+            'Data Migration': '#0284c7', // Sky-600
+            'Backup & Restore': '#d97706', // Amber-600
+            'Security': '#dc2626' // Red-600
+        };
+
+        if (mappedColors[label]) return mappedColors[label];
+
+        // Fallback hash for unknown types
+        let hash = 0;
+        for (let i = 0; i < label.length; i++) {
+            hash = label.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        hash = Math.abs(hash);
+        
+        const palette = [
+            '#3b82f6', '#f59e0b', '#10b981', '#ec4899', '#06b6d4', '#f97316', 
+            '#8b5cf6', '#84cc16', '#f43f5e', '#14b8a6', '#a855f7', '#eab308', 
+            '#0ea5e9', '#ef4444', '#22c55e', '#d946ef', '#6366f1', '#64748b'
+        ];
+        return palette[hash % palette.length];
+    }
+
     const donutEl = document.getElementById('donutChart');
     if (donutEl && data.requestTypes) {
         new Chart(donutEl, { 
@@ -39,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 labels: data.requestTypes.keys, 
                 datasets: [{ 
                     data: data.requestTypes.values, 
-                    backgroundColor: dc.slice(0, data.requestTypes.keys.length), 
+                    backgroundColor: data.requestTypes.keys.map(key => getStableColor(key)), 
                     borderWidth: 2, 
                     borderColor: '#fff', 
                     hoverOffset: 4 

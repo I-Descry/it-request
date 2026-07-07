@@ -110,6 +110,14 @@
                                     @error('branch') <span class="t-error">{{ $message }}</span> @enderror
                                 </div>
                                 <div>
+                                    <label for="employment_status" class="t-label">Employment Status</label>
+                                    <select name="employment_status" id="employment_status" required class="t-input">
+                                        <option value="Active" {{ old('employment_status', $employee->employment_status) == 'Active' ? 'selected' : '' }}>Active</option>
+                                        <option value="Resigned" {{ old('employment_status', $employee->employment_status) == 'Resigned' ? 'selected' : '' }}>Resigned</option>
+                                    </select>
+                                    @error('employment_status') <span class="t-error">{{ $message }}</span> @enderror
+                                </div>
+                                <div>
                                     <label for="contact_no_suffix" class="t-label">Contact No. <span style="color: var(--text-muted); font-weight:400;">(optional)</span></label>
                                     <div style="display: flex; align-items: stretch; border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; background: var(--bg-card); transition: border-color 0.15s, box-shadow 0.15s;" onfocusin="this.style.borderColor='#2563eb'; this.style.boxShadow='0 0 0 3px rgba(37, 99, 235, 0.12)';" onfocusout="this.style.borderColor='#d1d5db'; this.style.boxShadow='none';">
                                         <span style="background: var(--panel-bg); color: var(--text-primary); padding: 7px 10px; font-size: 0.875rem; border-right: 1px solid #d1d5db; display: flex; align-items: center;">+63</span>

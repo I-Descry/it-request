@@ -99,7 +99,7 @@
                         .ts-wrapper * { box-sizing: border-box !important; }
                         .ts-wrapper.single .ts-control { padding: 7px 10px 7px 30px !important; font-size: 0.875rem !important; background-color: var(--bg-card) !important; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="%239ca3af"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>') !important; background-repeat: no-repeat !important; background-position: left 10px center !important; background-size: 1.5em 1.5em !important; border: 1px solid var(--border-color) !important; border-radius: 6px !important; box-shadow: none !important; min-height: 0 !important; height: auto !important; }
                         .ts-wrapper.single .ts-control::after { display: none !important; }
-                        .ts-wrapper.single .ts-control > input { padding: 0 !important; margin: 0 !important; font-size: 0.875rem !important; line-height: 1.5rem !important; height: 1.5rem !important; min-height: 0 !important; }
+                        .ts-wrapper.single .ts-control > input { padding: 0 !important; margin: 0 !important; font-size: 0.875rem !important; line-height: 1.5rem !important; height: 1.5rem !important; min-height: 0 !important; color: var(--text-primary) !important; }
                         .ts-wrapper.single .ts-control > .item { margin: 0 !important; padding: 0 !important; font-size: 0.875rem !important; line-height: 1.5rem !important; color: var(--text-primary) !important; }
                         .ts-wrapper.single.focus .ts-control { border-color: #3b82f6 !important; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important; }
                         .ts-dropdown { border: 1px solid var(--border-color) !important; border-radius: 6px !important; margin-top: 2px !important; box-shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -1px rgba(0,0,0,.06) !important; background: var(--bg-card) !important; z-index: 99999 !important; }
@@ -218,13 +218,13 @@
                                 <div class="t-attach-list">
                                     <span class="t-label" style="margin-bottom: 6px;">Current Files</span>
                                     @foreach ($ticket->attachments as $attachment)
-                                        <div class="t-attach-item">
+                                        <div class="t-attach-item" id="attach-{{ $attachment->id }}">
                                             <a href="{{ Storage::url($attachment->file_path) }}" target="_blank" class="t-attach-link">
                                                 📄 {{ $attachment->file_name }}
                                             </a>
-                                            <label class="t-attach-delete">
-                                                <input type="checkbox" name="delete_attachments[]" value="{{ $attachment->id }}"> Remove
-                                            </label>
+                                            <button type="button" class="t-attach-delete" onclick="deleteAttachment({{ $attachment->id }})" style="background: none; border: none; color: #ef4444; font-size: 0.8rem; font-weight: 600; cursor: pointer; text-decoration: underline;">
+                                                Remove
+                                            </button>
                                         </div>
                                     @endforeach
                                 </div>
@@ -275,14 +275,29 @@
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        new TomSelect("#requested_by", {
+        var ts = new TomSelect("#requested_by", {
             create: false,
             sortField: {
                 field: "text",
                 direction: "asc"
+            },
+            maxOptions: null,
+            searchField: ['text', 'value'],
+            onChange: function(value) {
+                if (value && this.options[value] && this.options[value].node) {
+                    var opt = this.options[value].node;
+                    document.getElementById('position').value = opt.dataset.position || '';
+                    document.getElementById('department').value = opt.dataset.department || '';
+                    document.getElementById('branch').value = opt.dataset.branch || '';
+                } else {
+                    document.getElementById('position').value = '';
+                    document.getElementById('department').value = '';
+                    document.getElementById('branch').value = '';
+                }
             }
         });
     });
+
     function deleteAttachment(id) {
         if(confirm('Are you sure you want to delete this attachment?')) {
             fetch(`/tickets/attachments/${id}`, {

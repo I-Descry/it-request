@@ -45,19 +45,47 @@ class TicketController extends Controller
     public function index(Request $request)
     {
         // Fetch all active tickets (soft-deleted are automatically excluded)
-        $query = Ticket::withCount('attachments')->latest(); 
+        $query = Ticket::withCount('attachments');
         
-        if ($request->has('status') && $request->status !== '') { 
+        if ($search = $request->input('search')) {
+            $query->where(function($q) use ($search) {
+                $q->where('ticket_no', 'like', "%{$search}%")
+                  ->orWhere('requested_by', 'like', "%{$search}%")
+                  ->orWhere('request', 'like', "%{$search}%")
+                  ->orWhere('request_type', 'like', "%{$search}%")
+                  ->orWhere('department', 'like', "%{$search}%")
+                  ->orWhere('branch', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('filter_dept')) {
+            $query->where('department', $request->filter_dept);
+        }
+        if ($request->filled('filter_branch')) {
+            $query->where('branch', $request->filter_branch);
+        }
+        
+        if ($request->filled('status')) { 
             $query->where('status', $request->status); 
         } 
         
-        if ($request->has('request_type') && $request->request_type !== '') { 
+        if ($request->filled('request_type')) { 
             $query->where('request_type', $request->request_type); 
         } 
         
+        $sortBy = $request->input('sort_by', 'created_at');
+        $sortDir = $request->input('sort_dir', 'desc');
+        $validColumns = ['ticket_no', 'requested_by', 'position', 'branch', 'request_type', 'status', 'created_at'];
+        if (in_array($sortBy, $validColumns)) {
+            $query->orderBy($sortBy, $sortDir === 'desc' ? 'desc' : 'asc');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+        
         $tickets = $query->paginate(10)->appends($request->query());
+        $hierarchy = \App\Http\Controllers\HierarchyController::getHierarchy();
 
-        return view('tickets.index', compact('tickets'));
+        return view('tickets.index', compact('tickets', 'hierarchy'));
     }
 
     /**
@@ -68,25 +96,27 @@ class TicketController extends Controller
         $ticket->load('attachments');
 
         // Previous / Next navigation
-        $prevTicket = Ticket::where('id', '<', $ticket->id)->orderBy('id', 'desc')->first();
-        $nextTicket = Ticket::where('id', '>', $ticket->id)->orderBy('id', 'asc')->first();
+        $prevTicket = Ticket::where('id', '<', $ticket->id)->orderBy('id', 'desc')->select('id', 'ticket_no')->first();
+        $nextTicket = Ticket::where('id', '>', $ticket->id)->orderBy('id', 'asc')->select('id', 'ticket_no')->first();
 
         // Calculate requestor statistics
         $requestor = $ticket->requested_by;
+        $statsRaw = \App\Models\Ticket::where('requested_by', $requestor)
+            ->selectRaw("
+                COUNT(CASE WHEN DATE(created_at) = CURDATE() THEN 1 END) as today,
+                COUNT(CASE WHEN created_at >= ? AND created_at <= ? THEN 1 END) as this_week,
+                COUNT(CASE WHEN MONTH(created_at) = ? AND YEAR(created_at) = ? THEN 1 END) as this_month
+            ", [
+                \Carbon\Carbon::now()->startOfWeek(),
+                \Carbon\Carbon::now()->endOfWeek(),
+                \Carbon\Carbon::now()->month,
+                \Carbon\Carbon::now()->year
+            ])->first();
+
         $stats = [
-            'today' => \App\Models\Ticket::where('requested_by', $requestor)
-                             ->whereDate('created_at', \Carbon\Carbon::today())
-                             ->count(),
-            'this_week' => \App\Models\Ticket::where('requested_by', $requestor)
-                                 ->whereBetween('created_at', [
-                                     \Carbon\Carbon::now()->startOfWeek(),
-                                     \Carbon\Carbon::now()->endOfWeek()
-                                 ])
-                                 ->count(),
-            'this_month' => \App\Models\Ticket::where('requested_by', $requestor)
-                                  ->whereMonth('created_at', \Carbon\Carbon::now()->month)
-                                  ->whereYear('created_at', \Carbon\Carbon::now()->year)
-                                  ->count(),
+            'today' => $statsRaw->today ?? 0,
+            'this_week' => $statsRaw->this_week ?? 0,
+            'this_month' => $statsRaw->this_month ?? 0,
         ];
 
         return view('tickets.show', compact('ticket', 'stats', 'prevTicket', 'nextTicket'));
@@ -99,7 +129,9 @@ class TicketController extends Controller
     public function create(Request $request)
     {
         $requestTypes = self::REQUEST_TYPES;
-        $employees = \App\Models\Employee::orderBy('last_name')->get();
+        $employees = \App\Models\Employee::select('id', 'first_name', 'last_name', 'middle_name', 'suffix', 'position', 'branch', 'department', 'contact_no')
+            ->where('employment_status', 'Active')
+            ->orderBy('last_name')->get();
 
         $sourceTicket = null;
         if ($request->has('from')) {
@@ -162,7 +194,8 @@ class TicketController extends Controller
     public function edit(Ticket $ticket)
     {
         $requestTypes = self::REQUEST_TYPES;
-        $employees = \App\Models\Employee::orderBy('last_name')->get();
+        $employees = \App\Models\Employee::select('id', 'first_name', 'last_name', 'middle_name', 'suffix', 'position', 'branch', 'department', 'contact_no')
+            ->orderBy('last_name')->get();
         $ticket->load('attachments');
 
         return view('tickets.edit', compact('ticket', 'requestTypes', 'employees'));
@@ -198,12 +231,18 @@ class TicketController extends Controller
             foreach ($request->file('attachments') as $file) {
                 $path = $file->store('attachments', 'public');
 
-                TicketAttachment::create([
+                $attachment = TicketAttachment::create([
                     'ticket_id' => $ticket->id,
                     'file_name' => $file->getClientOriginalName(),
                     'file_path' => $path,
                     'file_type' => $file->getClientMimeType(),
                     'file_size' => $file->getSize(),
+                ]);
+
+                $ticket->activityLogs()->create([
+                    'action' => 'updated',
+                    'description' => "Added attachment: {$attachment->file_name}",
+                    'properties' => ['attachment' => $attachment->file_name]
                 ]);
             }
         }
@@ -211,12 +250,46 @@ class TicketController extends Controller
         // 4. Handle attachment removals
         if ($request->has('remove_attachments')) {
             $removeIds = $request->input('remove_attachments', []);
+            
+            // Delete physical files
+            $attachmentsToDelete = TicketAttachment::whereIn('id', $removeIds)
+                ->where('ticket_id', $ticket->id)
+                ->get();
+                
+            foreach ($attachmentsToDelete as $attachment) {
+                $ticket->activityLogs()->create([
+                    'action' => 'updated',
+                    'description' => "Removed attachment: {$attachment->file_name}",
+                    'properties' => ['attachment' => $attachment->file_name]
+                ]);
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($attachment->file_path);
+            }
+            
             TicketAttachment::whereIn('id', $removeIds)
                 ->where('ticket_id', $ticket->id)
                 ->delete();
         }
 
         return redirect()->route('tickets.show', $ticket->ticket_no)->with('success', 'Ticket updated successfully!');
+    }
+
+    /**
+     * Remove a specific attachment.
+     */
+    public function destroyAttachment($id)
+    {
+        $attachment = TicketAttachment::findOrFail($id);
+        
+        $attachment->ticket->activityLogs()->create([
+            'action' => 'updated',
+            'description' => "Removed attachment: {$attachment->file_name}",
+            'properties' => ['attachment' => $attachment->file_name]
+        ]);
+        
+        \Illuminate\Support\Facades\Storage::disk('public')->delete($attachment->file_path);
+        $attachment->delete();
+        
+        return response()->json(['success' => true]);
     }
 
     /**
@@ -246,14 +319,22 @@ class TicketController extends Controller
         ]);
 
         // 2. Copy attachments references to archive (same file paths, no duplication)
+        $ticket->load('attachments');
+        $attachmentsData = [];
+        $now = now();
         foreach ($ticket->attachments as $attachment) {
-            ArchiveTicketAttachment::create([
+            $attachmentsData[] = [
                 'archive_ticket_id' => $archiveTicket->id,
                 'file_name'         => $attachment->file_name,
                 'file_path'         => $attachment->file_path,
                 'file_type'         => $attachment->file_type,
                 'file_size'         => $attachment->file_size,
-            ]);
+                'created_at'        => $now,
+                'updated_at'        => $now,
+            ];
+        }
+        if (!empty($attachmentsData)) {
+            ArchiveTicketAttachment::insert($attachmentsData);
         }
 
         // 3. Soft-delete the ticket
@@ -265,13 +346,49 @@ class TicketController extends Controller
     /**
      * Show the archived tickets view.
      */
-    public function archived()
+    public function archived(Request $request)
     {
-        $archivedTickets = ArchiveTicket::withCount('attachments')
-            ->latest('archived_at')
-            ->paginate(10);
+        $query = ArchiveTicket::withCount('attachments');
+        
+        if ($search = $request->input('search')) {
+            $query->where(function($q) use ($search) {
+                $q->where('ticket_no', 'like', "%{$search}%")
+                  ->orWhere('requested_by', 'like', "%{$search}%")
+                  ->orWhere('request', 'like', "%{$search}%")
+                  ->orWhere('request_type', 'like', "%{$search}%")
+                  ->orWhere('department', 'like', "%{$search}%")
+                  ->orWhere('branch', 'like', "%{$search}%");
+            });
+        }
 
-        return view('tickets.archived', compact('archivedTickets'));
+        if ($request->filled('filter_dept')) {
+            $query->where('department', $request->filter_dept);
+        }
+        if ($request->filled('filter_branch')) {
+            $query->where('branch', $request->filter_branch);
+        }
+        
+        if ($request->filled('status')) { 
+            $query->where('status', $request->status); 
+        } 
+        
+        if ($request->filled('request_type')) { 
+            $query->where('request_type', $request->request_type); 
+        } 
+        
+        $sortBy = $request->input('sort_by', 'archived_at');
+        $sortDir = $request->input('sort_dir', 'desc');
+        $validColumns = ['ticket_no', 'requested_by', 'position', 'branch', 'request_type', 'status', 'archived_at'];
+        if (in_array($sortBy, $validColumns)) {
+            $query->orderBy($sortBy, $sortDir === 'desc' ? 'desc' : 'asc');
+        } else {
+            $query->orderBy('archived_at', 'desc');
+        }
+
+        $archivedTickets = $query->paginate(10)->appends($request->query());
+        $hierarchy = \App\Http\Controllers\HierarchyController::getHierarchy();
+
+        return view('tickets.archived', compact('archivedTickets', 'hierarchy'));
     }
 
     /**
