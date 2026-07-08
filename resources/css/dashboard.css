@@ -1,4 +1,4 @@
-.dk-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 12px; }
+.dk-grid-7 { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; margin-bottom: 12px; }
 .dk-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
 .dk-grid-70-30 { display: grid; grid-template-columns: 2.2fr 1fr; gap: 12px; margin-bottom: 12px; align-items: stretch; }
 

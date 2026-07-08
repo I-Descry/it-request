@@ -255,6 +255,21 @@ document.addEventListener('DOMContentLoaded', function() {
             datasets.push({ label: 'Escalated', data: data.techPerformance.escalated, backgroundColor: '#f59e0b', borderRadius: 4, barPercentage: 0.6 });
         }
 
+        const sumOpen = data.techPerformance.open.reduce((a, b) => a + b, 0);
+        if (sumOpen > 0) {
+            datasets.push({ label: 'Open', data: data.techPerformance.open, backgroundColor: '#fcd34d', borderRadius: 4, barPercentage: 0.6 });
+        }
+
+        const sumNotComplete = data.techPerformance.not_complete.reduce((a, b) => a + b, 0);
+        if (sumNotComplete > 0) {
+            datasets.push({ label: 'Not Complete', data: data.techPerformance.not_complete, backgroundColor: '#9ca3af', borderRadius: 4, barPercentage: 0.6 });
+        }
+
+        const sumCancelled = data.techPerformance.cancelled.reduce((a, b) => a + b, 0);
+        if (sumCancelled > 0) {
+            datasets.push({ label: 'Cancelled', data: data.techPerformance.cancelled, backgroundColor: '#ef4444', borderRadius: 4, barPercentage: 0.6 });
+        }
+
         new Chart(techEl, { 
             type: 'bar', 
             data: { 

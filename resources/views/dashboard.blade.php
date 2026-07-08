@@ -27,36 +27,42 @@
             @vite(['resources/css/dashboard.css', 'resources/js/dashboard.js'])
 
             {{-- Row 1: KPI Overview --}}
-            <div class="dk-grid-5">
-                <div class="dk-card dk-card-accent dk-clickable-card" style="border-left-color: #8b5cf6; cursor: pointer;" onclick="window.location='{{ route('tickets.index') }}'">
+            <div class="dk-grid-6" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 12px;">
+                <div class="dk-card dk-card-accent dk-clickable-card" style="border-left-color: #8b5cf6; cursor: pointer;" onclick="window.location='{{ route('tickets.index') }}'" title="Total Active: All requests in the selected timeframe.">
                     <div class="dk-kpi-icon" style="background: rgba(139, 92, 246, 0.15);"><svg fill="none" stroke="#8b5cf6" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
                     <div class="dk-kpi-label">Total Active</div>
                     <div class="dk-kpi-value" id="kpi-total-val">{{ $totalActive }}</div>
                     <div class="dk-kpi-sub">Requests for selected timeframe</div>
                 </div>
-                <div class="dk-card dk-card-accent dk-clickable-card" style="border-left-color: #3b82f6; cursor: pointer;" onclick="window.location='{{ route('tickets.index', ['status' => 'In Progress']) }}'">
+                <div class="dk-card dk-card-accent dk-clickable-card" style="border-left-color: #3b82f6; cursor: pointer;" onclick="window.location='{{ route('tickets.index', ['status' => 'In Progress']) }}'" title="In Progress: The request is currently being worked on by the IT staff.">
                     <div class="dk-kpi-icon" style="background: var(--badge-prog-bg);"><svg fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
                     <div class="dk-kpi-label">In Progress</div>
                     <div class="dk-kpi-value" id="kpi-prog-val">{{ $byStatus['In Progress'] ?? 0 }}</div>
                     <div class="dk-kpi-sub" id="kpi-prog-sub">{{ $totalActive > 0 ? number_format((($byStatus['In Progress'] ?? 0) / $totalActive) * 100, 1) : '0.0' }}%</div>
                 </div>
-                <div class="dk-card dk-card-accent dk-clickable-card" style="border-left-color: #f59e0b; cursor: pointer;" onclick="window.location='{{ route('tickets.index', ['status' => 'Escalated']) }}'">
+                <div class="dk-card dk-card-accent dk-clickable-card" style="border-left-color: #f59e0b; cursor: pointer;" onclick="window.location='{{ route('tickets.index', ['status' => 'Escalated']) }}'" title="Escalated: The request requires higher-level intervention or approvals.">
                     <div class="dk-kpi-icon" style="background: var(--badge-open-bg);"><svg fill="none" stroke="#f59e0b" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg></div>
                     <div class="dk-kpi-label">Escalated</div>
                     <div class="dk-kpi-value" id="kpi-esc-val">{{ $byStatus['Escalated'] ?? 0 }}</div>
                     <div class="dk-kpi-sub" id="kpi-esc-sub">{{ $totalActive > 0 ? number_format((($byStatus['Escalated'] ?? 0) / $totalActive) * 100, 1) : '0.0' }}%</div>
                 </div>
-                <div class="dk-card dk-card-accent dk-clickable-card" style="border-left-color: #10b981; cursor: pointer;" onclick="window.location='{{ route('tickets.index', ['status' => 'Resolved']) }}'">
+                <div class="dk-card dk-card-accent dk-clickable-card" style="border-left-color: #10b981; cursor: pointer;" onclick="window.location='{{ route('tickets.index', ['status' => 'Resolved']) }}'" title="Resolved: The request has been successfully completed.">
                     <div class="dk-kpi-icon" style="background: var(--badge-res-bg);"><svg fill="none" stroke="#10b981" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
                     <div class="dk-kpi-label">Resolved</div>
                     <div class="dk-kpi-value" id="kpi-res-val">{{ $byStatus['Resolved'] ?? 0 }}</div>
                     <div class="dk-kpi-sub" id="kpi-res-sub">{{ $totalActive > 0 ? number_format((($byStatus['Resolved'] ?? 0) / $totalActive) * 100, 1) : '0.0' }}%</div>
                 </div>
-                <div class="dk-card dk-card-accent dk-clickable-card" style="border-left-color: var(--text-light); cursor: pointer;" onclick="window.location='{{ route('tickets.index', ['status' => 'Not Complete']) }}'">
+                <div class="dk-card dk-card-accent dk-clickable-card" style="border-left-color: var(--text-light); cursor: pointer;" onclick="window.location='{{ route('tickets.index', ['status' => 'Not Complete']) }}'" title="Not Complete: The request is not done due to limitations or other external factors.">
                     <div class="dk-kpi-icon" style="background: var(--badge-closed-bg);"><svg fill="none" stroke="#6b7280" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
                     <div class="dk-kpi-label">Not Complete</div>
                     <div class="dk-kpi-value" id="kpi-not-val">{{ $byStatus['Not Complete'] ?? 0 }}</div>
                     <div class="dk-kpi-sub" id="kpi-not-sub">{{ $totalActive > 0 ? number_format((($byStatus['Not Complete'] ?? 0) / $totalActive) * 100, 1) : '0.0' }}%</div>
+                </div>
+                <div class="dk-card dk-card-accent dk-clickable-card" style="border-left-color: #ef4444; cursor: pointer;" onclick="window.location='{{ route('tickets.index', ['status' => 'Cancelled']) }}'" title="Cancelled: The request was cancelled by the user or staff.">
+                    <div class="dk-kpi-icon" style="background: rgba(239,68,68,0.15);"><svg fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg></div>
+                    <div class="dk-kpi-label">Cancelled</div>
+                    <div class="dk-kpi-value" id="kpi-cancel-val">{{ $byStatus['Cancelled'] ?? 0 }}</div>
+                    <div class="dk-kpi-sub" id="kpi-cancel-sub">{{ $totalActive > 0 ? number_format((($byStatus['Cancelled'] ?? 0) / $totalActive) * 100, 1) : '0.0' }}%</div>
                 </div>
             </div>
 
@@ -118,12 +124,15 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <script>
         @php 
-            $tL=[]; $tR=[]; $tI=[]; $tE=[]; 
+            $tL=[]; $tR=[]; $tI=[]; $tE=[]; $tO=[]; $tN=[]; $tC=[];
             foreach($techPerformance as $c=>$d){ 
                 $tL[]=$assistedByMap[$c]??$c; 
-                $tR[]=$d['resolved']; 
-                $tI[]=$d['in_progress']; 
-                $tE[]=$d['escalated']; 
+                $tR[]=$d['resolved'] ?? 0; 
+                $tI[]=$d['in_progress'] ?? 0; 
+                $tE[]=$d['escalated'] ?? 0; 
+                $tO[]=$d['open'] ?? 0;
+                $tN[]=$d['not_complete'] ?? 0;
+                $tC[]=$d['cancelled'] ?? 0;
             } 
         @endphp
         window.dashboardData = {
@@ -136,7 +145,10 @@
                 labels: {!! json_encode($tL) !!},
                 resolved: {!! json_encode($tR) !!},
                 in_progress: {!! json_encode($tI) !!},
-                escalated: {!! json_encode($tE) !!}
+                escalated: {!! json_encode($tE) !!},
+                open: {!! json_encode($tO) !!},
+                not_complete: {!! json_encode($tN) !!},
+                cancelled: {!! json_encode($tC) !!}
             }
         };
 

@@ -43,6 +43,9 @@
             </main>
         </div>
 
+        <!-- Global System Confirm Modal -->
+        <x-system-confirm />
+
         <!-- Global Truncated Text Hover Scroll (Marquee) Effect -->
         <script>
             document.addEventListener('DOMContentLoaded', function() {

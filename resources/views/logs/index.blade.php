@@ -25,6 +25,10 @@
                                style="padding: 10px 24px; font-weight: bold; text-decoration: none; {{ request('type') == 'employees' ? 'border-bottom: 3px solid var(--text-primary); color: var(--text-primary); margin-bottom: -2px;' : 'color: var(--text-secondary);' }}">
                                 Employee Logs
                             </a>
+                            <a href="{{ route('logs.index', ['type' => 'sso_accounts']) }}"
+                               style="padding: 10px 24px; font-weight: bold; text-decoration: none; {{ request('type') == 'sso_accounts' ? 'border-bottom: 3px solid var(--text-primary); color: var(--text-primary); margin-bottom: -2px;' : 'color: var(--text-secondary);' }}">
+                                SSO Account Logs
+                            </a>
                         </div>
                     </div>
 
@@ -50,6 +54,10 @@
                                             @elseif(class_basename($log->subject_type) === 'Employee')
                                                 <span class="dk-badge dk-badge-prog" style="font-size: 0.7rem;">
                                                     Employee: {{ $log->subject?->full_name ?? '#' . $log->subject_id }}
+                                                </span>
+                                            @elseif(class_basename($log->subject_type) === 'SsoAccount')
+                                                <span class="dk-badge" style="background: #e0e7ff; color: #4338ca; font-size: 0.7rem;">
+                                                    SSO: {{ $log->subject?->username ?? '#' . $log->subject_id }}
                                                 </span>
                                             @else
                                                 {{ class_basename($log->subject_type) }}

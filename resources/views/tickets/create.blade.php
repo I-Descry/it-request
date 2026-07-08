@@ -92,7 +92,7 @@
                         .ts-dropdown { border: 1px solid var(--border-color) !important; border-radius: 6px !important; margin-top: 2px !important; box-shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -1px rgba(0,0,0,.06) !important; background: var(--bg-card) !important; z-index: 99999 !important; }
                         .ts-dropdown .option { padding: 7px 10px !important; font-size: 0.875rem !important; color: var(--text-primary) !important; }
                         .ts-dropdown .option:hover, .ts-dropdown .option.active { background-color: var(--th-bg) !important; color: var(--text-primary) !important; }
-                        .ts-dropdown .option.selected { background-color: #e5e7eb !important; }
+                        .ts-dropdown .option.selected { background-color: rgba(128, 128, 128, 0.2) !important; }
 </style>
 
 
@@ -184,10 +184,11 @@
                                     <label for="status" class="t-label">Status</label>
                                     <select name="status" id="status" class="t-input">
                                         @php $dupStatus = old('status') ?? ($sourceTicket->status ?? 'Resolved'); @endphp
-                                        <option value="In Progress" {{ $dupStatus == 'In Progress' ? 'selected' : '' }}>In Progress</option>
-                                        <option value="Escalated" {{ $dupStatus == 'Escalated' ? 'selected' : '' }}>Escalated</option>
-                                        <option value="Resolved" {{ $dupStatus == 'Resolved' ? 'selected' : '' }}>Resolved</option>
-                                        <option value="Not Complete" {{ $dupStatus == 'Not Complete' ? 'selected' : '' }}>Not Complete</option>
+                                        <option value="In Progress" data-description="Currently being worked on." {{ $dupStatus == 'In Progress' ? 'selected' : '' }}>In Progress</option>
+                                        <option value="Escalated" data-description="Requires higher-level intervention." {{ $dupStatus == 'Escalated' ? 'selected' : '' }}>Escalated</option>
+                                        <option value="Resolved" data-description="Successfully completed." {{ $dupStatus == 'Resolved' ? 'selected' : '' }}>Resolved</option>
+                                        <option value="Not Complete" data-description="Request not done due to limitations." {{ $dupStatus == 'Not Complete' ? 'selected' : '' }}>Not Complete</option>
+                                        <option value="Cancelled" data-description="Request was cancelled by user or staff." {{ $dupStatus == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
                                     </select>
                                 </div>
                                 <div>
@@ -263,6 +264,30 @@
                     document.getElementById('position').value = '';
                     document.getElementById('department').value = '';
                     document.getElementById('branch').value = '';
+                }
+            }
+        });
+
+        var statusTs = new TomSelect("#status", {
+            create: false,
+            maxOptions: null,
+            searchField: ['text'],
+            render: {
+                option: function(data, escape) {
+                    var desc = '';
+                    if (data.value === 'In Progress') desc = 'Currently being worked on.';
+                    else if (data.value === 'Escalated') desc = 'Requires higher-level intervention.';
+                    else if (data.value === 'Resolved') desc = 'Successfully completed.';
+                    else if (data.value === 'Not Complete') desc = 'Request not done due to limitations.';
+                    else if (data.value === 'Cancelled') desc = 'Request was cancelled by user or staff.';
+
+                    return '<div>' +
+                        '<span style="display: block; font-weight: bold;">' + escape(data.text) + '</span>' +
+                        '<span style="display: block; font-size: 0.75rem; color: var(--text-muted);">' + escape(desc) + '</span>' +
+                    '</div>';
+                },
+                item: function(data, escape) {
+                    return '<div>' + escape(data.text) + '</div>';
                 }
             }
         });

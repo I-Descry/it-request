@@ -41,6 +41,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/employees/{employee}', [App\Http\Controllers\EmployeeController::class, 'update'])->name('employees.update');
     Route::delete('/employees/{employee}', [App\Http\Controllers\EmployeeController::class, 'destroy'])->name('employees.destroy');
     Route::patch('/employees/{employee}/offboard', [App\Http\Controllers\EmployeeController::class, 'offboard'])->name('employees.offboard');
+    
+    Route::resource('sso_accounts', App\Http\Controllers\SsoAccountController::class);
+    Route::post('/sso_accounts/{sso_account}/link', [App\Http\Controllers\SsoAccountController::class, 'linkEmployee'])->name('sso_accounts.link');
+    Route::post('/sso_accounts/{sso_account}/mark-password-changed', [App\Http\Controllers\SsoAccountController::class, 'markPasswordChanged'])->name('sso_accounts.mark_password_changed');
 
     Route::get('/logs', [App\Http\Controllers\ActivityLogController::class, 'index'])->name('logs.index');
 });

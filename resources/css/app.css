@@ -32,6 +32,8 @@
     --badge-res-text: #10b981;
     --badge-closed-bg: #f3f4f6;
     --badge-closed-text: #6b7280;
+    --badge-cancelled-bg: #fef2f2;
+    --badge-cancelled-text: #ef4444;
 
     /* Action buttons */
     --act-view-bg: transparent;
@@ -97,6 +99,8 @@
     --badge-res-text: #6ee7b7;
     --badge-closed-bg: rgba(107, 114, 128, 0.15);
     --badge-closed-text: #d1d5db;
+    --badge-cancelled-bg: rgba(239, 68, 68, 0.15);
+    --badge-cancelled-text: #fca5a5;
 
     /* Action buttons */
     --act-view-bg: transparent;
@@ -296,6 +300,7 @@ input:focus, select:focus, textarea:focus {
 .dk-badge-progress { background: var(--badge-prog-bg); color: var(--badge-prog-text); }
 .dk-badge-resolved { background: var(--badge-res-bg); color: var(--badge-res-text); }
 .dk-badge-closed { background: var(--badge-closed-bg); color: var(--badge-closed-text); }
+.dk-badge-cancelled { background: var(--badge-cancelled-bg); color: var(--badge-cancelled-text); }
 .dk-pagination { padding: 4px 10px; border-top: 1px solid var(--border-color); background: var(--bg-card); border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; font-size: 0.7rem;}
 
 /* View Ticket Panels & Layouts */

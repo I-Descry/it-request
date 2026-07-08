@@ -148,7 +148,7 @@ class DashboardController extends Controller
             'Both' => 'Both',
         ];
 
-        // Technician performance: resolved vs in progress vs escalated
+        // Technician performance: resolved vs in progress vs escalated vs open vs not complete vs cancelled
         $techPerformance = $baseQuery()->selectRaw("assisted_by, status, count(*) as count")
             ->groupBy('assisted_by', 'status')
             ->get()
@@ -156,8 +156,19 @@ class DashboardController extends Controller
             ->map(function ($rows) {
                 $resolved = $rows->where('status', 'Resolved')->sum('count');
                 $inProgress = $rows->where('status', 'In Progress')->sum('count');
-                $escalated = $rows->whereIn('status', ['Escalated', 'Not Complete', 'Open'])->sum('count');
-                return ['resolved' => $resolved, 'in_progress' => $inProgress, 'escalated' => $escalated, 'total' => $resolved + $inProgress + $escalated];
+                $escalated = $rows->where('status', 'Escalated')->sum('count');
+                $open = $rows->where('status', 'Open')->sum('count');
+                $notComplete = $rows->where('status', 'Not Complete')->sum('count');
+                $cancelled = $rows->where('status', 'Cancelled')->sum('count');
+                return [
+                    'resolved' => $resolved,
+                    'in_progress' => $inProgress,
+                    'escalated' => $escalated,
+                    'open' => $open,
+                    'not_complete' => $notComplete,
+                    'cancelled' => $cancelled,
+                    'total' => $resolved + $inProgress + $escalated + $open + $notComplete + $cancelled
+                ];
             })
             ->toArray();
 

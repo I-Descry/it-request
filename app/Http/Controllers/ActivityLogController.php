@@ -17,6 +17,8 @@ class ActivityLogController extends Controller
                 $query->where('subject_type', 'App\Models\Ticket');
             } elseif ($request->type === 'employees') {
                 $query->where('subject_type', 'App\Models\Employee');
+            } elseif ($request->type === 'sso_accounts') {
+                $query->where('subject_type', 'App\Models\SsoAccount');
             }
         }
 

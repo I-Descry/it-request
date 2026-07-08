@@ -71,7 +71,7 @@
                                 <label for="filter_branch" style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px;">Branch Filter</label>
                                 <select name="filter_branch" id="filter_branch" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem; outline: none;" onchange="document.getElementById('filterForm').requestSubmit();">
                                     <option value="">All Branches</option>
-                                    @foreach(['HEAD OFFICE', 'NDD BACOLOD', 'NDD BAESA', 'NDD BATAAN', 'NDD BATANGAS', 'NDD CAVITE', 'NDD CDO', 'NDD CEBU', 'NDD DAVAO', 'NDD DIPOLOG', 'NDD DUMAGUETE', 'NDD ILOILO', 'NDD LA UNION', 'NDD LAGUNA', 'NDD LAS PIÑAS', 'NDD NUEVA ECIJA', 'NDD PULILAN', 'NDD ROXAS', 'NDD SAN FRANCISCO', 'NDD TACLOBAN', 'NDD TARLAC', 'NDD TAYTAY'] as $br)
+                                    @foreach(['HEAD OFFICE', 'DC TAYTAY', 'NDD BACOLOD', 'NDD BAESA', 'NDD BATAAN', 'NDD BATANGAS', 'NDD CAVITE', 'NDD CDO', 'NDD CEBU', 'NDD DAVAO', 'NDD DIPOLOG', 'NDD DUMAGUETE', 'NDD ILOILO', 'NDD LA UNION', 'NDD LAGUNA', 'NDD LAS PIÑAS', 'NDD NUEVA ECIJA', 'NDD PULILAN', 'NDD ROXAS', 'NDD SAN FRANCISCO', 'NDD TACLOBAN', 'NDD TARLAC', 'NDD TAYTAY'] as $br)
                                         <option value="{{ $br }}" {{ request('filter_branch') == $br ? 'selected' : '' }}>{{ $br }}</option>
                                     @endforeach
                                 </select>
@@ -165,7 +165,7 @@
                                                 </svg>
                                             </a>
                                             @if($employee->employment_status === 'Active')
-                                            <form action="{{ route('employees.offboard', $employee->id) }}" method="POST" style="display: inline-block; margin: 0;" onsubmit="return confirm('Are you sure you want to mark this employee as resigned?');">
+                                            <form action="{{ route('employees.offboard', $employee->id) }}" method="POST" style="display: inline-block; margin: 0;" x-data @submit.prevent="$dispatch('open-confirm', { title: 'Mark as Resigned', message: 'Are you sure you want to mark this employee as resigned?', buttonText: 'Confirm', buttonColor: '#d97706', form: $el })">
                                                 @csrf
                                                 @method('PATCH')
                                                 <button type="submit" class="action-btn edit" style="background: none; border: none; padding: 0; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; color: #d97706;" data-tooltip="Mark as Resigned">
@@ -175,7 +175,7 @@
                                                 </button>
                                             </form>
                                             @endif
-                                            <form action="{{ route('employees.destroy', $employee->id) }}" method="POST" style="display: inline-block; margin: 0;" onsubmit="return confirm('Are you sure you want to delete this employee record? (This is a soft-delete).');">
+                                            <form action="{{ route('employees.destroy', $employee->id) }}" method="POST" style="display: inline-block; margin: 0;" x-data @submit.prevent="$dispatch('open-confirm', { title: 'Delete Employee', message: 'Are you sure you want to delete this employee record? (This is a soft-delete).', buttonText: 'Delete', buttonColor: '#dc2626', form: $el })">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="action-btn edit" style="background: none; border: none; padding: 0; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; color: #dc2626;" data-tooltip="Delete Employee">
@@ -273,20 +273,7 @@
             </div>
         </div>
     </div>
-    <!-- Delete Confirm Modal -->
-    <div id="deleteConfirmModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 60; flex-direction: column; align-items: center; justify-content: center;">
-        <div style="background: var(--bg-card); width: 90%; max-width: 400px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); padding: 20px; text-align: center;">
-            <div style="color: #ef4444; margin-bottom: 15px;">
-                <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin: 0 auto;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-            </div>
-            <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin-bottom: 10px;">Confirm Deletion</h3>
-            <p id="deleteConfirmMsg" style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px;"></p>
-            <div style="display: flex; gap: 10px; justify-content: center;">
-                <button type="button" onclick="closeDeleteConfirm()" style="background: #e2e8f0; color: var(--text-secondary); padding: 8px 20px; border-radius: 6px; border: none; font-weight: 600; cursor: pointer;">Cancel</button>
-                <button type="button" onclick="executeDelete()" style="background: #334155; color: #fff; padding: 8px 20px; border-radius: 6px; border: none; font-weight: 600; cursor: pointer;">Delete</button>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Hierarchy Modal Backdrop -->
     <div id="hierarchyModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; flex-direction: column; align-items: center; justify-content: center;">
@@ -592,24 +579,24 @@
             });
         }
 
-        function closeDeleteConfirm() {
-            document.getElementById('deleteConfirmModal').style.display = 'none';
-            deleteAction = null;
-        }
-
-        function executeDelete() {
-            if (deleteAction) deleteAction();
-            closeDeleteConfirm();
-        }
+        window.addEventListener('confirm-del-dept', function(e) {
+            let name = e.detail.name;
+            delete hierarchyData[name]; 
+            if (currentDept === name) currentDept = null;
+            render();
+        });
 
         function delDept(name) {
-            document.getElementById('deleteConfirmMsg').innerText = `Are you sure you want to delete the department "${name}" and all its positions?`;
-            deleteAction = function() {
-                delete hierarchyData[name]; 
-                if (currentDept === name) currentDept = null;
-                render();
-            };
-            document.getElementById('deleteConfirmModal').style.display = 'flex';
+            window.dispatchEvent(new CustomEvent('open-confirm', { 
+                detail: { 
+                    title: 'Delete Department', 
+                    message: `Are you sure you want to delete the department "${name}" and all its positions?`, 
+                    buttonText: 'Delete', 
+                    buttonColor: '#dc2626', 
+                    dispatchEvent: 'confirm-del-dept', 
+                    dispatchDetail: { name: name } 
+                } 
+            }));
         }
 
         function addPos() {
@@ -638,14 +625,24 @@
             });
         }
 
+        window.addEventListener('confirm-del-pos', function(e) {
+            let index = e.detail.index;
+            hierarchyData[currentDept].splice(index, 1);
+            render();
+        });
+
         function delPos(index) {
             let name = hierarchyData[currentDept][index];
-            document.getElementById('deleteConfirmMsg').innerText = `Are you sure you want to delete the position "${name}"?`;
-            deleteAction = function() {
-                hierarchyData[currentDept].splice(index, 1);
-                render();
-            };
-            document.getElementById('deleteConfirmModal').style.display = 'flex';
+            window.dispatchEvent(new CustomEvent('open-confirm', { 
+                detail: { 
+                    title: 'Delete Position', 
+                    message: `Are you sure you want to delete the position "${name}"?`, 
+                    buttonText: 'Delete', 
+                    buttonColor: '#dc2626', 
+                    dispatchEvent: 'confirm-del-pos', 
+                    dispatchDetail: { index: index } 
+                } 
+            }));
         }
     </script>
 </x-app-layout>

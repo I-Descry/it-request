@@ -105,7 +105,7 @@
                         .ts-dropdown { border: 1px solid var(--border-color) !important; border-radius: 6px !important; margin-top: 2px !important; box-shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -1px rgba(0,0,0,.06) !important; background: var(--bg-card) !important; z-index: 99999 !important; }
                         .ts-dropdown .option { padding: 7px 10px !important; font-size: 0.875rem !important; color: var(--text-primary) !important; }
                         .ts-dropdown .option:hover, .ts-dropdown .option.active { background-color: var(--th-bg) !important; color: var(--text-primary) !important; }
-                        .ts-dropdown .option.selected { background-color: #e5e7eb !important; }
+                        .ts-dropdown .option.selected { background-color: rgba(128, 128, 128, 0.2) !important; }
 </style>
 
 
@@ -197,10 +197,11 @@
                                 <div>
                                     <label for="status" class="t-label">Status</label>
                                     <select name="status" id="status" class="t-input">
-                                        <option value="In Progress" {{ old('status', $ticket->status) == 'In Progress' ? 'selected' : '' }}>In Progress</option>
-                                        <option value="Escalated" {{ old('status', $ticket->status) == 'Escalated' ? 'selected' : '' }}>Escalated</option>
-                                        <option value="Resolved" {{ old('status', $ticket->status) == 'Resolved' ? 'selected' : '' }}>Resolved</option>
-                                        <option value="Not Complete" {{ old('status', $ticket->status) == 'Not Complete' ? 'selected' : '' }}>Not Complete</option>
+                                        <option value="In Progress" data-description="Currently being worked on." {{ old('status', $ticket->status) == 'In Progress' ? 'selected' : '' }}>In Progress</option>
+                                        <option value="Escalated" data-description="Requires higher-level intervention." {{ old('status', $ticket->status) == 'Escalated' ? 'selected' : '' }}>Escalated</option>
+                                        <option value="Resolved" data-description="Successfully completed." {{ old('status', $ticket->status) == 'Resolved' ? 'selected' : '' }}>Resolved</option>
+                                        <option value="Not Complete" data-description="Request not done due to limitations." {{ old('status', $ticket->status) == 'Not Complete' ? 'selected' : '' }}>Not Complete</option>
+                                        <option value="Cancelled" data-description="Request was cancelled by user or staff." {{ old('status', $ticket->status) == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
                                     </select>
                                 </div>
                                 <div>
@@ -222,7 +223,7 @@
                                             <a href="{{ Storage::url($attachment->file_path) }}" target="_blank" class="t-attach-link">
                                                 📄 {{ $attachment->file_name }}
                                             </a>
-                                            <button type="button" class="t-attach-delete" onclick="deleteAttachment({{ $attachment->id }})" style="background: none; border: none; color: #ef4444; font-size: 0.8rem; font-weight: 600; cursor: pointer; text-decoration: underline;">
+                                            <button type="button" class="t-attach-delete" x-data @click="$dispatch('open-confirm', { title: 'Delete Attachment', message: 'Are you sure you want to delete this attachment? This cannot be undone.', buttonText: 'Delete', buttonColor: '#ef4444', dispatchEvent: 'confirm-delete-attachment', dispatchDetail: { id: {{ $attachment->id }} } })" style="background: none; border: none; color: #ef4444; font-size: 0.8rem; font-weight: 600; cursor: pointer; text-decoration: underline;">
                                                 Remove
                                             </button>
                                         </div>
@@ -296,23 +297,46 @@
                 }
             }
         });
+
+        var statusTs = new TomSelect("#status", {
+            create: false,
+            maxOptions: null,
+            searchField: ['text'],
+            render: {
+                option: function(data, escape) {
+                    var desc = '';
+                    if (data.value === 'In Progress') desc = 'Currently being worked on.';
+                    else if (data.value === 'Escalated') desc = 'Requires higher-level intervention.';
+                    else if (data.value === 'Resolved') desc = 'Successfully completed.';
+                    else if (data.value === 'Not Complete') desc = 'Request not done due to limitations.';
+                    else if (data.value === 'Cancelled') desc = 'Request was cancelled by user or staff.';
+
+                    return '<div>' +
+                        '<span style="display: block; font-weight: bold;">' + escape(data.text) + '</span>' +
+                        '<span style="display: block; font-size: 0.75rem; color: var(--text-muted);">' + escape(desc) + '</span>' +
+                    '</div>';
+                },
+                item: function(data, escape) {
+                    return '<div>' + escape(data.text) + '</div>';
+                }
+            }
+        });
     });
 
-    function deleteAttachment(id) {
-        if(confirm('Are you sure you want to delete this attachment?')) {
-            fetch(`/tickets/attachments/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json'
-                }
-            }).then(response => response.json())
-            .then(data => {
-                if(data.success) {
-                    document.getElementById(`attach-${id}`).remove();
-                }
-            });
-        }
-    }
+    window.addEventListener('confirm-delete-attachment', function(e) {
+        let id = e.detail.id;
+        fetch(`/tickets/attachments/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            }
+        }).then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                document.getElementById(`attach-${id}`).remove();
+            }
+        });
+    });
 </script>
 

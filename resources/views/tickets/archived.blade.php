@@ -49,7 +49,7 @@
                                 <label for="status" style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px;">Status</label>
                                 <select name="status" id="status" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem; outline: none;" onchange="document.getElementById('filterForm').requestSubmit();">
                                     <option value="">All Statuses</option>
-                                    @foreach(['Open', 'In Progress', 'Resolved', 'Closed', 'Escalated', 'Not Complete'] as $stat)
+                                    @foreach(['Open', 'In Progress', 'Resolved', 'Closed', 'Escalated', 'Not Complete', 'Cancelled'] as $stat)
                                         <option value="{{ $stat }}" {{ request('status') == $stat ? 'selected' : '' }}>{{ $stat }}</option>
                                     @endforeach
                                 </select>
@@ -69,7 +69,7 @@
                                 <label for="filter_branch" style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px;">Branch</label>
                                 <select name="filter_branch" id="filter_branch" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem; outline: none;" onchange="document.getElementById('filterForm').requestSubmit();">
                                     <option value="">All Branches</option>
-                                    @foreach(['HEAD OFFICE', 'NDD BACOLOD', 'NDD BAESA', 'NDD BATAAN', 'NDD BATANGAS', 'NDD CAVITE', 'NDD CDO', 'NDD CEBU', 'NDD DAVAO', 'NDD DIPOLOG', 'NDD DUMAGUETE', 'NDD ILOILO', 'NDD LA UNION', 'NDD LAGUNA', 'NDD LAS PIÑAS', 'NDD NUEVA ECIJA', 'NDD PULILAN', 'NDD ROXAS', 'NDD SAN FRANCISCO', 'NDD TACLOBAN', 'NDD TARLAC', 'NDD TAYTAY'] as $br)
+                                    @foreach(['HEAD OFFICE', 'DC TAYTAY', 'NDD BACOLOD', 'NDD BAESA', 'NDD BATAAN', 'NDD BATANGAS', 'NDD CAVITE', 'NDD CDO', 'NDD CEBU', 'NDD DAVAO', 'NDD DIPOLOG', 'NDD DUMAGUETE', 'NDD ILOILO', 'NDD LA UNION', 'NDD LAGUNA', 'NDD LAS PIÑAS', 'NDD NUEVA ECIJA', 'NDD PULILAN', 'NDD ROXAS', 'NDD SAN FRANCISCO', 'NDD TACLOBAN', 'NDD TARLAC', 'NDD TAYTAY'] as $br)
                                         <option value="{{ $br }}" {{ request('filter_branch') == $br ? 'selected' : '' }}>{{ $br }}</option>
                                     @endforeach
                                 </select>
@@ -172,6 +172,7 @@
                                                     'In Progress' => 'background-color: #eff6ff; color: #3b82f6;',
                                                     'Resolved' => 'background-color: #ecfdf5; color: #10b981;',
                                                     'Closed', 'Not Complete' => 'background-color: #f3f4f6; color: var(--text-light);',
+                                                    'Cancelled' => 'background-color: #fef2f2; color: #ef4444;',
                                                     default => 'background-color: #f3f4f6; color: var(--text-light);',
                                                 };
                                             @endphp
@@ -189,9 +190,9 @@
                                     <td>{{ $ticket->archived_by ?? 'N/A' }}</td>
 
                                     <td style="position: sticky; right: 0; background-color: inherit; z-index: 1; box-shadow: -4px 0 8px rgba(0,0,0,0.06);">
-                                        <form action="{{ route('tickets.restore', $ticket->id) }}" method="POST"
-                                              onsubmit="return confirm('Are you sure you want to restore this ticket back to active tickets?');"
-                                              style="display: inline; margin: 0;">
+                                        <form action="{{ route('tickets.restore', $ticket->id) }}" method="POST" 
+                                              style="display: inline-block; margin: 0;"
+                                              x-data @submit.prevent="$dispatch('open-confirm', { title: 'Restore Ticket', message: 'Are you sure you want to restore this ticket back to active tickets?', buttonText: 'Restore', buttonColor: '#10b981', form: $el })">
                                             @csrf
                                             <button type="submit" class="action-btn restore" data-tooltip="Restore Ticket"
                                                     style="color: #4f46e5; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; padding: 0;">

@@ -32,9 +32,6 @@
                             <a href="{{ route('tickets.edit', $ticket->ticket_no) }}" class="dk-btn dk-btn-warning">
                                 ✏️ Edit Ticket
                             </a>
-                            <a href="{{ route('tickets.create', ['from' => $ticket->ticket_no]) }}" class="dk-btn dk-btn-secondary" style="background: var(--bg-card); border: 1px solid #6366f1; color: #6366f1;">
-                                📋 Duplicate
-                            </a>
                         </div>
                         <div style="display: flex; gap: 6px; align-items: center;">
                             @if($prevTicket)
@@ -69,6 +66,7 @@
                                     'In Progress' => 'dk-badge-progress',
                                     'Resolved' => 'dk-badge-resolved',
                                     'Closed', 'Not Complete' => 'dk-badge-closed',
+                                    'Cancelled' => 'dk-badge-cancelled',
                                     default => 'dk-badge-closed',
                                 };
                             @endphp
