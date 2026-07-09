@@ -47,6 +47,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/sso_accounts/{sso_account}/mark-password-changed', [App\Http\Controllers\SsoAccountController::class, 'markPasswordChanged'])->name('sso_accounts.mark_password_changed');
 
     Route::get('/logs', [App\Http\Controllers\ActivityLogController::class, 'index'])->name('logs.index');
+
+    /* --- REPORT ROUTES --- */
+    Route::get('/reports', [App\Http\Controllers\ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/excel', [App\Http\Controllers\ReportController::class, 'exportExcel'])->name('reports.excel');
+    Route::get('/reports/pdf', [App\Http\Controllers\ReportController::class, 'exportPdf'])->name('reports.pdf');
 });
 
 require __DIR__.'/auth.php';

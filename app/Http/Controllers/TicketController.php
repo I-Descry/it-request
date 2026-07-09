@@ -58,6 +58,24 @@ class TicketController extends Controller
             });
         }
 
+        if ($request->filled('requested_by')) {
+            $query->where('requested_by', $request->requested_by);
+        }
+
+        if ($request->filled('date_filter')) {
+            if ($request->date_filter === 'today') {
+                $query->whereDate('created_at', \Carbon\Carbon::today());
+            } elseif ($request->date_filter === 'this_week') {
+                $query->whereBetween('created_at', [
+                    \Carbon\Carbon::now()->startOfWeek(),
+                    \Carbon\Carbon::now()->endOfWeek()
+                ]);
+            } elseif ($request->date_filter === 'this_month') {
+                $query->whereMonth('created_at', \Carbon\Carbon::now()->month)
+                      ->whereYear('created_at', \Carbon\Carbon::now()->year);
+            }
+        }
+
         if ($request->filled('filter_dept')) {
             $query->where('department', $request->filter_dept);
         }
@@ -99,27 +117,7 @@ class TicketController extends Controller
         $prevTicket = Ticket::where('id', '<', $ticket->id)->orderBy('id', 'desc')->select('id', 'ticket_no')->first();
         $nextTicket = Ticket::where('id', '>', $ticket->id)->orderBy('id', 'asc')->select('id', 'ticket_no')->first();
 
-        // Calculate requestor statistics
-        $requestor = $ticket->requested_by;
-        $statsRaw = \App\Models\Ticket::where('requested_by', $requestor)
-            ->selectRaw("
-                COUNT(CASE WHEN DATE(created_at) = CURDATE() THEN 1 END) as today,
-                COUNT(CASE WHEN created_at >= ? AND created_at <= ? THEN 1 END) as this_week,
-                COUNT(CASE WHEN MONTH(created_at) = ? AND YEAR(created_at) = ? THEN 1 END) as this_month
-            ", [
-                \Carbon\Carbon::now()->startOfWeek(),
-                \Carbon\Carbon::now()->endOfWeek(),
-                \Carbon\Carbon::now()->month,
-                \Carbon\Carbon::now()->year
-            ])->first();
-
-        $stats = [
-            'today' => $statsRaw->today ?? 0,
-            'this_week' => $statsRaw->this_week ?? 0,
-            'this_month' => $statsRaw->this_month ?? 0,
-        ];
-
-        return view('tickets.show', compact('ticket', 'stats', 'prevTicket', 'nextTicket'));
+        return view('tickets.show', compact('ticket', 'prevTicket', 'nextTicket'));
     }
 
     /**

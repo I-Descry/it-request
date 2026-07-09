@@ -109,25 +109,7 @@
                         <div><strong class="dk-text-label">Assisted By:</strong> <br>{{ $ticket->assisted_by ?? 'N/A' }}</div>
                         <div><strong class="dk-text-label">Date Created:</strong> <br>{{ $ticket->created_at->format('M d, Y h:i A') }}</div>
                         
-                        @if(isset($stats))
-                        <div>
-                            <strong class="dk-text-label">Request Frequency:</strong>
-                            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px;">
-                                <div style="background: var(--th-bg); border: 1px solid var(--border-color); padding: 5px 10px; border-radius: 6px; display: flex; align-items: center; gap: 6px;">
-                                    <span style="color: var(--text-secondary); font-size: 0.75rem;">Today</span>
-                                    <b style="color: #3b82f6; font-size: 0.9rem;">{{ $stats['today'] }}</b>
-                                </div>
-                                <div style="background: var(--th-bg); border: 1px solid var(--border-color); padding: 5px 10px; border-radius: 6px; display: flex; align-items: center; gap: 6px;">
-                                    <span style="color: var(--text-secondary); font-size: 0.75rem;">Week</span>
-                                    <b style="color: #6366f1; font-size: 0.9rem;">{{ $stats['this_week'] }}</b>
-                                </div>
-                                <div style="background: var(--th-bg); border: 1px solid var(--border-color); padding: 5px 10px; border-radius: 6px; display: flex; align-items: center; gap: 6px;">
-                                    <span style="color: var(--text-secondary); font-size: 0.75rem;">Month</span>
-                                    <b style="color: #8b5cf6; font-size: 0.9rem;">{{ $stats['this_month'] }}</b>
-                                </div>
-                            </div>
-                        </div>
-                        @endif
+
                     </div>
 
                     <div class="dk-panel dk-grid-2">

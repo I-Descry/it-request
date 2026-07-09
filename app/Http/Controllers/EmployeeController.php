@@ -25,7 +25,26 @@ class EmployeeController extends Controller
             })
             ->orderBy('last_name', 'asc')->orderBy('id', 'asc')->first();
 
-        return view('employees.show', compact('employee', 'prevEmployee', 'nextEmployee'));
+        // Calculate requestor statistics
+        $statsRaw = \App\Models\Ticket::where('requested_by', $employee->full_name)
+            ->selectRaw("
+                COUNT(CASE WHEN DATE(created_at) = CURDATE() THEN 1 END) as today,
+                COUNT(CASE WHEN created_at >= ? AND created_at <= ? THEN 1 END) as this_week,
+                COUNT(CASE WHEN MONTH(created_at) = ? AND YEAR(created_at) = ? THEN 1 END) as this_month
+            ", [
+                \Carbon\Carbon::now()->startOfWeek(),
+                \Carbon\Carbon::now()->endOfWeek(),
+                \Carbon\Carbon::now()->month,
+                \Carbon\Carbon::now()->year
+            ])->first();
+
+        $stats = [
+            'today' => $statsRaw->today ?? 0,
+            'this_week' => $statsRaw->this_week ?? 0,
+            'this_month' => $statsRaw->this_month ?? 0,
+        ];
+
+        return view('employees.show', compact('employee', 'prevEmployee', 'nextEmployee', 'stats'));
     }
 
     /**

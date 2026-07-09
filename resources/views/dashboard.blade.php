@@ -24,7 +24,8 @@
 
     <div style="padding: 10px 0;">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            @vite(['resources/css/dashboard.css', 'resources/js/dashboard.js'])
+            <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}?v={{ time() }}">
+            <script src="{{ asset('js/dashboard.js') }}?v={{ time() }}" defer></script>
 
             {{-- Row 1: KPI Overview --}}
             <div class="dk-grid-6" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 12px;">

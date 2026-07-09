@@ -120,6 +120,30 @@
                             </div>
                         </div>
 
+                        {{-- Ticket Statistics --}}
+                        @if(isset($stats))
+                        <div style="margin-top: 30px;">
+                            <h3 style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">Ticket Statistics</h3>
+                            <div>
+                                <strong class="dk-text-label" style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Request Frequency</strong>
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px;">
+                                    <a href="{{ route('tickets.index', ['requested_by' => $employee->full_name, 'date_filter' => 'today']) }}" style="background: var(--th-bg); border: 1px solid var(--border-color); padding: 5px 10px; border-radius: 6px; display: flex; align-items: center; gap: 6px; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor='var(--border-color)'" title="View Today's Tickets">
+                                        <span style="color: var(--text-secondary); font-size: 0.75rem;">Today</span>
+                                        <b style="color: #3b82f6; font-size: 1rem;">{{ $stats['today'] }}</b>
+                                    </a>
+                                    <a href="{{ route('tickets.index', ['requested_by' => $employee->full_name, 'date_filter' => 'this_week']) }}" style="background: var(--th-bg); border: 1px solid var(--border-color); padding: 5px 10px; border-radius: 6px; display: flex; align-items: center; gap: 6px; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.borderColor='#6366f1'" onmouseout="this.style.borderColor='var(--border-color)'" title="View This Week's Tickets">
+                                        <span style="color: var(--text-secondary); font-size: 0.75rem;">Week</span>
+                                        <b style="color: #6366f1; font-size: 1rem;">{{ $stats['this_week'] }}</b>
+                                    </a>
+                                    <a href="{{ route('tickets.index', ['requested_by' => $employee->full_name, 'date_filter' => 'this_month']) }}" style="background: var(--th-bg); border: 1px solid var(--border-color); padding: 5px 10px; border-radius: 6px; display: flex; align-items: center; gap: 6px; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.borderColor='#8b5cf6'" onmouseout="this.style.borderColor='var(--border-color)'" title="View This Month's Tickets">
+                                        <span style="color: var(--text-secondary); font-size: 0.75rem;">Month</span>
+                                        <b style="color: #8b5cf6; font-size: 1rem;">{{ $stats['this_month'] }}</b>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+
                     </div>
                 </div>
             </div>
