@@ -9,188 +9,258 @@
         @endif
     </title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Nunito', sans-serif; font-size: 10px; color: #334155; line-height: 1.4; }
 
-        .header {
-            background: #ffffff;
-            padding: 20px 24px;
-            border-bottom: 2px solid #2563eb;
+        body {
+            font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
+            font-size: 9px;
+            color: #1e293b;
+            line-height: 1.5;
+        }
+
+        .doc-header {
+            padding: 18px 24px 14px;
+            border-bottom: 3px solid #6b7280;
+        }
+        .doc-header-top {
             display: table;
             width: 100%;
+            margin-bottom: 10px;
         }
-        .header-content {
+        .doc-header-left {
             display: table-cell;
             vertical-align: middle;
         }
-        .header-title { 
-            font-size: 22px; 
-            font-weight: 700; 
-            color: #1e293b;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+        .doc-header-right {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: right;
         }
-        .header-sub { 
-            font-size: 11px; 
-            color: #64748b; 
-            margin-top: 4px;
+        .doc-org {
+            font-size: 10px;
             font-weight: 600;
+            color: #64748b;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.08em;
+        }
+        .doc-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-top: 2px;
+        }
+        .doc-ref {
+            font-size: 8px;
+            color: #94a3b8;
+            margin-top: 2px;
         }
 
-        .meta-bar {
+        /* ── Metadata Grid ── */
+        .meta-grid {
+            padding: 10px 24px;
             background: #f8fafc;
-            padding: 12px 24px;
-            font-size: 9px;
-            color: #475569;
             border-bottom: 1px solid #e2e8f0;
         }
-        .meta-bar span { margin-right: 24px; display: inline-block; }
-        .meta-bar strong { color: #0f172a; font-weight: 700; }
-
-        table {
+        .meta-grid table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+            margin: 0;
         }
-        th {
-            background: #f1f5f9;
+        .meta-grid td {
+            padding: 3px 0;
+            border: none;
+            font-size: 8.5px;
+            color: #475569;
+            vertical-align: top;
+        }
+        .meta-grid .meta-label {
+            font-weight: 700;
             color: #334155;
-            padding: 10px 12px;
-            text-align: left;
+            width: 90px;
+        }
+        .meta-grid .meta-sep {
+            width: 12px;
+            color: #cbd5e1;
+        }
+
+        /* ── Summary Strip ── */
+        .summary-strip {
+            padding: 8px 24px;
             font-size: 9px;
+            color: #334155;
+            font-weight: 600;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        /* ── Data Table ── */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+        }
+        .data-table thead th {
+            background: #6b7280;
+            color: #ffffff;
+            padding: 7px 8px;
+            text-align: left;
+            font-size: 7.5px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            border-bottom: 1px solid #cbd5e1;
+            letter-spacing: 0.04em;
+            border: none;
         }
-        td {
-            padding: 8px 12px;
-            border-bottom: 1px solid #f1f5f9;
-            font-size: 9px;
-            vertical-align: middle;
+        .data-table thead th:first-child {
+            text-align: center;
+            width: 28px;
+        }
+        .data-table tbody td {
+            padding: 5px 8px;
+            font-size: 8px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
             word-wrap: break-word;
+            color: #334155;
         }
-        tr:nth-child(even) { background: #fdfdfd; }
-        tr:hover { background: #f8fafc; }
+        .data-table tbody tr:nth-child(even) td {
+            background: #f8fafc;
+        }
+        .data-table tbody td:first-child {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 7.5px;
+            font-weight: 600;
+        }
 
-        .footer {
+        /* ── Status Badges ── */
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 7px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .badge-resolved     { background: #dcfce7; color: #15803d; }
+        .badge-in-progress  { background: #dbeafe; color: #1d4ed8; }
+        .badge-escalated    { background: #fef3c7; color: #92400e; }
+        .badge-not-complete { background: #fee2e2; color: #b91c1c; }
+        .badge-cancelled    { background: #f1f5f9; color: #475569; }
+        .badge-active       { background: #dcfce7; color: #15803d; }
+        .badge-inactive     { background: #f1f5f9; color: #475569; }
+        .badge-locked       { background: #fef3c7; color: #92400e; }
+        .badge-resigned     { background: #fee2e2; color: #b91c1c; }
+
+        /* ── Footer ── */
+        .doc-footer {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            text-align: center;
-            font-size: 8px;
-            color: #94a3b8;
-            padding: 10px;
+            padding: 8px 24px;
             border-top: 1px solid #e2e8f0;
             background: #ffffff;
         }
-
-        .status-badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 8px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+        .doc-footer table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
         }
-        .status-resolved { background: #dcfce7; color: #166534; }
-        .status-in-progress { background: #dbeafe; color: #1e40af; }
-        .status-escalated { background: #fef9c3; color: #854d0e; }
-        .status-not-complete { background: #fee2e2; color: #991b1b; }
-        .status-cancelled { background: #f1f5f9; color: #475569; }
-        .status-active { background: #dcfce7; color: #166534; }
-        .status-inactive { background: #fee2e2; color: #991b1b; }
-        .status-locked { background: #fef9c3; color: #854d0e; }
-        .status-resigned { background: #fee2e2; color: #991b1b; }
-
-        .summary-bar {
-            padding: 15px 24px 5px;
-            font-size: 11px;
-            color: #0f172a;
-            font-weight: 700;
+        .doc-footer td {
+            font-size: 7px;
+            color: #94a3b8;
+            padding: 0;
+            border: none;
+            vertical-align: middle;
         }
 
         .no-data {
             text-align: center;
-            padding: 60px;
-            font-size: 14px;
+            padding: 50px 24px;
+            font-size: 12px;
             color: #94a3b8;
-            font-style: italic;
-        }
-        
-        .page-break {
-            page-break-after: always;
         }
     </style>
 </head>
 <body>
-    {{-- Header --}}
-    <div class="header">
-        <div class="header-content">
-            <div class="header-title">
-                @if($type === 'tickets') IT Requests Report
-                @elseif($type === 'employees') Employees Report
-                @else SSO Accounts Report
-                @endif
+    @php
+        $reportTitles = [
+            'tickets' => 'IT Requests Report',
+            'employees' => 'Employees Report',
+            'sso_accounts' => 'SSO Accounts Report',
+        ];
+        $reportTitle = $reportTitles[$type] ?? 'Report';
+        $refNo = strtoupper(substr($type, 0, 3)) . '-' . now()->format('Ymd-His');
+    @endphp
+
+    {{-- Document Header --}}
+    <div class="doc-header">
+        <div class="doc-header-top">
+            <div class="doc-header-left">
+                <div class="doc-org">IT Department</div>
+                <div class="doc-title">{{ $reportTitle }}</div>
             </div>
-            <div class="header-sub">IT Department • Internal System Report</div>
+            <div class="doc-header-right">
+                <div class="doc-ref">Ref: {{ $refNo }}</div>
+                <div class="doc-ref">Classification: Internal Use Only</div>
+            </div>
         </div>
     </div>
 
-    {{-- Meta Bar --}}
-    <div class="meta-bar">
-        <span><strong>Generated:</strong> {{ $generatedAt }}</span>
-        <span><strong>Total Records:</strong> {{ $data->count() }}</span>
-        @if(!empty($filters['date_from']))
-            <span><strong>From:</strong> {{ $filters['date_from'] }}</span>
-        @endif
-        @if(!empty($filters['date_to']))
-            <span><strong>To:</strong> {{ $filters['date_to'] }}</span>
-        @endif
-        @if(!empty($filters['status']))
-            <span><strong>Status:</strong> {{ $filters['status'] }}</span>
-        @endif
-        @if(!empty($filters['department']))
-            <span><strong>Department:</strong> {{ $filters['department'] }}</span>
-        @endif
-    </div>
-
-    <div class="summary-bar">
-        Showing {{ $data->count() }} record{{ $data->count() !== 1 ? 's' : '' }}
+    {{-- Metadata --}}
+    <div class="meta-grid">
+        <table>
+            <tr>
+                <td class="meta-label">Date Generated</td>
+                <td class="meta-sep">:</td>
+                <td>{{ $generatedAt }}</td>
+                <td class="meta-label" style="padding-left: 20px;">Total Records</td>
+                <td class="meta-sep">:</td>
+                <td>{{ $data->count() }}</td>
+            </tr>
+            @if(!empty($filters['date_from']) || !empty($filters['date_to']))
+            <tr>
+                <td class="meta-label">Date Range</td>
+                <td class="meta-sep">:</td>
+                <td colspan="4">
+                    {{ !empty($filters['date_from']) ? \Carbon\Carbon::parse($filters['date_from'])->format('M d, Y') : 'Start' }}
+                    —
+                    {{ !empty($filters['date_to']) ? \Carbon\Carbon::parse($filters['date_to'])->format('M d, Y') : 'Present' }}
+                </td>
+            </tr>
+            @endif
+        </table>
     </div>
 
     @if($data->count() === 0)
         <div class="no-data">No records found matching the selected filters.</div>
     @else
+
         {{-- TICKETS TABLE --}}
         @if($type === 'tickets')
-        <table>
+        <table class="data-table">
             <thead>
                 <tr>
-                    <th style="width: 8%;">Ticket No</th>
+                    <th>#</th>
+                    <th style="width: 7%;">Ticket No.</th>
                     <th style="width: 10%;">Type</th>
-                    <th style="width: 14%;">Request</th>
-                    <th style="width: 12%;">Requested By</th>
+                    <th style="width: 13%;">Request</th>
+                    <th style="width: 10%;">Requested By</th>
                     <th style="width: 10%;">Department</th>
                     <th style="width: 8%;">Branch</th>
                     <th style="width: 10%;">Assisted By</th>
-                    <th style="width: 8%;">Status</th>
+                    <th style="width: 7%;">Status</th>
                     <th style="width: 12%;">Remarks</th>
-                    <th style="width: 8%;">Date</th>
+                    <th style="width: 10%;">Date</th>
                 </tr>
             </thead>
             <tbody>
                 @php
                     $assistedByMap = ['IT03' => 'Tristan Railey Tan', 'IT04' => 'John Paul Villacorta', 'Both' => 'Both'];
                 @endphp
-                @foreach($data as $row)
+                @foreach($data as $i => $row)
                 <tr>
+                    <td>{{ $i + 1 }}</td>
                     <td>{{ $row->ticket_no }}</td>
                     <td>{{ $row->request_type }}</td>
                     <td>{{ $row->request }}</td>
@@ -200,16 +270,16 @@
                     <td>{{ $assistedByMap[$row->assisted_by] ?? $row->assisted_by }}</td>
                     <td>
                         @php
-                            $statusClass = match($row->status) {
-                                'Resolved' => 'status-resolved',
-                                'In Progress' => 'status-in-progress',
-                                'Escalated' => 'status-escalated',
-                                'Not Complete' => 'status-not-complete',
-                                'Cancelled' => 'status-cancelled',
+                            $bc = match($row->status) {
+                                'Resolved' => 'badge-resolved',
+                                'In Progress' => 'badge-in-progress',
+                                'Escalated' => 'badge-escalated',
+                                'Not Complete' => 'badge-not-complete',
+                                'Cancelled' => 'badge-cancelled',
                                 default => '',
                             };
                         @endphp
-                        <span class="status-badge {{ $statusClass }}">{{ $row->status }}</span>
+                        <span class="badge {{ $bc }}">{{ $row->status }}</span>
                     </td>
                     <td>{{ $row->remarks }}</td>
                     <td>{{ $row->created_at ? \Carbon\Carbon::parse($row->created_at)->format('M d, Y') : ($row->original_created_at ? \Carbon\Carbon::parse($row->original_created_at)->format('M d, Y') : '') }}</td>
@@ -221,23 +291,25 @@
 
         {{-- EMPLOYEES TABLE --}}
         @if($type === 'employees')
-        <table>
+        <table class="data-table">
             <thead>
                 <tr>
-                    <th style="width: 18%;">Full Name</th>
-                    <th style="width: 8%;">NFP ID</th>
-                    <th style="width: 14%;">Position</th>
-                    <th style="width: 14%;">Department</th>
-                    <th style="width: 12%;">Branch</th>
-                    <th style="width: 10%;">Contact No</th>
-                    <th style="width: 10%;">Status</th>
-                    <th style="width: 10%;">Resigned Date</th>
-                    <th style="width: 8%;">Date Added</th>
+                    <th>#</th>
+                    <th style="width: 16%;">Full Name</th>
+                    <th style="width: 7%;">NFP ID</th>
+                    <th style="width: 13%;">Position</th>
+                    <th style="width: 12%;">Department</th>
+                    <th style="width: 11%;">Branch</th>
+                    <th style="width: 10%;">Contact No.</th>
+                    <th style="width: 7%;">Status</th>
+                    <th style="width: 11%;">Resigned Date</th>
+                    <th style="width: 11%;">Date Added</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($data as $row)
+                @foreach($data as $i => $row)
                 <tr>
+                    <td>{{ $i + 1 }}</td>
                     <td>{{ $row->full_name }}</td>
                     <td>{{ $row->nfp_id }}</td>
                     <td>{{ $row->position }}</td>
@@ -245,7 +317,7 @@
                     <td>{{ $row->branch }}</td>
                     <td>{{ $row->contact_no }}</td>
                     <td>
-                        <span class="status-badge {{ $row->employment_status === 'Active' ? 'status-active' : 'status-resigned' }}">
+                        <span class="badge {{ $row->employment_status === 'Active' ? 'badge-active' : 'badge-resigned' }}">
                             {{ $row->employment_status }}
                         </span>
                     </td>
@@ -259,23 +331,25 @@
 
         {{-- SSO ACCOUNTS TABLE --}}
         @if($type === 'sso_accounts')
-        <table>
+        <table class="data-table">
             <thead>
                 <tr>
-                    <th style="width: 14%;">Username</th>
-                    <th style="width: 16%;">Name</th>
+                    <th>#</th>
+                    <th style="width: 13%;">Username</th>
+                    <th style="width: 15%;">Name</th>
                     <th style="width: 12%;">Department</th>
                     <th style="width: 12%;">Position</th>
-                    <th style="width: 14%;">Email</th>
-                    <th style="width: 8%;">Type</th>
+                    <th style="width: 13%;">Email</th>
+                    <th style="width: 7%;">Type</th>
                     <th style="width: 10%;">Transferred From</th>
                     <th style="width: 6%;">Status</th>
                     <th style="width: 8%;">Date Created</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($data as $row)
+                @foreach($data as $i => $row)
                 <tr>
+                    <td>{{ $i + 1 }}</td>
                     <td>{{ $row->username }}</td>
                     <td>{{ $row->name }}</td>
                     <td>{{ $row->department }}</td>
@@ -285,14 +359,14 @@
                     <td>{{ $row->transferred_from }}</td>
                     <td>
                         @php
-                            $ssoClass = match($row->status) {
-                                'Active' => 'status-active',
-                                'Inactive' => 'status-inactive',
-                                'Locked' => 'status-locked',
+                            $sc = match($row->status) {
+                                'Active' => 'badge-active',
+                                'Inactive' => 'badge-inactive',
+                                'Locked' => 'badge-locked',
                                 default => '',
                             };
                         @endphp
-                        <span class="status-badge {{ $ssoClass }}">{{ $row->status }}</span>
+                        <span class="badge {{ $sc }}">{{ $row->status }}</span>
                     </td>
                     <td>{{ $row->created_at?->format('M d, Y') }}</td>
                 </tr>
@@ -300,11 +374,18 @@
             </tbody>
         </table>
         @endif
+
     @endif
 
     {{-- Footer --}}
-    <div class="footer">
-        IT Request System &bull; Generated on {{ $generatedAt }} &bull; Confidential
+    <div class="doc-footer">
+        <table>
+            <tr>
+                <td>IT Request System · {{ $reportTitle }}</td>
+                <td style="text-align: center;">{{ $generatedAt }}</td>
+                <td style="text-align: right;">Internal Use Only · Confidential</td>
+            </tr>
+        </table>
     </div>
 </body>
 </html>

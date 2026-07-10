@@ -135,12 +135,68 @@
     .checkbox-row input[type="checkbox"] {
         width: 16px;
         height: 16px;
-        accent-color: #2563eb;
+        accent-color: var(--border-color-focus);
         cursor: pointer;
     }
     .checkbox-row label {
         font-size: 0.8rem;
         color: var(--text-primary);
+        cursor: pointer;
+    }
+
+    /* ── Filter Columns ── */
+    .filter-col .filter-col-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 6px;
+    }
+    .filter-col .filter-col-list {
+        max-height: 170px;
+        overflow-y: auto;
+        padding-right: 4px;
+    }
+    .filter-col .filter-col-list::-webkit-scrollbar { width: 3px; }
+    .filter-col .filter-col-list::-webkit-scrollbar-track { background: transparent; }
+    .filter-col .filter-col-list::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+
+    .cb-option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 6px;
+        font-size: 0.8rem;
+        color: var(--text-primary);
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background 0.15s;
+    }
+    .cb-option:hover { background: var(--bg-hover); }
+    .cb-option input[type="checkbox"] {
+        width: 15px;
+        height: 15px;
+        accent-color: var(--border-color-focus);
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+    .select-all-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        cursor: pointer;
+        white-space: nowrap;
+        padding: 2px 6px;
+        border-radius: 4px;
+        transition: background 0.15s;
+    }
+    .select-all-label:hover { background: var(--bg-hover); }
+    .select-all-label input[type="checkbox"] {
+        width: 13px;
+        height: 13px;
+        accent-color: var(--border-color-focus);
         cursor: pointer;
     }
 </style>
@@ -189,44 +245,52 @@
                             <div class="t-section">
                                 <div class="t-section-title">Ticket Filters</div>
                                 <div class="t-grid t-grid-4">
-                                    <div>
-                                        <label for="f_status" class="t-label">Status</label>
-                                        <select name="status" id="f_status" class="t-input">
-                                            <option value="">All Statuses</option>
+                                    <div class="filter-col">
+                                        <div class="filter-col-header">
+                                            <span class="t-label" style="margin-bottom:0">Status</span>
+                                            <label class="select-all-label"><input type="checkbox" checked onchange="toggleAll(this, 'status[]')"> All</label>
+                                        </div>
+                                        <div class="filter-col-list">
                                             @foreach ($ticketStatuses as $s)
-                                                <option value="{{ $s }}">{{ $s }}</option>
+                                                <label class="cb-option"><input type="checkbox" name="status[]" value="{{ $s }}" checked> {{ $s }}</label>
                                             @endforeach
-                                        </select>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label for="f_request_type" class="t-label">Request Type</label>
-                                        <select name="request_type" id="f_request_type" class="t-input">
-                                            <option value="">All Types</option>
+                                    <div class="filter-col">
+                                        <div class="filter-col-header">
+                                            <span class="t-label" style="margin-bottom:0">Request Type</span>
+                                            <label class="select-all-label"><input type="checkbox" checked onchange="toggleAll(this, 'request_type[]')"> All</label>
+                                        </div>
+                                        <div class="filter-col-list">
                                             @foreach ($requestTypes as $rt)
-                                                <option value="{{ $rt }}">{{ $rt }}</option>
+                                                <label class="cb-option"><input type="checkbox" name="request_type[]" value="{{ $rt }}" checked> {{ $rt }}</label>
                                             @endforeach
-                                        </select>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label for="f_assisted_by" class="t-label">Assisted By</label>
-                                        <select name="assisted_by" id="f_assisted_by" class="t-input">
-                                            <option value="">All Staff</option>
-                                            <option value="IT03">Tristan Railey Tan</option>
-                                            <option value="IT04">John Paul Villacorta</option>
-                                            <option value="Both">Both</option>
-                                        </select>
+                                    <div class="filter-col">
+                                        <div class="filter-col-header">
+                                            <span class="t-label" style="margin-bottom:0">Assisted By</span>
+                                            <label class="select-all-label"><input type="checkbox" checked onchange="toggleAll(this, 'assisted_by[]')"> All</label>
+                                        </div>
+                                        <div class="filter-col-list">
+                                            <label class="cb-option"><input type="checkbox" name="assisted_by[]" value="IT03" checked> Tristan Railey Tan</label>
+                                            <label class="cb-option"><input type="checkbox" name="assisted_by[]" value="IT04" checked> John Paul Villacorta</label>
+                                            <label class="cb-option"><input type="checkbox" name="assisted_by[]" value="Both" checked> Both</label>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label for="f_t_dept" class="t-label">Department</label>
-                                        <select name="department" id="f_t_dept" class="t-input">
-                                            <option value="">All Departments</option>
+                                    <div class="filter-col">
+                                        <div class="filter-col-header">
+                                            <span class="t-label" style="margin-bottom:0">Department</span>
+                                            <label class="select-all-label"><input type="checkbox" checked onchange="toggleAll(this, 'department[]')"> All</label>
+                                        </div>
+                                        <div class="filter-col-list">
                                             @foreach ($ticketDepartments as $d)
-                                                <option value="{{ $d }}">{{ $d }}</option>
+                                                <label class="cb-option"><input type="checkbox" name="department[]" value="{{ $d }}" checked> {{ $d }}</label>
                                             @endforeach
-                                        </select>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="checkbox-row">
+                                <div class="checkbox-row" style="margin-top: 10px;">
                                     <input type="checkbox" name="include_archived" id="include_archived" value="1">
                                     <label for="include_archived">Include Archived Tickets</label>
                                 </div>
@@ -238,32 +302,38 @@
                             <div class="t-section">
                                 <div class="t-section-title">Employee Filters</div>
                                 <div class="t-grid t-grid-3">
-                                    <div>
-                                        <label for="f_emp_status" class="t-label">Employment Status</label>
-                                        <select name="employment_status" id="f_emp_status" class="t-input">
-                                            <option value="">All Statuses</option>
+                                    <div class="filter-col">
+                                        <div class="filter-col-header">
+                                            <span class="t-label" style="margin-bottom:0">Employment Status</span>
+                                            <label class="select-all-label"><input type="checkbox" checked onchange="toggleAll(this, 'employment_status[]')"> All</label>
+                                        </div>
+                                        <div class="filter-col-list">
                                             @foreach ($employeeStatuses as $es)
-                                                <option value="{{ $es }}">{{ $es }}</option>
+                                                <label class="cb-option"><input type="checkbox" name="employment_status[]" value="{{ $es }}" checked> {{ $es }}</label>
                                             @endforeach
-                                        </select>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label for="f_emp_dept" class="t-label">Department</label>
-                                        <select name="department" id="f_emp_dept" class="t-input">
-                                            <option value="">All Departments</option>
+                                    <div class="filter-col">
+                                        <div class="filter-col-header">
+                                            <span class="t-label" style="margin-bottom:0">Department</span>
+                                            <label class="select-all-label"><input type="checkbox" checked onchange="toggleAll(this, 'emp_department[]')"> All</label>
+                                        </div>
+                                        <div class="filter-col-list">
                                             @foreach ($employeeDepartments as $d)
-                                                <option value="{{ $d }}">{{ $d }}</option>
+                                                <label class="cb-option"><input type="checkbox" name="emp_department[]" value="{{ $d }}" checked> {{ $d }}</label>
                                             @endforeach
-                                        </select>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label for="f_emp_branch" class="t-label">Branch</label>
-                                        <select name="branch" id="f_emp_branch" class="t-input">
-                                            <option value="">All Branches</option>
+                                    <div class="filter-col">
+                                        <div class="filter-col-header">
+                                            <span class="t-label" style="margin-bottom:0">Branch</span>
+                                            <label class="select-all-label"><input type="checkbox" checked onchange="toggleAll(this, 'branch[]')"> All</label>
+                                        </div>
+                                        <div class="filter-col-list">
                                             @foreach ($employeeBranches as $b)
-                                                <option value="{{ $b }}">{{ $b }}</option>
+                                                <label class="cb-option"><input type="checkbox" name="branch[]" value="{{ $b }}" checked> {{ $b }}</label>
                                             @endforeach
-                                        </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -274,32 +344,38 @@
                             <div class="t-section">
                                 <div class="t-section-title">SSO Account Filters</div>
                                 <div class="t-grid t-grid-3">
-                                    <div>
-                                        <label for="f_sso_status" class="t-label">Status</label>
-                                        <select name="status" id="f_sso_status" class="t-input">
-                                            <option value="">All Statuses</option>
+                                    <div class="filter-col">
+                                        <div class="filter-col-header">
+                                            <span class="t-label" style="margin-bottom:0">Status</span>
+                                            <label class="select-all-label"><input type="checkbox" checked onchange="toggleAll(this, 'sso_status[]')"> All</label>
+                                        </div>
+                                        <div class="filter-col-list">
                                             @foreach ($ssoStatuses as $ss)
-                                                <option value="{{ $ss }}">{{ $ss }}</option>
+                                                <label class="cb-option"><input type="checkbox" name="sso_status[]" value="{{ $ss }}" checked> {{ $ss }}</label>
                                             @endforeach
-                                        </select>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label for="f_sso_type" class="t-label">Account Type</label>
-                                        <select name="account_type" id="f_sso_type" class="t-input">
-                                            <option value="">All Types</option>
+                                    <div class="filter-col">
+                                        <div class="filter-col-header">
+                                            <span class="t-label" style="margin-bottom:0">Account Type</span>
+                                            <label class="select-all-label"><input type="checkbox" checked onchange="toggleAll(this, 'account_type[]')"> All</label>
+                                        </div>
+                                        <div class="filter-col-list">
                                             @foreach ($ssoAccountTypes as $at)
-                                                <option value="{{ $at }}">{{ $at }}</option>
+                                                <label class="cb-option"><input type="checkbox" name="account_type[]" value="{{ $at }}" checked> {{ $at }}</label>
                                             @endforeach
-                                        </select>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label for="f_sso_dept" class="t-label">Department</label>
-                                        <select name="department" id="f_sso_dept" class="t-input">
-                                            <option value="">All Departments</option>
+                                    <div class="filter-col">
+                                        <div class="filter-col-header">
+                                            <span class="t-label" style="margin-bottom:0">Department</span>
+                                            <label class="select-all-label"><input type="checkbox" checked onchange="toggleAll(this, 'sso_department[]')"> All</label>
+                                        </div>
+                                        <div class="filter-col-list">
                                             @foreach ($ssoDepartments as $d)
-                                                <option value="{{ $d }}">{{ $d }}</option>
+                                                <label class="cb-option"><input type="checkbox" name="sso_department[]" value="{{ $d }}" checked> {{ $d }}</label>
                                             @endforeach
-                                        </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -338,38 +414,51 @@
             card.classList.toggle('active', card.dataset.type === type);
         });
 
-        // Show/hide filter groups
+        // Show/hide filter groups and disable/enable their inputs
         document.querySelectorAll('.filter-group').forEach(fg => {
             fg.classList.remove('active');
+            // Disable all inputs in hidden groups so they aren't submitted
+            fg.querySelectorAll('input, select, textarea').forEach(input => {
+                input.disabled = true;
+            });
         });
+        
         const activeGroup = document.getElementById('filters-' + type);
-        if (activeGroup) activeGroup.classList.add('active');
+        if (activeGroup) {
+            activeGroup.classList.add('active');
+            // Enable inputs for the active group
+            activeGroup.querySelectorAll('input, select, textarea').forEach(input => {
+                input.disabled = false;
+            });
+        }
     }
 
     function submitReport(format) {
         const form = document.getElementById('reportForm');
         
         if (format === 'both') {
-            const originalTarget = form.target;
-            const originalAction = form.action;
+            const formData = new FormData(form);
+            const params = new URLSearchParams(formData).toString();
             
-            // First submit Excel in a new tab
-            form.action = "{{ route('reports.excel') }}";
-            form.target = "_blank";
-            form.submit();
+            // Download excel via hidden iframe
+            const iframeExcel = document.createElement('iframe');
+            iframeExcel.style.display = 'none';
+            iframeExcel.src = "{{ route('reports.excel') }}?" + params;
+            document.body.appendChild(iframeExcel);
             
-            // Wait slightly, then submit PDF in a new tab
+            // Download PDF via hidden iframe with slight delay
             setTimeout(() => {
-                form.action = "{{ route('reports.pdf') }}";
-                form.target = "_blank";
-                form.submit();
+                const iframePdf = document.createElement('iframe');
+                iframePdf.style.display = 'none';
+                iframePdf.src = "{{ route('reports.pdf') }}?" + params;
+                document.body.appendChild(iframePdf);
                 
-                // Reset form state
+                // Cleanup iframes after a while
                 setTimeout(() => {
-                    form.action = originalAction;
-                    form.target = originalTarget;
-                }, 100);
-            }, 600);
+                    if (document.body.contains(iframeExcel)) document.body.removeChild(iframeExcel);
+                    if (document.body.contains(iframePdf)) document.body.removeChild(iframePdf);
+                }, 10000);
+            }, 1000);
             
             return;
         }
@@ -382,4 +471,34 @@
         form.target = ""; // Current window
         form.submit();
     }
+
+    // Toggle all checkboxes in a group
+    function toggleAll(masterCheckbox, groupName) {
+        const checkboxes = document.querySelectorAll('input[name="' + groupName + '"]');
+        checkboxes.forEach(cb => cb.checked = masterCheckbox.checked);
+    }
+
+    // Sync the "All" master checkbox when individual items change
+    function syncSelectAll(checkbox) {
+        const name = checkbox.name;
+        const allCbs = document.querySelectorAll('input[name="' + name + '"]');
+        const allChecked = Array.from(allCbs).every(cb => cb.checked);
+        // Find the master checkbox in the same filter-box
+        const filterCol = checkbox.closest('.filter-col');
+        if (filterCol) {
+            const master = filterCol.querySelector('.select-all-label input[type="checkbox"]');
+            if (master) master.checked = allChecked;
+        }
+    }
+
+    // Attach sync listeners to all filter checkboxes
+    document.querySelectorAll('.cb-option input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', function() { syncSelectAll(this); });
+    });
+
+    // Initialize state on load
+    document.addEventListener('DOMContentLoaded', () => {
+        const defaultType = document.getElementById('report_type').value || 'tickets';
+        selectReportType(defaultType);
+    });
 </script>
