@@ -17,15 +17,15 @@
                     @endif
 
                     <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                        <a href="{{ route('employees.create') }}" class="dk-btn dk-btn-primary">
+                        <a href="{{ route('employees.create') }}" class="btn btn-primary">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right: 6px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                             Add Employee
                         </a>
-                        <button type="button" onclick="openHierarchyModal()" class="dk-btn dk-btn-outline">
+                        <button type="button" onclick="openHierarchyModal()" class="btn btn-outline">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right: 6px;"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                             Manage Hierarchy
                         </button>
-                        <a href="{{ route('employees.directory') }}" class="dk-btn dk-btn-secondary">
+                        <a href="{{ route('employees.directory') }}" class="btn btn-secondary">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right: 6px;"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/></svg>
                             Directory
                         </a>
@@ -71,18 +71,18 @@
                                 <label for="filter_branch" style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px;">Branch Filter</label>
                                 <select name="filter_branch" id="filter_branch" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem; outline: none;" onchange="document.getElementById('filterForm').requestSubmit();">
                                     <option value="">All Branches</option>
-                                    @foreach(['HEAD OFFICE', 'DC TAYTAY', 'NDD BACOLOD', 'NDD BAESA', 'NDD BATAAN', 'NDD BATANGAS', 'NDD CAVITE', 'NDD CDO', 'NDD CEBU', 'NDD DAVAO', 'NDD DIPOLOG', 'NDD DUMAGUETE', 'NDD ILOILO', 'NDD LA UNION', 'NDD LAGUNA', 'NDD LAS PIÑAS', 'NDD NUEVA ECIJA', 'NDD PULILAN', 'NDD ROXAS', 'NDD SAN FRANCISCO', 'NDD TACLOBAN', 'NDD TARLAC', 'NDD TAYTAY'] as $br)
+                                    @foreach(['HEAD OFFICE', 'IT HQ', 'DC TAYTAY', 'NDD BACOLOD', 'NDD BAESA', 'NDD BATAAN', 'NDD BATANGAS', 'NDD CAVITE', 'NDD CDO', 'NDD CEBU', 'NDD DAVAO', 'NDD DIPOLOG', 'NDD DUMAGUETE', 'NDD ILOILO', 'NDD LA UNION', 'NDD LAGUNA', 'NDD LAS PIÑAS', 'NDD NUEVA ECIJA', 'NDD PULILAN', 'NDD ROXAS', 'NDD SAN FRANCISCO', 'NDD TACLOBAN', 'NDD TARLAC', 'NDD TAYTAY'] as $br)
                                         <option value="{{ $br }}" {{ request('filter_branch') == $br ? 'selected' : '' }}>{{ $br }}</option>
                                     @endforeach
                                 </select>
                             </div>
 
                             <div>
-                                <button type="submit" class="dk-btn dk-btn-primary" style="height: 38px;">Search</button>
+                                <button type="submit" class="btn btn-primary" style="height: 38px;">Search</button>
                             </div>
                             @if(request()->hasAny(['search', 'filter_dept', 'filter_branch']))
                             <div>
-                                <a href="{{ route('employees.index') }}" class="dk-btn dk-btn-outline" style="height: 38px;">Clear</a>
+                                <a href="{{ route('employees.index') }}" class="btn btn-outline" style="height: 38px;">Clear</a>
                             </div>
                             @endif
                         </form>
@@ -196,7 +196,7 @@
                       </div>
                       
                       <div style="margin-top: 15px;">
-                          {{ $employees->links() }}
+                          {{ $employees->onEachSide(1)->links() }}
                       </div>
                   </div>
 
@@ -297,8 +297,8 @@
                     <div id="breadcrumb" style="font-size: 0.95rem;"></div>
                     <div style="display: flex; gap: 10px; align-items: center;">
                         <span style="font-size: 0.8rem; color: var(--text-muted);" id="drill-hint">Click a pill to drill down</span>
-                        <button type="button" onclick="closeHierarchyModal()" class="dk-btn dk-btn-outline">Cancel</button>
-                        <button type="button" onclick="saveHierarchyAjax()" id="saveHierarchyBtn" class="dk-btn dk-btn-primary">Save Changes</button>
+                        <button type="button" onclick="closeHierarchyModal()" class="btn btn-outline">Cancel</button>
+                        <button type="button" onclick="saveHierarchyAjax()" id="saveHierarchyBtn" class="btn btn-primary">Save Changes</button>
                     </div>
                 </div>
 
@@ -645,4 +645,8 @@
             }));
         }
     </script>
+    </div>
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/employees.css') }}?v={{ time() }}">
+@endpush
 </x-app-layout>

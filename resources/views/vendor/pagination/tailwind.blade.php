@@ -28,7 +28,7 @@
         <div class="hidden sm:flex-1 sm:flex sm:gap-2 sm:items-center sm:justify-between">
 
             <div>
-                <p class="text-sm text-gray-700 leading-5 dark:text-gray-600">
+                <p class="text-sm text-gray-700 leading-5 dark:text-gray-600 whitespace-nowrap">
                     {!! __('Showing') !!}
                     @if ($paginator->firstItem())
                         <span class="font-medium">{{ $paginator->firstItem() }}</span>
@@ -64,7 +64,40 @@
                     @endif
 
                     {{-- Pagination Elements --}}
-                    @foreach ($elements as $element)
+                    @php
+                        $totalPages = $paginator->lastPage();
+                        $currentPage = $paginator->currentPage();
+                        $customElements = [];
+
+                        if ($totalPages <= 7) {
+                            for ($i = 1; $i <= $totalPages; $i++) {
+                                $customElements[0][$i] = $paginator->url($i);
+                            }
+                        } else {
+                            if ($currentPage <= 4) {
+                                for ($i = 1; $i <= 5; $i++) {
+                                    $customElements[0][$i] = $paginator->url($i);
+                                }
+                                $customElements[1] = '...';
+                                $customElements[2][$totalPages] = $paginator->url($totalPages);
+                            } elseif ($currentPage >= $totalPages - 3) {
+                                $customElements[0][1] = $paginator->url(1);
+                                $customElements[1] = '...';
+                                for ($i = $totalPages - 4; $i <= $totalPages; $i++) {
+                                    $customElements[2][$i] = $paginator->url($i);
+                                }
+                            } else {
+                                $customElements[0][1] = $paginator->url(1);
+                                $customElements[1] = '...';
+                                for ($i = $currentPage - 1; $i <= $currentPage + 1; $i++) {
+                                    $customElements[2][$i] = $paginator->url($i);
+                                }
+                                $customElements[3] = '...';
+                                $customElements[4][$totalPages] = $paginator->url($totalPages);
+                            }
+                        }
+                    @endphp
+                    @foreach ($customElements as $element)
                         {{-- "Three Dots" Separator --}}
                         @if (is_string($element))
                             <span aria-disabled="true">
@@ -109,3 +142,4 @@
         </div>
     </nav>
 @endif
+

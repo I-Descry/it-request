@@ -16,3 +16,34 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
+
+.dash-header-wrap { display: flex; justify-content: space-between; align-items: center; }
+.timeframe-wrap { display: flex; align-items: center; gap: 10px; }
+.timeframe-label { font-size: 0.85rem; font-weight: 600; color: #6b7280; }
+.relative-wrap { position: relative; }
+.timeframe-select { appearance: none; padding: 6px 32px 6px 12px; border: 1px solid var(--border-color); border-radius: 6px; background-color: var(--bg-card); color: var(--text-primary); font-size: 0.85rem; font-weight: 600; cursor: pointer; outline: none; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+.select-icon-wrap { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #9ca3af; }
+.dash-container { padding: 10px 0; }
+.border-purple { border-left-color: #8b5cf6; }
+.bg-purple-light { background: rgba(139, 92, 246, 0.15); }
+.border-blue { border-left-color: #3b82f6; }
+.bg-prog-bg { background: var(--badge-prog-bg); }
+.border-amber { border-left-color: #f59e0b; }
+.bg-open-bg { background: var(--badge-open-bg); }
+.border-emerald { border-left-color: #10b981; }
+.bg-res-bg { background: var(--badge-res-bg); }
+.border-light { border-left-color: var(--text-light); }
+.bg-closed-bg { background: var(--badge-closed-bg); }
+.border-red { border-left-color: #ef4444; }
+.bg-red-light { background: rgba(239,68,68,0.15); }
+.card-title { margin: 0 0 16px 0; font-size: 0.95rem; color: var(--text-primary); font-weight: 600; }
+.mb-0 { margin: 0 !important; }
+.mb-4 { margin-bottom: 16px; }
+.flex-col-gap { display: flex; flex-direction: column; gap: 12px; }
+.p-4 { padding: 16px; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.toggle-bg { display: flex; background: var(--bg-main); border-radius: 6px; padding: 2px; gap: 2px; }
+.cursor-pointer { cursor: pointer; }
+
+.dk-grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 12px; }
+

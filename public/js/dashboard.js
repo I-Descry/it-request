@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function() {
             datasets.push({ label: 'Cancelled', data: data.techPerformance.cancelled, backgroundColor: '#ef4444', borderRadius: 4, barPercentage: 0.6 });
         }
 
-        new Chart(techEl, { 
+        window.techChartInstance = new Chart(techEl, { 
             type: 'bar', 
             data: { 
                 labels: data.techPerformance.labels, 
@@ -317,6 +317,42 @@ document.addEventListener('DOMContentLoaded', function() {
                 } 
             } 
         });
+
+        // Initialize Staff Filter Dropdown
+        const techFilter = document.getElementById('techStaffFilter');
+        if (techFilter && window.techChartInstance) {
+            // Populate Dropdown
+            data.techPerformance.labels.forEach((label, idx) => {
+                const opt = document.createElement('option');
+                opt.value = idx;
+                opt.textContent = label;
+                techFilter.appendChild(opt);
+            });
+
+            // Handle Filtering
+            techFilter.addEventListener('change', function(e) {
+                const val = e.target.value;
+                const chart = window.techChartInstance;
+                
+                if (val === '') {
+                    // Show All
+                    chart.data.labels = data.techPerformance.labels;
+                    chart.data.datasets.forEach(dataset => {
+                        const k = dataset.label.toLowerCase().replace(' ', '_');
+                        dataset.data = data.techPerformance[k] || [];
+                    });
+                } else {
+                    // Show Specific
+                    const idx = parseInt(val, 10);
+                    chart.data.labels = [data.techPerformance.labels[idx]];
+                    chart.data.datasets.forEach(dataset => {
+                        const k = dataset.label.toLowerCase().replace(' ', '_');
+                        dataset.data = [data.techPerformance[k][idx]];
+                    });
+                }
+                chart.update();
+            });
+        }
     }
     // AJAX Pagination for Recent Tickets
     document.addEventListener('click', function(e) {

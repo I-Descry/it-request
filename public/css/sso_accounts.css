@@ -1,0 +1,17 @@
+﻿.alert-success { color: green; margin-bottom: 15px; font-weight: bold; }
+.emp-actions { display: flex; gap: 10px; margin-bottom: 20px; }
+.icon-mr { margin-right: 6px; }
+
+.filter-panel { background: var(--panel-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px; }
+.filter-form { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+.filter-col-search-wide { flex: 1; min-width: 250px; }
+.filter-label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px; }
+.relative { position: relative; }
+.search-icon-wrapper { position: absolute; top: 9px; left: 10px; color: var(--text-muted); }
+.filter-input-search { width: 100%; padding: 8px 10px 8px 35px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem; outline: none; }
+
+.h-38 { height: 38px; }
+.whitespace-nowrap { white-space: nowrap; }
+.no-select { user-select: none; }
+.text-center { text-align: center; }
+

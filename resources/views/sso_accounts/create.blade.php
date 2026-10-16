@@ -29,10 +29,10 @@
                         .t-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
                         .t-error { color: #dc2626; font-size: 0.75rem; margin-top: 2px; display: block; }
                         .t-footer { display: flex; justify-content: flex-end; align-items: center; gap: 12px; padding-top: 10px; border-top: 1px solid var(--border-color); }
-                        .t-btn-cancel { text-decoration: none; color: var(--text-light); font-size: 0.85rem; font-weight: 500; padding: 7px 16px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); transition: background 0.15s; }
-                        .t-btn-cancel:hover { background: var(--th-bg); }
-                        .t-btn-submit { background: #2563eb; color: var(--bg-card); padding: 7px 20px; border-radius: 6px; border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: background 0.15s; box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2); }
-                        .t-btn-submit:hover { background: #1d4ed8; }
+                        .btn btn-secondary { text-decoration: none; color: var(--text-light); font-size: 0.85rem; font-weight: 500; padding: 7px 16px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); transition: background 0.15s; }
+                        .btn btn-secondary:hover { background: var(--th-bg); }
+                        .btn btn-primary { background: #2563eb; color: var(--bg-card); padding: 7px 20px; border-radius: 6px; border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: background 0.15s; box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2); }
+                        .btn btn-primary:hover { background: #1d4ed8; }
                     </style>
 
                     <form action="{{ route('sso_accounts.store') }}" method="POST" autocomplete="off">
@@ -144,8 +144,8 @@
 
                         {{-- Actions --}}
                         <div class="t-footer">
-                            <a href="{{ route('sso_accounts.index') }}" class="t-btn-cancel">Cancel</a>
-                            <button type="submit" class="t-btn-submit">Save Account</button>
+                            <a href="{{ route('sso_accounts.index') }}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Save Account</button>
                         </div>
                     </form>
 

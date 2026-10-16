@@ -26,10 +26,10 @@
                     {{-- Action Buttons --}}
                     <div style="display: flex; gap: 10px; margin-bottom: 15px; align-items: center; justify-content: space-between;">
                         <div style="display: flex; gap: 10px; align-items: center;">
-                            <a href="{{ route('tickets.index') }}" class="dk-btn dk-btn-secondary">
+                            <a href="{{ route('tickets.index') }}" class="btn btn-secondary">
                                 ← Back to Tickets
                             </a>
-                            <a href="{{ route('tickets.edit', $ticket->ticket_no) }}" class="dk-btn dk-btn-warning">
+                            <a href="{{ route('tickets.edit', $ticket->ticket_no) }}" class="btn btn-warning">
                                 ✏️ Edit Ticket
                             </a>
                         </div>

@@ -17,7 +17,7 @@
                     @endif
 
                     <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                        <a href="{{ route('sso_accounts.create') }}" class="dk-btn dk-btn-primary">
+                        <a href="{{ route('sso_accounts.create') }}" class="btn btn-primary">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right: 6px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                             Add SSO Account
                         </a>
@@ -37,11 +37,11 @@
                             </div>
                             
                             <div>
-                                <button type="submit" class="dk-btn dk-btn-primary" style="height: 38px;">Search</button>
+                                <button type="submit" class="btn btn-primary" style="height: 38px;">Search</button>
                             </div>
                             @if(request()->has('search'))
                             <div>
-                                <a href="{{ route('sso_accounts.index') }}" class="dk-btn dk-btn-outline" style="height: 38px;">Clear</a>
+                                <a href="{{ route('sso_accounts.index') }}" class="btn btn-outline" style="height: 38px;">Clear</a>
                             </div>
                             @endif
                         </form>
@@ -174,7 +174,7 @@
                         </div>
                         
                         <div style="margin-top: 15px;">
-                            {{ $ssoAccounts->links() }}
+                            {{ $ssoAccounts->onEachSide(1)->links() }}
                         </div>
                     </div>
                 </div>
@@ -259,10 +259,10 @@
                             </div>
                         </div>
                         <div style="display: flex; justify-content: flex-end; gap: 12px;">
-                            <button type="button" @click="linkModalOpen = false" class="dk-btn" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary);">
+                            <button type="button" @click="linkModalOpen = false" class="btn" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary);">
                                 Cancel
                             </button>
-                            <button type="submit" class="dk-btn" style="background: #3b82f6; color: white; border: none;">
+                            <button type="submit" class="btn" style="background: #3b82f6; color: white; border: none;">
                                 Link Employee
                             </button>
                         </div>
@@ -272,4 +272,7 @@
         </div>
 
     </div>
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/sso_accounts.css') }}?v={{ time() }}">
+@endpush
 </x-app-layout>

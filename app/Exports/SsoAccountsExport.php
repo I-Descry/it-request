@@ -7,7 +7,7 @@ use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
@@ -15,7 +15,7 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
-class SsoAccountsExport implements FromQuery, WithHeadings, WithMapping, WithStyles, ShouldAutoSize, WithEvents
+class SsoAccountsExport implements FromQuery, WithHeadings, WithMapping, WithStyles, WithColumnWidths, WithEvents
 {
     protected $filters;
 
@@ -49,6 +49,21 @@ class SsoAccountsExport implements FromQuery, WithHeadings, WithMapping, WithSty
         }
 
         return $query->orderBy('created_at', 'desc');
+    }
+
+        public function columnWidths(): array
+    {
+        return [
+            'A' => 20, // Username
+            'B' => 25, // Name
+            'C' => 20, // Department
+            'D' => 20, // Position
+            'E' => 30, // Email
+            'F' => 15, // Account Type
+            'G' => 20, // Transferred From
+            'H' => 15, // Status
+            'I' => 20, // Date Created
+        ];
     }
 
     public function headings(): array
@@ -89,6 +104,7 @@ class SsoAccountsExport implements FromQuery, WithHeadings, WithMapping, WithSty
         // Set Nunito font for the entire sheet
         $sheet->getStyle("A1:{$lastCol}{$lastRow}")->applyFromArray([
             'font' => ['name' => 'Nunito', 'size' => 10],
+            'alignment' => ['wrapText' => true, 'vertical' => Alignment::VERTICAL_TOP],
         ]);
 
         // Header row styling
@@ -141,3 +157,4 @@ class SsoAccountsExport implements FromQuery, WithHeadings, WithMapping, WithSty
         ];
     }
 }
+

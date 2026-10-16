@@ -7,7 +7,7 @@ use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
@@ -15,7 +15,7 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
-class TicketsExport implements FromQuery, WithHeadings, WithMapping, WithStyles, ShouldAutoSize, WithEvents
+class TicketsExport implements FromQuery, WithHeadings, WithMapping, WithStyles, WithColumnWidths, WithEvents
 {
     protected $filters;
 
@@ -53,6 +53,24 @@ class TicketsExport implements FromQuery, WithHeadings, WithMapping, WithStyles,
         }
 
         return $query->orderBy('created_at', 'desc');
+    }
+
+        public function columnWidths(): array
+    {
+        return [
+            'A' => 15, // Ticket No
+            'B' => 15, // Request Type
+            'C' => 35, // Request
+            'D' => 45, // Request Details
+            'E' => 20, // Requested By
+            'F' => 15, // Position
+            'G' => 15, // Department
+            'H' => 15, // Branch
+            'I' => 20, // Assisted By
+            'J' => 12, // Status
+            'K' => 35, // Remarks
+            'L' => 18, // Date Created
+        ];
     }
 
     public function headings(): array
@@ -105,6 +123,7 @@ class TicketsExport implements FromQuery, WithHeadings, WithMapping, WithStyles,
         // Set Nunito font for the entire sheet
         $sheet->getStyle("A1:{$lastCol}{$lastRow}")->applyFromArray([
             'font' => ['name' => 'Nunito', 'size' => 10],
+            'alignment' => ['wrapText' => true, 'vertical' => Alignment::VERTICAL_TOP],
         ]);
 
         // Header row styling
@@ -157,3 +176,4 @@ class TicketsExport implements FromQuery, WithHeadings, WithMapping, WithStyles,
         ];
     }
 }
+

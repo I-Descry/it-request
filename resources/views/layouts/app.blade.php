@@ -23,6 +23,7 @@
                 document.documentElement.classList.remove('dark');
             }
         </script>
+        @stack('styles')
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -122,5 +123,6 @@
                 });
             });
         </script>
+        @stack('scripts')
     </body>
 </html>

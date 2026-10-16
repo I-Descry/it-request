@@ -1,4 +1,4 @@
-                    <div style="padding: 8px 12px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+﻿                    <div style="padding: 8px 12px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
                         <h3 class="dk-section-title" style="margin: 0; color: var(--text-primary);">Recent Tickets</h3>
                         <a href="{{ route('tickets.create') }}" style="background-color: #2563eb; color: var(--bg-card); padding: 4px 12px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; text-decoration: none;">+ New Ticket</a>
                     </div>
@@ -64,7 +64,7 @@
                     <div class="dk-pagination" style="flex-shrink: 0; min-height: 52px; display: flex; align-items: center; justify-content: flex-end; padding: 0 16px; border-top: 1px solid var(--border-color); background: var(--bg-card);">
                         @if ($recentTickets->hasPages())
                             <div style="width: 100%;">
-                                {{ $recentTickets->links() }}
+                                {{ $recentTickets->onEachSide(1)->links() }}
                             </div>
                         @else
                             <div style="width: 100%;">
@@ -101,3 +101,4 @@
                             </div>
                         @endif
                     </div>
+

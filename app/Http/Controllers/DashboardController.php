@@ -203,7 +203,7 @@ class DashboardController extends Controller
                 'byStatus' => $byStatus,
                 'techPerformance' => $techPerformance,
                 'topRequestors' => view('partials.dashboard.top_requestors', compact('topRequestors'))->render(),
-                'recentTickets' => view('partials.dashboard.recent_tickets', compact('recentTickets'))->render(),
+                'recentTickets', 'topRequestors', 'topRequestors' => view('partials.dashboard.recent_tickets', compact('recentTickets', 'topRequestors', 'topRequestors'))->render(),
                 'departmentBreakdown' => view('partials.dashboard.department_breakdown', compact('departmentBreakdown'))->render(),
             ]);
         }
@@ -212,7 +212,7 @@ class DashboardController extends Controller
             'totalActive', 'timeframes', 'selectedTimeframe', 'metrics',
             'byStatus', 'archivedCount',
             'byRequestType', 'techPerformance', 'assistedByMap',
-            'recentTickets', 'topRequestors', 'departmentBreakdown', 'excludedTypes'
+            'recentTickets', 'topRequestors', 'topRequestors', 'topRequestors', 'departmentBreakdown', 'excludedTypes'
         ));
     }
 }

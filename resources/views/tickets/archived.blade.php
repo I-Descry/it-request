@@ -69,18 +69,18 @@
                                 <label for="filter_branch" style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px;">Branch</label>
                                 <select name="filter_branch" id="filter_branch" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem; outline: none;" onchange="document.getElementById('filterForm').requestSubmit();">
                                     <option value="">All Branches</option>
-                                    @foreach(['HEAD OFFICE', 'DC TAYTAY', 'NDD BACOLOD', 'NDD BAESA', 'NDD BATAAN', 'NDD BATANGAS', 'NDD CAVITE', 'NDD CDO', 'NDD CEBU', 'NDD DAVAO', 'NDD DIPOLOG', 'NDD DUMAGUETE', 'NDD ILOILO', 'NDD LA UNION', 'NDD LAGUNA', 'NDD LAS PIÑAS', 'NDD NUEVA ECIJA', 'NDD PULILAN', 'NDD ROXAS', 'NDD SAN FRANCISCO', 'NDD TACLOBAN', 'NDD TARLAC', 'NDD TAYTAY'] as $br)
+                                    @foreach(['HEAD OFFICE', 'IT HQ', 'DC TAYTAY', 'NDD BACOLOD', 'NDD BAESA', 'NDD BATAAN', 'NDD BATANGAS', 'NDD CAVITE', 'NDD CDO', 'NDD CEBU', 'NDD DAVAO', 'NDD DIPOLOG', 'NDD DUMAGUETE', 'NDD ILOILO', 'NDD LA UNION', 'NDD LAGUNA', 'NDD LAS PIÑAS', 'NDD NUEVA ECIJA', 'NDD PULILAN', 'NDD ROXAS', 'NDD SAN FRANCISCO', 'NDD TACLOBAN', 'NDD TARLAC', 'NDD TAYTAY'] as $br)
                                         <option value="{{ $br }}" {{ request('filter_branch') == $br ? 'selected' : '' }}>{{ $br }}</option>
                                     @endforeach
                                 </select>
                             </div>
 
                             <div>
-                                <button type="submit" class="dk-btn dk-btn-primary" style="height: 38px;">Filter</button>
+                                <button type="submit" class="btn btn-primary" style="height: 38px;">Filter</button>
                             </div>
                             @if(request()->hasAny(['search', 'filter_dept', 'filter_branch', 'status', 'request_type']))
                             <div>
-                                <a href="{{ route('tickets.archived') }}" class="dk-btn dk-btn-outline" style="height: 38px;">Clear</a>
+                                <a href="{{ route('tickets.archived') }}" class="btn btn-outline" style="height: 38px;">Clear</a>
                             </div>
                             @endif
                         </form>

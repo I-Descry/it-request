@@ -97,6 +97,7 @@
             width: 100%;
             border-collapse: collapse;
             margin: 0;
+            table-layout: fixed;
         }
         .data-table thead th {
             background: #6b7280;
@@ -108,10 +109,11 @@
             text-transform: uppercase;
             letter-spacing: 0.04em;
             border: none;
+            overflow: hidden;
         }
         .data-table thead th:first-child {
             text-align: center;
-            width: 28px;
+            width: 3%;
         }
         .data-table tbody td {
             padding: 5px 8px;
@@ -303,7 +305,7 @@
                     <th style="width: 10%;">Contact No.</th>
                     <th style="width: 7%;">Status</th>
                     <th style="width: 11%;">Resigned Date</th>
-                    <th style="width: 11%;">Date Added</th>
+                    <th style="width: 10%;">Date Added</th>
                 </tr>
             </thead>
             <tbody>
@@ -343,7 +345,7 @@
                     <th style="width: 7%;">Type</th>
                     <th style="width: 10%;">Transferred From</th>
                     <th style="width: 6%;">Status</th>
-                    <th style="width: 8%;">Date Created</th>
+                    <th style="width: 9%;">Date Created</th>
                 </tr>
             </thead>
             <tbody>
